@@ -24,12 +24,11 @@ func NewDB() *gorm.DB {
 	PASS := c.Database.Password
 	DBNAME := c.Database.DBName
 
-	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", HOST, PORT, USER, PASS, DBNAME)
-
+	dsn := fmt.Sprintf(
+		"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", HOST, PORT, USER, PASS, DBNAME)
 	conn, err = gorm.Open("postgres", dsn)
 	if err != nil {
 		panic(err.Error())
 	}
-
 	return conn
 }

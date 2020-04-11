@@ -13,7 +13,7 @@ var (
 	err  error
 )
 
-//DBConn :　データベースコネクションの確立とマイグレーションの実行
+//DBConn :　データベースコネクションの確立
 func DBConn() *gorm.DB {
 	InitConf()
 	c := Config

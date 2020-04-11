@@ -13,8 +13,8 @@ var (
 	err  error
 )
 
-//NewDB :　データベースコネクションの確立とマイグレーションの実行
-func NewDB() *gorm.DB {
+//DBConn :　データベースコネクションの確立とマイグレーションの実行
+func DBConn() *gorm.DB {
 	InitConf()
 	c := Config
 

@@ -5,6 +5,7 @@ import (
 	"io"
 	"os"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 )
@@ -16,9 +17,18 @@ func InitRouter(conn *gorm.DB) *gin.Engine {
 	if err != nil {
 		panic(err.Error())
 	}
-
 	gin.DefaultWriter = io.MultiWriter(f)
 
-	r := gin.New()
+	corsConf := cors.DefaultConfig()
+
+	corsConf.AllowAllOrigins = true
+	corsConf.AllowCredentials = true
+	corsConf.AddAllowHeaders("authorization")
+
+	r := gin.Default()
+	// add middleware
+	r.Use(cors.New(corsConf))
+	r.Use(gin.Logger())
+	r.Use(gin.Recovery())
 	return r
 }

@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	conn := config.NewDB()
+	conn := config.DBConn()
 	defer conn.Close()
 
 	routers := router.InitRouter(conn)

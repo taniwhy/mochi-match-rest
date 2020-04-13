@@ -6,9 +6,11 @@ import (
 
 // User : usersテーブルモデル
 type User struct {
-	ID        int
-	IsAdmin   bool
-	IsFrozen  bool
-	CreatedAt time.Time
-	UpdateAt  time.Time
+	ID         int
+	Provider   string
+	ProviderID string
+	IsAdmin    bool
+	IsFrozen   bool
+	CreatedAt  time.Time
+	UpdateAt   time.Time
 }

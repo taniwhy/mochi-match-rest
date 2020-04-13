@@ -12,5 +12,7 @@ require (
 	github.com/jinzhu/gorm v1.9.12
 	github.com/satori/go.uuid v1.2.0 // indirect
 	github.com/spf13/viper v1.6.3
+	github.com/taniwhy/css-study-game-WebAPI v0.0.0-20200117050318-f845b5ef3a45
+	github.com/taniwhy/task-manager-api v0.0.0-20200316002504-399659419481
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
 )

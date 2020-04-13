@@ -16,6 +16,8 @@ import (
 // InitRouter :　ルーティング
 func InitRouter(conn *gorm.DB) *gin.Engine {
 	googleAuthHandler := handler.NewGoogleOAuthHandler()
+	userHandler := handler.NewUserHandler(conn)
+
 	store := config.NewRedisStore()
 	fmt.Print(conn)
 	f, err := os.Create("./config/log/access.log")

@@ -1,12 +1,19 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
 	"github.com/taniwhy/mochi-match-rest/config"
 	"github.com/taniwhy/mochi-match-rest/router"
 )
+
+func init() {
+	config.InitConf()
+	fmt.Println("1", config.Config.Database.DBName)
+	fmt.Println("2", config.Config.GoogleOAuth.ClientID)
+}
 
 func main() {
 	conn := config.DBConn()

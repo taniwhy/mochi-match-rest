@@ -9,6 +9,7 @@ type EntryHistory struct {
 	ID        int
 	Room      int
 	User      int
+	
 	EntryTime time.Time
 	UpdateAt  time.Time
 }

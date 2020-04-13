@@ -3,7 +3,9 @@ package config
 import (
 	"fmt"
 
+	"github.com/gin-contrib/sessions/redis"
 	"github.com/jinzhu/gorm"
+
 	// postgres driver
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
@@ -15,13 +17,11 @@ var (
 
 //DBConn :　データベースコネクションの確立
 func DBConn() *gorm.DB {
-	InitConf()
 	c := Config
-
 	HOST := c.Database.Host
 	PORT := c.Database.Port
 	USER := c.Database.User
-	PASS := c.Database.Password
+	PASS := c.Database.Pass
 	DBNAME := c.Database.DBName
 
 	dsn := fmt.Sprintf(
@@ -31,4 +31,20 @@ func DBConn() *gorm.DB {
 		panic(err.Error())
 	}
 	return conn
+}
+
+// NewRedisStore : TODO
+func NewRedisStore() redis.Store {
+	c := Config
+	SIZE := c.Redis.Size
+	NETWORK := c.Redis.Network
+	ADDR := c.Redis.Addr
+	PASS := c.Redis.Pass
+	KEY := c.Redis.Key
+
+	store, err := redis.NewStore(SIZE, NETWORK, ADDR, PASS, []byte(KEY))
+	if err != nil {
+		panic(err.Error())
+	}
+	return store
 }

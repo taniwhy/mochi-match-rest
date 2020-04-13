@@ -18,3 +18,4 @@ config.yml
 dbconf.yml
 
 access.log
+memo

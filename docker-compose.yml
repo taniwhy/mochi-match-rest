@@ -17,19 +17,6 @@ services:
     container_name: "mochi-match-redis"
     ports:
       - "6379:6379"
-  api:
-    tty: true
-    build:
-      context: ./
-      dockerfile: ./Dockerfile
-    volumes:
-      - ./:/go/src/github.com/taniwhy/mochi-match-rest
-    ports:
-      - "8080:8080"
-    depends_on:
-      - db
-      - redis
-
 volumes:
   mochimatch_postgres_dev_data:
     driver: local

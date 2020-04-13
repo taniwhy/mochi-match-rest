@@ -6,17 +6,17 @@ import (
 	"os"
 
 	"github.com/gin-contrib/cors"
-	"github.com/gin-gonic/contrib/sessions"
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
+	"github.com/taniwhy/mochi-match-rest/config"
+	"github.com/taniwhy/mochi-match-rest/interface/handler"
 )
 
-// InitRouter :　ルーティングのセットアップ
+// InitRouter :　ルーティング
 func InitRouter(conn *gorm.DB) *gin.Engine {
-	store, err := sessions.NewRedisStore(10, "tcp", "mochi-match-redis:6379", "", []byte("secret"))
-	if err != nil {
-		panic(err.Error())
-	}
+	googleAuthHandler := handler.NewGoogleOAuthHandler()
+	store := config.NewRedisStore()
 	fmt.Print(conn)
 	f, err := os.Create("./config/log/access.log")
 	if err != nil {
@@ -36,5 +36,14 @@ func InitRouter(conn *gorm.DB) *gin.Engine {
 	r.Use(sessions.Sessions("session", store))
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
+
+	v1 := r.Group("/v1")
+	auth := v1.Group("/auth")
+	google := auth.Group("/google")
+	{
+		google.GET("/login", googleAuthHandler.Login)
+		google.GET("/callback", googleAuthHandler.Callback)
+	}
+
 	return r
 }

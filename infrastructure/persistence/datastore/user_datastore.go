@@ -25,8 +25,8 @@ func (uD userDatastore) FindAllUser() ([]*models.User, error) {
 	return users, nil
 }
 
-func (uD userDatastore) FindUserByID(ID int) (*models.User, error) {
-	User := models.User{ID: ID}
+func (uD userDatastore) FindUserByID(id int64) (*models.User, error) {
+	User := models.User{ID: id}
 	err := uD.db.Take(&User).Error
 	if err != nil {
 		return nil, err
@@ -34,24 +34,24 @@ func (uD userDatastore) FindUserByID(ID int) (*models.User, error) {
 	return &User, nil
 }
 
-func (uD userDatastore) FindUserByProviderID(provider, providerID string) (*models.User, error) {
-	User := models.User{
+func (uD userDatastore) FindUserByProviderID(provider, id string) (*models.User, error) {
+	user := models.User{
 		Provider:   provider,
-		ProviderID: providerID,
+		ProviderID: id,
 	}
-	err := uD.db.Take(&User).Error
+	err := uD.db.Take(&user).Error
 	if err != nil {
 		return nil, err
 	}
-	return &User, nil
+	return &user, nil
 }
 
-func (uD userDatastore) InsertUser(User *models.User) error {
-	return uD.db.Create(User).Error
+func (uD userDatastore) InsertUser(user *models.User) error {
+	return uD.db.Create(user).Error
 }
 
-func (uD userDatastore) UpdateUser(User *models.User) error {
-	return uD.db.Updates(User).Error
+func (uD userDatastore) UpdateUser(user *models.User) error {
+	return uD.db.Updates(user).Error
 }
 
 func (uD userDatastore) DeleteUser(user *models.User) error {

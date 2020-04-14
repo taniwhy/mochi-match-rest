@@ -1,29 +1,29 @@
 package router
 
 import (
-	"fmt"
-	"io"
-	"os"
-
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
+	"github.com/taniwhy/mochi-match-rest/application/usecase"
 	"github.com/taniwhy/mochi-match-rest/infrastructure/dao"
+	"github.com/taniwhy/mochi-match-rest/infrastructure/persistence/datastore"
 	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/auth"
 )
 
 // InitRouter :　ルーティング
 func InitRouter(conn *gorm.DB) *gin.Engine {
-	googleAuthHandler := auth.NewGoogleOAuthHandler()
+	// DI
+	userStore := datastore.NewUserDatastore(conn)
+	userUsecase := usecase.NewUserUsecase(userStore)
+	googleAuthHandler := auth.NewGoogleOAuthHandler(userUsecase)
 
 	store := dao.NewRedisStore()
-	fmt.Print(conn)
-	f, err := os.Create("./config/log/access.log")
-	if err != nil {
-		panic(err.Error())
-	}
-	gin.DefaultWriter = io.MultiWriter(f)
+	//f, err := os.Create("./config/log/access.log")
+	//if err != nil {
+	//	panic(err.Error())
+	//}
+	//gin.DefaultWriter = io.MultiWriter(f)
 
 	corsConf := cors.DefaultConfig()
 
@@ -35,8 +35,6 @@ func InitRouter(conn *gorm.DB) *gin.Engine {
 	// add middleware
 	r.Use(cors.New(corsConf))
 	r.Use(sessions.Sessions("session", store))
-	r.Use(gin.Logger())
-	r.Use(gin.Recovery())
 
 	v1 := r.Group("/v1")
 	auth := v1.Group("/auth")

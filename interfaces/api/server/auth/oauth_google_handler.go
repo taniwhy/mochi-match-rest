@@ -11,21 +11,11 @@ import (
 	"github.com/google/uuid"
 	"github.com/taniwhy/mochi-match-rest/application/usecase"
 	"github.com/taniwhy/mochi-match-rest/config"
+	"github.com/taniwhy/mochi-match-rest/domain/models"
 	"golang.org/x/oauth2"
 )
 
 const oauthGoogleURLAPI = "https://www.googleapis.com/oauth2/v2/userinfo?access_token="
-
-type googleUser struct {
-	ID            string `json:"id"`
-	Email         string `json:"email"`
-	VerifiedEmail bool   `json:"verified_email"`
-	Name          string `json:"name"`
-	GivenName     string `json:"given_name"`
-	FamilyName    string `json:"family_name"`
-	Picture       string `json:"picture"`
-	Locale        string `json:"locale"`
-}
 
 // InterfaceGoogleOAuthHandler : todo
 type InterfaceGoogleOAuthHandler interface {
@@ -39,9 +29,10 @@ type googleOAuthHandler struct {
 }
 
 // NewGoogleOAuthHandler :
-func NewGoogleOAuthHandler() InterfaceGoogleOAuthHandler {
+func NewGoogleOAuthHandler(uU usecase.UserUseCase) InterfaceGoogleOAuthHandler {
 	return &googleOAuthHandler{
 		oauthConf: config.ConfigureOAuthClient(),
+		uU:        uU,
 	}
 }
 
@@ -92,21 +83,19 @@ func (gA *googleOAuthHandler) Callback(c *gin.Context) {
 		return
 	}
 
-	gU := googleUser{}
+	gU := models.GoogleUser{}
 	err = json.Unmarshal(data, &gU)
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
-	res, err := gA.uU.FindUserByProviderID("google", gU.ID)
-	if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, err)
-		return
-	}
+	// todo : errのpanic処理
+	res, _ := gA.uU.FindUserByProviderID("google", gU.ID)
 	if res != nil {
-		// todo
-		return
+		// ログインしリダイレクト
+		c.Writer.WriteString(`<!DOCTYPE html><html><body>ログイン完了</body></html>`)
 	}
-	return
+	// ユーザー登録ページにリダイレクト
+	c.Writer.WriteString(`<!DOCTYPE html><html><body>ユーザー登録ページです</body></html>`)
 }

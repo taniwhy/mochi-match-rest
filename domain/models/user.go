@@ -6,7 +6,7 @@ import (
 
 // User : usersテーブルモデル
 type User struct {
-	ID         int
+	ID         int64
 	Provider   string
 	ProviderID string
 	IsAdmin    bool

@@ -1,16 +1,39 @@
 package usecase
 
-import "github.com/taniwhy/mochi-match-rest/domain/repository"
+import (
+	"github.com/taniwhy/mochi-match-rest/domain/models"
+	"github.com/taniwhy/mochi-match-rest/domain/repository"
+)
 
-type UserUseCaseInterface interface {
+// UserUseCase :
+type UserUseCase interface {
+	FindUserByProviderID(provider string, id string) (*models.User, error)
+	CreateUser(user models.User) (*models.User, error)
 }
 
 type userUsecase struct {
 	userRepository repository.UserRepository
 }
 
-func NewUserUsecase(uR repository.UserRepository) UserUseCaseInterface {
+// NewUserUsecase :
+func NewUserUsecase(uR repository.UserRepository) UserUseCase {
 	return &userUsecase{
 		userRepository: uR,
 	}
+}
+
+func (uU userUsecase) FindUserByProviderID(provider string, id string) (*models.User, error) {
+	user, err := uU.userRepository.FindUserByProviderID(provider, id)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
+}
+
+func (uU userUsecase) CreateUser(user models.User) (*models.User, error) {
+	user, err := uU.userRepository.InsertUser(user)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
 }

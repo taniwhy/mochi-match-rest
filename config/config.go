@@ -32,7 +32,7 @@ type config struct {
 	}
 }
 
-// Config : todo
+// config : todo
 var (
 	Config config
 )
@@ -56,6 +56,29 @@ func InitConf() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
+}
+
+// GetDatabaseConf :
+func GetDatabaseConf() (dsn string) {
+	HOST := Config.Database.Host
+	PORT := Config.Database.Port
+	USER := Config.Database.User
+	PASS := Config.Database.Pass
+	DBNAME := Config.Database.DBName
+	dsn = fmt.Sprintf(
+		"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", HOST, PORT, USER, PASS, DBNAME,
+	)
+	return
+}
+
+// GetRedisConf :
+func GetRedisConf() (size int, network, addr, pass, key string) {
+	size = Config.Redis.Size
+	network = Config.Redis.Network
+	addr = Config.Redis.Addr
+	pass = Config.Redis.Pass
+	key = Config.Redis.Key
+	return
 }
 
 // ConfigureOAuthClient :

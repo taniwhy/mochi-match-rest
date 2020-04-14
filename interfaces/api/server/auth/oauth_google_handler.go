@@ -1,6 +1,7 @@
-package handler
+package auth
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -8,11 +9,23 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"github.com/taniwhy/mochi-match-rest/application/usecase"
 	"github.com/taniwhy/mochi-match-rest/config"
 	"golang.org/x/oauth2"
 )
 
 const oauthGoogleURLAPI = "https://www.googleapis.com/oauth2/v2/userinfo?access_token="
+
+type googleUser struct {
+	ID            string `json:"id"`
+	Email         string `json:"email"`
+	VerifiedEmail bool   `json:"verified_email"`
+	Name          string `json:"name"`
+	GivenName     string `json:"given_name"`
+	FamilyName    string `json:"family_name"`
+	Picture       string `json:"picture"`
+	Locale        string `json:"locale"`
+}
 
 // InterfaceGoogleOAuthHandler : todo
 type InterfaceGoogleOAuthHandler interface {
@@ -22,6 +35,7 @@ type InterfaceGoogleOAuthHandler interface {
 
 type googleOAuthHandler struct {
 	oauthConf *oauth2.Config
+	uU        usecase.UserUseCase
 }
 
 // NewGoogleOAuthHandler :
@@ -72,6 +86,27 @@ func (gA *googleOAuthHandler) Callback(c *gin.Context) {
 	}
 	defer email.Body.Close()
 
-	data, _ := ioutil.ReadAll(email.Body)
-	c.JSON(http.StatusOK, string(data))
+	data, err := ioutil.ReadAll(email.Body)
+	if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+
+	gU := googleUser{}
+	err = json.Unmarshal(data, &gU)
+	if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+
+	res, err := gA.uU.FindUserByProviderID("google", gU.ID)
+	if err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+	if res != nil {
+		// todo
+		return
+	}
+	return
 }

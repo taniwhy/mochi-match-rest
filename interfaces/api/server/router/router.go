@@ -9,16 +9,15 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
-	"github.com/taniwhy/mochi-match-rest/config"
-	"github.com/taniwhy/mochi-match-rest/interface/handler"
+	"github.com/taniwhy/mochi-match-rest/infrastructure/dao"
+	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/auth"
 )
 
 // InitRouter :　ルーティング
 func InitRouter(conn *gorm.DB) *gin.Engine {
-	googleAuthHandler := handler.NewGoogleOAuthHandler()
-	userHandler := handler.NewUserHandler(conn)
+	googleAuthHandler := auth.NewGoogleOAuthHandler()
 
-	store := config.NewRedisStore()
+	store := dao.NewRedisStore()
 	fmt.Print(conn)
 	f, err := os.Create("./config/log/access.log")
 	if err != nil {

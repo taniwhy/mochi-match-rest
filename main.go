@@ -6,7 +6,8 @@ import (
 	"time"
 
 	"github.com/taniwhy/mochi-match-rest/config"
-	"github.com/taniwhy/mochi-match-rest/router"
+	"github.com/taniwhy/mochi-match-rest/infrastructure/dao"
+	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/router"
 )
 
 func init() {
@@ -16,7 +17,7 @@ func init() {
 }
 
 func main() {
-	conn := config.DBConn()
+	conn := dao.NewDatabase()
 	defer conn.Close()
 
 	routers := router.InitRouter(conn)

@@ -1,0 +1,272 @@
+@startuml
+
+package "models" {
+	class "ChatPost" as models.ChatPost <<V,Orchid>> {
+		+ID: int
+		+Room: int
+		+User: int
+		+Message: string
+		+CreatedAt: time.Time
+	}
+}
+
+
+
+package "models" {
+	class "EntryHistory" as models.EntryHistory <<V,Orchid>> {
+		+ID: int
+		+Room: int
+		+User: int
+		+EntryTime: time.Time
+		+UpdateAt: time.Time
+	}
+}
+
+
+
+package "models" {
+	class "FavorateGame" as models.FavorateGame <<V,Orchid>> {
+		+ID: int
+		+UserDetail: int
+		+GameTitle: int
+		+CreatedAt: time.Time
+	}
+}
+
+
+
+package "models" {
+	class "GameTitle" as models.GameTitle <<V,Orchid>> {
+		+ID: int
+		+GameTitle: int
+		+CreatedAt: time.Time
+		+UpdateAt: time.Time
+	}
+}
+
+
+
+package "models" {
+	class "GoogleUser" as models.GoogleUser <<V,Orchid>> {
+		+ID: string
+		+Email: string
+		+VerifiedEmail: bool
+		+Name: string
+		+GivenName: string
+		+FamilyName: string
+		+Picture: string
+		+Locale: string
+	}
+}
+
+
+
+package "models" {
+	class "Report" as models.Report <<V,Orchid>> {
+		+ID: int
+		+Caller: int
+		+Vaiolator: int
+		+VaiolationDetail: int
+		+ReportedRoom: int
+		+CreatedAt: time.Time
+	}
+}
+
+
+
+package "models" {
+	class "Room" as models.Room <<V,Orchid>> {
+		+ID: int
+		+RoomOwner: int
+		+GameTitle: int
+		+Capacity: int
+		+IsLock: bool
+		+CreatedAt: time.Time
+	}
+}
+
+
+
+package "models" {
+	class "RoomBlacklist" as models.RoomBlacklist <<V,Orchid>> {
+		+ID: int
+		+Room: int
+		+BlackUser: int
+		+CreatedAt: time.Time
+	}
+}
+
+
+
+package "models" {
+	class "RoomReservation" as models.RoomReservation <<V,Orchid>> {
+		+ID: int
+		+Room: int
+		+ReeasingTime: time.Time
+		+CreatedAt: time.Time
+	}
+}
+
+
+
+package "models" {
+	class "User" as models.User <<V,Orchid>> {
+		+ID: int64
+		+Provider: string
+		+ProviderID: string
+		+IsAdmin: bool
+		+IsFrozen: bool
+		+CreatedAt: time.Time
+		+UpdateAt: time.Time
+	}
+}
+
+
+
+package "models" {
+	class "UserDetail" as models.UserDetail <<V,Orchid>> {
+		+ID: int
+		+User: int
+		+UserName: string
+		+Icon: int
+		+UpdateAt: time.Time
+	}
+}
+
+
+
+package "repository" {
+	interface "UserRepository" as repository.UserRepository {
+		+DeleteUser(user: models.User): error
+		+FindAllUser(): (models.User, error)
+		+FindUserByID(id: int64): (models.User, error)
+		+FindUserByProviderID(provider: string, id: string): (models.User, error)
+		+InsertUser(user: models.User): error
+		+UpdateUser(user: models.User): error
+	}
+}
+
+
+	repository.UserRepository ..> models.User : <<use>> 
+	repository.UserRepository ..> error : <<return>> 
+	repository.UserRepository ..> error : <<return>> 
+	repository.UserRepository ..> models.User : <<return>> 
+	repository.UserRepository ..> error : <<return>> 
+	repository.UserRepository ..> models.User : <<return>> 
+	repository.UserRepository ..> error : <<return>> 
+	repository.UserRepository ..> models.User : <<use>> 
+	repository.UserRepository ..> error : <<return>> 
+	repository.UserRepository ..> models.User : <<use>> 
+	repository.UserRepository ..> error : <<return>> 
+
+package "auth" {
+	interface "InterfaceGoogleOAuthHandler" as auth.InterfaceGoogleOAuthHandler {
+		+Callback(c: gin.Context)
+		+Login(c: gin.Context)
+	}
+}
+
+
+
+package "auth" {
+	class "googleOAuthHandler" as auth.googleOAuthHandler <<E,#FFCC00>> {
+		-oauthConf: oauth2.Config
+		-uU: usecase.UserUseCase
+		+Login(c: gin.Context)
+		+Callback(c: gin.Context)
+	}
+}
+
+	auth.googleOAuthHandler --> usecase.UserUseCase
+
+
+package "handler" {
+	interface "UserHandler" as handler.UserHandler {
+		+Login(: gin.Context)
+	}
+}
+
+
+
+package "handler" {
+	class "userHandler" as handler.userHandler <<V,Orchid>> {
+		-userUseCase: usecase.UserUseCase
+		+Login(c: gin.Context)
+	}
+}
+
+	handler.userHandler --> usecase.UserUseCase
+
+
+package "usecase" {
+	interface "UserUseCase" as usecase.UserUseCase {
+		+CreateUser(user: models.User): error
+		+FindUserByProviderID(provider: string, id: string): (models.User, error)
+	}
+}
+
+
+	usecase.UserUseCase ..> models.User : <<use>> 
+	usecase.UserUseCase ..> error : <<return>> 
+	usecase.UserUseCase ..> models.User : <<return>> 
+	usecase.UserUseCase ..> error : <<return>> 
+
+package "usecase" {
+	class "userUsecase" as usecase.userUsecase <<V,Orchid>> {
+		-userRepository: repository.UserRepository
+		+FindUserByProviderID(provider: string, id: string): (models.User, error)
+		+CreateUser(user: models.User): error
+	}
+}
+
+	usecase.userUsecase --> repository.UserRepository
+
+	usecase.userUsecase ..> models.User : <<return>> 
+	usecase.userUsecase ..> error : <<return>> 
+	usecase.userUsecase ..> models.User : <<use>> 
+	usecase.userUsecase ..> error : <<return>> 
+
+package "config" {
+	class "config" as config.config <<V,Orchid>> {
+		+Database: struct{Host: string; Port: string; User: string; Pass: string; DBName: string}
+		+Redis: struct{Size: int; Network: string; Addr: string; Pass: string; Key: string}
+		+GoogleOAuth: struct{RedirectURL: string; ClientID: string; ClientSecret: string}
+	}
+}
+
+
+
+package "datastore" {
+	class "userDatastore" as datastore.userDatastore <<V,Orchid>> {
+		-db: gorm.DB
+		+FindAllUser(): (models.User, error)
+		+FindUserByID(id: int64): (models.User, error)
+		+FindUserByProviderID(provider: string, id: string): (models.User, error)
+		+InsertUser(user: models.User): error
+		+UpdateUser(user: models.User): error
+		+DeleteUser(user: models.User): error
+	}
+}
+
+
+	datastore.userDatastore ..> error : <<return>> 
+	datastore.userDatastore ..> models.User : <<return>> 
+	datastore.userDatastore ..> error : <<return>> 
+	datastore.userDatastore ..> models.User : <<return>> 
+	datastore.userDatastore ..> error : <<return>> 
+	datastore.userDatastore ..> models.User : <<use>> 
+	datastore.userDatastore ..> error : <<return>> 
+	datastore.userDatastore ..> models.User : <<use>> 
+	datastore.userDatastore ..> error : <<return>> 
+	datastore.userDatastore ..> models.User : <<use>> 
+	datastore.userDatastore ..> error : <<return>> 
+
+	auth.InterfaceGoogleOAuthHandler -up-|> handler.UserHandler
+	auth.googleOAuthHandler -up-|> auth.InterfaceGoogleOAuthHandler
+	auth.googleOAuthHandler -up-|> handler.UserHandler
+	handler.userHandler -up-|> handler.UserHandler
+	usecase.userUsecase -up-|> usecase.UserUseCase
+	datastore.userDatastore -up-|> repository.UserRepository
+
+
+@enduml

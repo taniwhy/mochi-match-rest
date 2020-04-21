@@ -8,7 +8,7 @@ import (
 // UserUseCase :
 type UserUseCase interface {
 	FindUserByProviderID(provider string, id string) (*models.User, error)
-	CreateUser(user models.User) (*models.User, error)
+	CreateUser(user *models.User) error
 }
 
 type userUsecase struct {
@@ -22,7 +22,7 @@ func NewUserUsecase(uR repository.UserRepository) UserUseCase {
 	}
 }
 
-func (uU userUsecase) FindUserByProviderID(provider string, id string) (*models.User, error) {
+func (uU userUsecase) FindUserByProviderID(provider, id string) (*models.User, error) {
 	user, err := uU.userRepository.FindUserByProviderID(provider, id)
 	if err != nil {
 		return nil, err
@@ -30,10 +30,10 @@ func (uU userUsecase) FindUserByProviderID(provider string, id string) (*models.
 	return user, nil
 }
 
-func (uU userUsecase) CreateUser(user models.User) (*models.User, error) {
-	user, err := uU.userRepository.InsertUser(user)
+func (uU userUsecase) CreateUser(user *models.User) error {
+	err := uU.userRepository.InsertUser(user)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return user, nil
+	return nil
 }

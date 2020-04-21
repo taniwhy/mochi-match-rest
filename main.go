@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 	"time"
 
@@ -12,8 +11,6 @@ import (
 
 func init() {
 	config.InitConf()
-	fmt.Println("1", config.Config.Database.DBName)
-	fmt.Println("2", config.Config.GoogleOAuth.ClientID)
 }
 
 func main() {

@@ -60,13 +60,13 @@ func InitConf() {
 
 // GetDatabaseConf :
 func GetDatabaseConf() (dsn string) {
-	HOST := Config.Database.Host
-	PORT := Config.Database.Port
-	USER := Config.Database.User
-	PASS := Config.Database.Pass
-	DBNAME := Config.Database.DBName
+	host := Config.Database.Host
+	port := Config.Database.Port
+	user := Config.Database.User
+	pass := Config.Database.Pass
+	dbname := Config.Database.DBName
 	dsn = fmt.Sprintf(
-		"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", HOST, PORT, USER, PASS, DBNAME,
+		"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", host, port, user, pass, dbname,
 	)
 	return
 }

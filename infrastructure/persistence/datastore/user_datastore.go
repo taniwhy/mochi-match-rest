@@ -35,10 +35,12 @@ func (uD userDatastore) FindUserByID(id int64) (*models.User, error) {
 }
 
 func (uD userDatastore) FindUserByProviderID(provider, id string) (*models.User, error) {
-	user := models.User{
-		Provider:   provider,
-		ProviderID: id,
+	user := models.User{}
+	switch provider {
+	case "google":
+		user.GoogleID = id
 	}
+
 	err := uD.db.Take(&user).Error
 	if err != nil {
 		return nil, err

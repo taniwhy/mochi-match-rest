@@ -7,8 +7,9 @@ import (
 // User : usersテーブルモデル
 type User struct {
 	ID         int64
-	Provider   string
-	ProviderID string
+	GoogleID   string
+	FacebookID string
+	TwitterID  string
 	IsAdmin    bool
 	IsFrozen   bool
 	CreatedAt  time.Time

@@ -8,6 +8,6 @@ import (
 type RoomReservation struct {
 	ID           int
 	Room         int
-	ReeasingTime time.Time
+	RelasingTime time.Time
 	CreatedAt    time.Time
 }

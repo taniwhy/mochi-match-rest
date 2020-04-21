@@ -1,6 +1,8 @@
 package router
 
 import (
+	"log"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -43,6 +45,33 @@ func InitRouter(conn *gorm.DB) *gin.Engine {
 		google.GET("/login", googleAuthHandler.Login)
 		google.GET("/callback", googleAuthHandler.Callback)
 	}
+	v1.Use(sessionCheck())
+	{
+		v1.GET("/", SigninFormRoute)
+	}
 
 	return r
+}
+
+func SigninFormRoute(g *gin.Context) {
+	g.String(200, "hello")
+}
+
+func sessionCheck() gin.HandlerFunc {
+	return func(c *gin.Context) {
+
+		session := sessions.Default(c)
+		retrievedState := session.Get("state")
+
+		// セッションがない場合、ログインフォームをだす
+		if retrievedState == nil {
+			log.Println("ログインしていません")
+			c.String(200, "ログインしてません")
+			c.Abort() // これがないと続けて処理されてしまう
+		} else {
+			c.String(200, "ログインしてます")
+			c.Next()
+		}
+		log.Println("ログインチェック終わり")
+	}
 }

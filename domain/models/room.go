@@ -6,7 +6,7 @@ import (
 
 // Room : roomテーブルモデル
 type Room struct {
-	ID        int
+	ID        int64
 	RoomOwner int
 	GameTitle int
 	Capacity  int

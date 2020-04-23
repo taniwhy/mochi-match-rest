@@ -8,7 +8,7 @@ import (
 type RoomRepository interface {
 	FindAllRoom() ([]*models.Room, error)
 	FindRoomByID(id int64) (*models.Room, error)
-	InsertRoomDetail(room *models.Room) error
-	UpdateRoomDetail(room *models.Room) error
-	DeleteRoomDetail(room *models.Room) error
+	InsertRoom(room *models.Room) error
+	UpdateRoom(room *models.Room) error
+	DeleteRoom(room *models.Room) error
 }

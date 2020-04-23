@@ -7,21 +7,37 @@ import (
 
 // UserHandler : インターフェース
 type UserHandler interface {
-	Login(*gin.Context)
+	GetUser(*gin.Context)
+	CreateUser(*gin.Context)
+	UpdateUser(*gin.Context)
+	DeleteUser(*gin.Context)
 }
 
 type userHandler struct {
-	userUseCase usecase.UserUseCase
+	userUsecase       usecase.UserUseCase
+	userDetailUsecase usecase.UserDetailUseCase
 }
 
 // NewUserHandler : ユーザーのHandler生成
-func NewUserHandler(uU usecase.UserUseCase) UserHandler {
+func NewUserHandler(uU usecase.UserUseCase, uDU usecase.UserDetailUseCase) UserHandler {
 	return &userHandler{
-		userUseCase: uU,
+		userUsecase:       uU,
+		userDetailUsecase: uDU,
 	}
 }
 
-// Login : GET /user/me-> ユーザーのデータを返す
-func (uh userHandler) Login(c *gin.Context) {
+func (uh userHandler) GetUser(c *gin.Context) {
+
+}
+
+func (uh userHandler) CreateUser(c *gin.Context) {
+
+}
+
+func (uh userHandler) UpdateUser(c *gin.Context) {
+
+}
+
+func (uh userHandler) DeleteUser(c *gin.Context) {
 
 }

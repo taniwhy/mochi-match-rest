@@ -1,5 +1,99 @@
 @startuml
 
+package "handler" {
+	interface "UserHandler" as handler.UserHandler {
+		+CreateUser(: gin.Context)
+		+DeleteUser(: gin.Context)
+		+GetUser(: gin.Context)
+		+UpdateUser(: gin.Context)
+	}
+}
+
+
+
+package "handler" {
+	class "userHandler" as handler.userHandler <<V,Orchid>> {
+		-userUsecase: usecase.UserUseCase
+		-userDetailUsecase: usecase.UserDetailUseCase
+		+GetUser(c: gin.Context)
+		+CreateUser(c: gin.Context)
+		+UpdateUser(c: gin.Context)
+		+DeleteUser(c: gin.Context)
+	}
+}
+
+	handler.userHandler --> usecase.UserUseCase
+	handler.userHandler --> usecase.UserDetailUseCase
+
+
+package "usecase" {
+	interface "UserDetailUseCase" as usecase.UserDetailUseCase {
+		+CreateUserDetail(userDetail: models.UserDetail): error
+		+DeleteUserDetail(userDetail: models.UserDetail): error
+		+FindUserDetailByID(id: int64): (models.UserDetail, error)
+		+UpdateUserDetail(userDetail: models.UserDetail): error
+	}
+}
+
+
+	usecase.UserDetailUseCase ..> models.UserDetail : <<use>> 
+	usecase.UserDetailUseCase ..> error : <<return>> 
+	usecase.UserDetailUseCase ..> models.UserDetail : <<use>> 
+	usecase.UserDetailUseCase ..> error : <<return>> 
+	usecase.UserDetailUseCase ..> models.UserDetail : <<return>> 
+	usecase.UserDetailUseCase ..> error : <<return>> 
+	usecase.UserDetailUseCase ..> models.UserDetail : <<use>> 
+	usecase.UserDetailUseCase ..> error : <<return>> 
+
+package "usecase" {
+	interface "UserUseCase" as usecase.UserUseCase {
+		+CreateUser(user: models.User): error
+		+FindUserByProviderID(provider: string, id: string): (models.User, error)
+	}
+}
+
+
+	usecase.UserUseCase ..> models.User : <<use>> 
+	usecase.UserUseCase ..> error : <<return>> 
+	usecase.UserUseCase ..> models.User : <<return>> 
+	usecase.UserUseCase ..> error : <<return>> 
+
+package "usecase" {
+	class "userDetailUsecase" as usecase.userDetailUsecase <<V,Orchid>> {
+		-userDetailRepository: repository.UserDetailRepository
+		+FindUserDetailByID(id: int64): (models.UserDetail, error)
+		+CreateUserDetail(userDetail: models.UserDetail): error
+		+UpdateUserDetail(userDetail: models.UserDetail): error
+		+DeleteUserDetail(userDetail: models.UserDetail): error
+	}
+}
+
+	usecase.userDetailUsecase --> repository.UserDetailRepository
+
+	usecase.userDetailUsecase ..> models.UserDetail : <<return>> 
+	usecase.userDetailUsecase ..> error : <<return>> 
+	usecase.userDetailUsecase ..> models.UserDetail : <<use>> 
+	usecase.userDetailUsecase ..> error : <<return>> 
+	usecase.userDetailUsecase ..> models.UserDetail : <<use>> 
+	usecase.userDetailUsecase ..> error : <<return>> 
+	usecase.userDetailUsecase ..> models.UserDetail : <<use>> 
+	usecase.userDetailUsecase ..> error : <<return>> 
+
+package "usecase" {
+	class "userUsecase" as usecase.userUsecase <<V,Orchid>> {
+		-userRepository: repository.UserRepository
+		+FindUserByProviderID(provider: string, id: string): (models.User, error)
+		+CreateUser(user: models.User): error
+	}
+}
+
+	usecase.userUsecase --> repository.UserRepository
+
+	usecase.userUsecase ..> models.User : <<return>> 
+	usecase.userUsecase ..> error : <<return>> 
+	usecase.userUsecase ..> models.User : <<use>> 
+	usecase.userUsecase ..> error : <<return>> 
+
 package "models" {
 	class "ChatPost" as models.ChatPost <<V,Orchid>> {
 		+ID: int
@@ -102,7 +196,7 @@ package "models" {
 	class "RoomReservation" as models.RoomReservation <<V,Orchid>> {
 		+ID: int
 		+Room: int
-		+ReeasingTime: time.Time
+		+RelasingTime: time.Time
 		+CreatedAt: time.Time
 	}
 }
@@ -112,8 +206,9 @@ package "models" {
 package "models" {
 	class "User" as models.User <<V,Orchid>> {
 		+ID: int64
-		+Provider: string
-		+ProviderID: string
+		+GoogleID: string
+		+FacebookID: string
+		+TwitterID: string
 		+IsAdmin: bool
 		+IsFrozen: bool
 		+CreatedAt: time.Time
@@ -125,8 +220,8 @@ package "models" {
 
 package "models" {
 	class "UserDetail" as models.UserDetail <<V,Orchid>> {
-		+ID: int
-		+User: int
+		+ID: int64
+		+User: int64
 		+UserName: string
 		+Icon: int
 		+UpdateAt: time.Time
@@ -134,30 +229,6 @@ package "models" {
 }
 
 
-
-package "repository" {
-	interface "UserRepository" as repository.UserRepository {
-		+DeleteUser(user: models.User): error
-		+FindAllUser(): (models.User, error)
-		+FindUserByID(id: int64): (models.User, error)
-		+FindUserByProviderID(provider: string, id: string): (models.User, error)
-		+InsertUser(user: models.User): error
-		+UpdateUser(user: models.User): error
-	}
-}
-
-
-	repository.UserRepository ..> models.User : <<use>> 
-	repository.UserRepository ..> error : <<return>> 
-	repository.UserRepository ..> error : <<return>> 
-	repository.UserRepository ..> models.User : <<return>> 
-	repository.UserRepository ..> error : <<return>> 
-	repository.UserRepository ..> models.User : <<return>> 
-	repository.UserRepository ..> error : <<return>> 
-	repository.UserRepository ..> models.User : <<use>> 
-	repository.UserRepository ..> error : <<return>> 
-	repository.UserRepository ..> models.User : <<use>> 
-	repository.UserRepository ..> error : <<return>> 
 
 package "auth" {
 	interface "InterfaceGoogleOAuthHandler" as auth.InterfaceGoogleOAuthHandler {
@@ -178,62 +249,6 @@ package "auth" {
 }
 
 	auth.googleOAuthHandler --> usecase.UserUseCase
-
-
-package "handler" {
-	interface "UserHandler" as handler.UserHandler {
-		+Login(: gin.Context)
-	}
-}
-
-
-
-package "handler" {
-	class "userHandler" as handler.userHandler <<V,Orchid>> {
-		-userUseCase: usecase.UserUseCase
-		+Login(c: gin.Context)
-	}
-}
-
-	handler.userHandler --> usecase.UserUseCase
-
-
-package "usecase" {
-	interface "UserUseCase" as usecase.UserUseCase {
-		+CreateUser(user: models.User): error
-		+FindUserByProviderID(provider: string, id: string): (models.User, error)
-	}
-}
-
-
-	usecase.UserUseCase ..> models.User : <<use>> 
-	usecase.UserUseCase ..> error : <<return>> 
-	usecase.UserUseCase ..> models.User : <<return>> 
-	usecase.UserUseCase ..> error : <<return>> 
-
-package "usecase" {
-	class "userUsecase" as usecase.userUsecase <<V,Orchid>> {
-		-userRepository: repository.UserRepository
-		+FindUserByProviderID(provider: string, id: string): (models.User, error)
-		+CreateUser(user: models.User): error
-	}
-}
-
-	usecase.userUsecase --> repository.UserRepository
-
-	usecase.userUsecase ..> models.User : <<return>> 
-	usecase.userUsecase ..> error : <<return>> 
-	usecase.userUsecase ..> models.User : <<use>> 
-	usecase.userUsecase ..> error : <<return>> 
-
-package "config" {
-	class "config" as config.config <<V,Orchid>> {
-		+Database: struct{Host: string; Port: string; User: string; Pass: string; DBName: string}
-		+Redis: struct{Size: int; Network: string; Addr: string; Pass: string; Key: string}
-		+GoogleOAuth: struct{RedirectURL: string; ClientID: string; ClientSecret: string}
-	}
-}
-
 
 
 package "datastore" {
@@ -261,12 +276,89 @@ package "datastore" {
 	datastore.userDatastore ..> models.User : <<use>> 
 	datastore.userDatastore ..> error : <<return>> 
 
-	auth.InterfaceGoogleOAuthHandler -up-|> handler.UserHandler
-	auth.googleOAuthHandler -up-|> auth.InterfaceGoogleOAuthHandler
-	auth.googleOAuthHandler -up-|> handler.UserHandler
+package "datastore" {
+	class "userDetailDatastore" as datastore.userDetailDatastore <<V,Orchid>> {
+		-db: gorm.DB
+		+FindAllUserDetail(): (models.UserDetail, error)
+		+FindUserDetailByID(id: int64): (models.UserDetail, error)
+		+InsertUserDetail(userDetail: models.UserDetail): error
+		+UpdateUserDetail(userDetail: models.UserDetail): error
+		+DeleteUserDetail(userDetail: models.UserDetail): error
+	}
+}
+
+
+	datastore.userDetailDatastore ..> error : <<return>> 
+	datastore.userDetailDatastore ..> models.UserDetail : <<return>> 
+	datastore.userDetailDatastore ..> error : <<return>> 
+	datastore.userDetailDatastore ..> models.UserDetail : <<use>> 
+	datastore.userDetailDatastore ..> error : <<return>> 
+	datastore.userDetailDatastore ..> models.UserDetail : <<use>> 
+	datastore.userDetailDatastore ..> error : <<return>> 
+	datastore.userDetailDatastore ..> models.UserDetail : <<use>> 
+	datastore.userDetailDatastore ..> error : <<return>> 
+
+package "config" {
+	class "config" as config.config <<V,Orchid>> {
+		+Database: struct{Host: string; Port: string; User: string; Pass: string; DBName: string}
+		+Redis: struct{Size: int; Network: string; Addr: string; Pass: string; Key: string}
+		+GoogleOAuth: struct{RedirectURL: string; ClientID: string; ClientSecret: string}
+	}
+}
+
+
+
+package "repository" {
+	interface "UserDetailRepository" as repository.UserDetailRepository {
+		+DeleteUserDetail(userDetail: models.UserDetail): error
+		+FindAllUserDetail(): (models.UserDetail, error)
+		+FindUserDetailByID(id: int64): (models.UserDetail, error)
+		+InsertUserDetail(userDetail: models.UserDetail): error
+		+UpdateUserDetail(userDetail: models.UserDetail): error
+	}
+}
+
+
+	repository.UserDetailRepository ..> models.UserDetail : <<use>> 
+	repository.UserDetailRepository ..> error : <<return>> 
+	repository.UserDetailRepository ..> error : <<return>> 
+	repository.UserDetailRepository ..> models.UserDetail : <<return>> 
+	repository.UserDetailRepository ..> error : <<return>> 
+	repository.UserDetailRepository ..> models.UserDetail : <<use>> 
+	repository.UserDetailRepository ..> error : <<return>> 
+	repository.UserDetailRepository ..> models.UserDetail : <<use>> 
+	repository.UserDetailRepository ..> error : <<return>> 
+
+package "repository" {
+	interface "UserRepository" as repository.UserRepository {
+		+DeleteUser(user: models.User): error
+		+FindAllUser(): (models.User, error)
+		+FindUserByID(id: int64): (models.User, error)
+		+FindUserByProviderID(provider: string, id: string): (models.User, error)
+		+InsertUser(user: models.User): error
+		+UpdateUser(user: models.User): error
+	}
+}
+
+
+	repository.UserRepository ..> models.User : <<use>> 
+	repository.UserRepository ..> error : <<return>> 
+	repository.UserRepository ..> error : <<return>> 
+	repository.UserRepository ..> models.User : <<return>> 
+	repository.UserRepository ..> error : <<return>> 
+	repository.UserRepository ..> models.User : <<return>> 
+	repository.UserRepository ..> error : <<return>> 
+	repository.UserRepository ..> models.User : <<use>> 
+	repository.UserRepository ..> error : <<return>> 
+	repository.UserRepository ..> models.User : <<use>> 
+	repository.UserRepository ..> error : <<return>> 
+
 	handler.userHandler -up-|> handler.UserHandler
+	usecase.userDetailUsecase -up-|> usecase.UserDetailUseCase
 	usecase.userUsecase -up-|> usecase.UserUseCase
+	auth.googleOAuthHandler -up-|> auth.InterfaceGoogleOAuthHandler
 	datastore.userDatastore -up-|> repository.UserRepository
+	datastore.userDetailDatastore -up-|> repository.UserDetailRepository
 
 
 @enduml

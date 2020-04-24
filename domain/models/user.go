@@ -12,6 +12,7 @@ type User struct {
 	TwitterID  string
 	IsAdmin    bool
 	IsFrozen   bool
+	IsDelete   bool
 	CreatedAt  time.Time
 	UpdateAt   time.Time
 }

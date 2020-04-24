@@ -7,7 +7,7 @@ import (
 
 // UserUseCase :
 type UserUseCase interface {
-	FindUserByProviderID(provider string, id string) (*models.User, error)
+	FindUserByProviderID(provider, id string) (*models.User, error)
 	CreateUser(user *models.User) error
 }
 

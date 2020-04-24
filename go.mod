@@ -18,6 +18,7 @@ require (
 	github.com/labstack/gommon v0.3.0 // indirect
 	github.com/satori/go.uuid v1.2.0 // indirect
 	github.com/spf13/viper v1.6.3
+	github.com/taniwhy/task-manager-api v0.0.0-20200316002504-399659419481
 	github.com/urfave/cli v1.22.4 // indirect
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
 )

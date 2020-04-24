@@ -6,8 +6,8 @@ import (
 
 // RoomBlacklist : room_blacklistテーブルモデル
 type RoomBlacklist struct {
-	ID        int
-	Room      int
-	BlackUser int
+	ID        int64
+	Room      int64
+	BlackUser int64
 	CreatedAt time.Time
 }

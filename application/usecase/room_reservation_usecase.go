@@ -15,50 +15,50 @@ type RoomReservationUseCase interface {
 }
 
 type roomReservationUsecase struct {
-	roomRepository repository.RoomRepository
+	roomReservationRepository repository.RoomReservationRepository
 }
 
 // NewRoomReservationUsecase :
-func NewRoomReservationUsecase(rR repository.RoomRepository) RoomUseCase {
-	return &roomUsecase{
-		roomRepository: rR,
+func NewRoomReservationUsecase(rR repository.RoomReservationRepository) RoomReservationUseCase {
+	return &roomReservationUsecase{
+		roomReservationRepository: rR,
 	}
 }
 
-func (rU roomReservationUsecase) FindAllRoomReservation() ([]*models.Room, error) {
-	rooms, err := rU.roomRepository.FindAllRoom()
+func (rU roomReservationUsecase) FindAllRoomReservation() ([]*models.RoomReservation, error) {
+	roomReservations, err := rU.roomReservationRepository.FindAllRoomReservation()
 	if err != nil {
 		return nil, err
 	}
-	return rooms, nil
+	return roomReservations, nil
 }
 
-func (rU roomReservationUsecase) FindRoomReservationByID(id int64) (*models.Room, error) {
-	room, err := rU.roomRepository.FindRoomByID(id)
+func (rU roomReservationUsecase) FindRoomReservationByID(id int64) (*models.RoomReservation, error) {
+	roomReservation, err := rU.roomReservationRepository.FindRoomReservationByID(id)
 	if err != nil {
 		return nil, err
 	}
-	return room, nil
+	return roomReservation, nil
 }
 
-func (rU roomReservationUsecase) InsertRoomReservation(room *models.Room) error {
-	err := rU.roomRepository.InsertRoom(room)
+func (rU roomReservationUsecase) InsertRoomReservation(roomReservation *models.RoomReservation) error {
+	err := rU.roomReservationRepository.InsertRoomReservation(roomReservation)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (rU roomReservationUsecase) UpdateRoomReservation(room *models.Room) error {
-	err := rU.roomRepository.UpdateRoom(room)
+func (rU roomReservationUsecase) UpdateRoomReservation(room *models.RoomReservation) error {
+	err := rU.roomReservationRepository.UpdateRoomReservation(room)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (rU roomReservationUsecase) DeleteRoomReservation(room *models.Room) error {
-	err := rU.roomRepository.DeleteRoom(room)
+func (rU roomReservationUsecase) DeleteRoomReservation(room *models.RoomReservation) error {
+	err := rU.roomReservationRepository.DeleteRoomReservation(room)
 	if err != nil {
 		return err
 	}

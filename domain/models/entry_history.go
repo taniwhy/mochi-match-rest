@@ -9,6 +9,8 @@ type EntryHistory struct {
 	ID        int
 	Room      int
 	User      int
+	IsLeave   bool
 	EntryTime time.Time
-	UpdateAt  time.Time
+	LeaveTime time.Time
+	CreatedAt time.Time
 }

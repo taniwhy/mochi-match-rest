@@ -1,106 +1,4 @@
 @startuml
-title APIServer
-package "datastore" {
-	class "chatPostDatastore" as datastore.chatPostDatastore <<V,Orchid>> {
-		-db: gorm.DB
-		+FindAllChatPost(): (models.ChatPost, error)
-		+FindChatPostByRoomID(id: int64): (models.ChatPost, error)
-		+InsertChatPost(chatpost: models.ChatPost): error
-		+DeleteChatPost(chatpost: models.ChatPost): error
-	}
-}
-
-	datastore.chatPostDatastore ..> models.ChatPost : <<use>> 
-
-package "datastore" {
-	class "roomBlacklistDatastore" as datastore.roomBlacklistDatastore <<V,Orchid>> {
-		-db: gorm.DB
-		+FindAllBlacklist(): (models.RoomBlacklist, error)
-		+FindBlacklistByID(id: int64): (models.RoomBlacklist, error)
-		+InsertBlacklist(blacklist: models.RoomBlacklist): error
-		+DeleteBlacklist(blacklist: models.RoomBlacklist): error
-	}
-}
-
-
-	datastore.roomBlacklistDatastore ..> models.RoomBlacklist : <<use>> 
-
-package "datastore" {
-	class "roomDatastore" as datastore.roomDatastore <<V,Orchid>> {
-		-db: gorm.DB
-		+FindAllRoom(): (models.Room, error)
-		+FindRoomByID(id: int64): (models.Room, error)
-		+InsertRoom(room: models.Room): error
-		+UpdateRoom(room: models.Room): error
-		+DeleteRoom(room: models.Room): error
-	}
-}
-
-	datastore.roomDatastore ..> models.Room : <<use>> 
-
-package "datastore" {
-	class "roomReservationDatastore" as datastore.roomReservationDatastore <<V,Orchid>> {
-		-db: gorm.DB
-		+FindAllRoomReservation(): (models.RoomReservation, error)
-		+FindRoomReservationByID(id: int64): (models.RoomReservation, error)
-		+InsertRoomReservation(roomReservation: models.RoomReservation): error
-		+UpdateRoomReservation(roomReservation: models.RoomReservation): error
-		+DeleteRoomReservation(roomReservation: models.RoomReservation): error
-	}
-}
-
-
-	datastore.roomReservationDatastore ..> models.RoomReservation : <<use>> 
-
-package "datastore" {
-	class "userDatastore" as datastore.userDatastore <<V,Orchid>> {
-		-db: gorm.DB
-		+FindAllUser(): (models.User, error)
-		+FindUserByID(id: int64): (models.User, error)
-		+FindUserByProviderID(provider: string, id: string): (models.User, error)
-		+InsertUser(user: models.User): error
-		+UpdateUser(user: models.User): error
-		+DeleteUser(user: models.User): error
-	}
-}
-
-
-	datastore.userDatastore ..> models.User : <<use>> 
-
-package "datastore" {
-	class "userDetailDatastore" as datastore.userDetailDatastore <<V,Orchid>> {
-		-db: gorm.DB
-		+FindAllUserDetail(): (models.UserDetail, error)
-		+FindUserDetailByID(id: int64): (models.UserDetail, error)
-		+InsertUserDetail(userDetail: models.UserDetail): error
-		+UpdateUserDetail(userDetail: models.UserDetail): error
-		+DeleteUserDetail(userDetail: models.UserDetail): error
-	}
-}
-
-
-	datastore.userDetailDatastore ..> models.UserDetail : <<use>> 
-
-package "auth" {
-	interface "InterfaceGoogleOAuthHandler" as auth.InterfaceGoogleOAuthHandler {
-		+Callback(c: gin.Context)
-		+Login(c: gin.Context)
-	}
-}
-
-
-
-package "auth" {
-	class "googleOAuthHandler" as auth.googleOAuthHandler <<E,#FFCC00>> {
-		-oauthConf: oauth2.Config
-		-uU: usecase.UserUseCase
-		+Login(c: gin.Context)
-		+Callback(c: gin.Context)
-	}
-}
-
-	auth.googleOAuthHandler --> usecase.UserUseCase
-
 
 package "usecase" {
 	interface "ChatPostUseCase" as usecase.ChatPostUseCase {
@@ -113,6 +11,11 @@ package "usecase" {
 
 
 	usecase.ChatPostUseCase ..> models.ChatPost : <<use>> 
+	usecase.ChatPostUseCase ..> error : <<return>> 
+	usecase.ChatPostUseCase ..> error : <<return>> 
+	usecase.ChatPostUseCase ..> error : <<return>> 
+	usecase.ChatPostUseCase ..> models.ChatPost : <<use>> 
+	usecase.ChatPostUseCase ..> error : <<return>> 
 
 package "usecase" {
 	interface "RoomBlacklistUseCase" as usecase.RoomBlacklistUseCase {
@@ -125,6 +28,12 @@ package "usecase" {
 
 
 	usecase.RoomBlacklistUseCase ..> models.RoomBlacklist : <<use>> 
+	usecase.RoomBlacklistUseCase ..> error : <<return>> 
+	usecase.RoomBlacklistUseCase ..> error : <<return>> 
+	usecase.RoomBlacklistUseCase ..> models.RoomBlacklist : <<return>> 
+	usecase.RoomBlacklistUseCase ..> error : <<return>> 
+	usecase.RoomBlacklistUseCase ..> models.RoomBlacklist : <<use>> 
+	usecase.RoomBlacklistUseCase ..> error : <<return>> 
 
 package "usecase" {
 	interface "RoomReservationUseCase" as usecase.RoomReservationUseCase {
@@ -138,6 +47,14 @@ package "usecase" {
 
 
 	usecase.RoomReservationUseCase ..> models.RoomReservation : <<use>> 
+	usecase.RoomReservationUseCase ..> error : <<return>> 
+	usecase.RoomReservationUseCase ..> error : <<return>> 
+	usecase.RoomReservationUseCase ..> models.RoomReservation : <<return>> 
+	usecase.RoomReservationUseCase ..> error : <<return>> 
+	usecase.RoomReservationUseCase ..> models.RoomReservation : <<use>> 
+	usecase.RoomReservationUseCase ..> error : <<return>> 
+	usecase.RoomReservationUseCase ..> models.RoomReservation : <<use>> 
+	usecase.RoomReservationUseCase ..> error : <<return>> 
 
 package "usecase" {
 	interface "RoomUseCase" as usecase.RoomUseCase {
@@ -151,6 +68,14 @@ package "usecase" {
 
 
 	usecase.RoomUseCase ..> models.Room : <<use>> 
+	usecase.RoomUseCase ..> error : <<return>> 
+	usecase.RoomUseCase ..> error : <<return>> 
+	usecase.RoomUseCase ..> models.Room : <<return>> 
+	usecase.RoomUseCase ..> error : <<return>> 
+	usecase.RoomUseCase ..> models.Room : <<use>> 
+	usecase.RoomUseCase ..> error : <<return>> 
+	usecase.RoomUseCase ..> models.Room : <<use>> 
+	usecase.RoomUseCase ..> error : <<return>> 
 
 package "usecase" {
 	interface "UserDetailUseCase" as usecase.UserDetailUseCase {
@@ -163,6 +88,13 @@ package "usecase" {
 
 
 	usecase.UserDetailUseCase ..> models.UserDetail : <<use>> 
+	usecase.UserDetailUseCase ..> error : <<return>> 
+	usecase.UserDetailUseCase ..> models.UserDetail : <<use>> 
+	usecase.UserDetailUseCase ..> error : <<return>> 
+	usecase.UserDetailUseCase ..> models.UserDetail : <<return>> 
+	usecase.UserDetailUseCase ..> error : <<return>> 
+	usecase.UserDetailUseCase ..> models.UserDetail : <<use>> 
+	usecase.UserDetailUseCase ..> error : <<return>> 
 
 package "usecase" {
 	interface "UserUseCase" as usecase.UserUseCase {
@@ -173,6 +105,9 @@ package "usecase" {
 
 
 	usecase.UserUseCase ..> models.User : <<use>> 
+	usecase.UserUseCase ..> error : <<return>> 
+	usecase.UserUseCase ..> models.User : <<return>> 
+	usecase.UserUseCase ..> error : <<return>> 
 
 package "usecase" {
 	class "chatPostUsecase" as usecase.chatPostUsecase <<V,Orchid>> {
@@ -186,7 +121,12 @@ package "usecase" {
 
 	usecase.chatPostUsecase --> repository.ChatPostRepository
 
+	usecase.chatPostUsecase ..> error : <<return>> 
+	usecase.chatPostUsecase ..> error : <<return>> 
 	usecase.chatPostUsecase ..> models.ChatPost : <<use>> 
+	usecase.chatPostUsecase ..> error : <<return>> 
+	usecase.chatPostUsecase ..> models.ChatPost : <<use>> 
+	usecase.chatPostUsecase ..> error : <<return>> 
 
 package "usecase" {
 	class "roomBlacklistUsecase" as usecase.roomBlacklistUsecase <<V,Orchid>> {
@@ -200,22 +140,36 @@ package "usecase" {
 
 	usecase.roomBlacklistUsecase --> repository.RoomBlacklistRepository
 
+	usecase.roomBlacklistUsecase ..> error : <<return>> 
+	usecase.roomBlacklistUsecase ..> models.RoomBlacklist : <<return>> 
+	usecase.roomBlacklistUsecase ..> error : <<return>> 
 	usecase.roomBlacklistUsecase ..> models.RoomBlacklist : <<use>> 
+	usecase.roomBlacklistUsecase ..> error : <<return>> 
+	usecase.roomBlacklistUsecase ..> models.RoomBlacklist : <<use>> 
+	usecase.roomBlacklistUsecase ..> error : <<return>> 
 
 package "usecase" {
 	class "roomReservationUsecase" as usecase.roomReservationUsecase <<V,Orchid>> {
-		-roomRepository: repository.RoomRepository
-		+FindAllRoomReservation(): (models.Room, error)
-		+FindRoomReservationByID(id: int64): (models.Room, error)
-		+InsertRoomReservation(room: models.Room): error
-		+UpdateRoomReservation(room: models.Room): error
-		+DeleteRoomReservation(room: models.Room): error
+		-roomReservationRepository: repository.RoomReservationRepository
+		+FindAllRoomReservation(): (models.RoomReservation, error)
+		+FindRoomReservationByID(id: int64): (models.RoomReservation, error)
+		+InsertRoomReservation(roomReservation: models.RoomReservation): error
+		+UpdateRoomReservation(room: models.RoomReservation): error
+		+DeleteRoomReservation(room: models.RoomReservation): error
 	}
 }
 
-	usecase.roomReservationUsecase --> repository.RoomRepository
+	usecase.roomReservationUsecase --> repository.RoomReservationRepository
 
-	usecase.roomReservationUsecase ..> models.Room : <<use>> 
+	usecase.roomReservationUsecase ..> error : <<return>> 
+	usecase.roomReservationUsecase ..> models.RoomReservation : <<return>> 
+	usecase.roomReservationUsecase ..> error : <<return>> 
+	usecase.roomReservationUsecase ..> models.RoomReservation : <<use>> 
+	usecase.roomReservationUsecase ..> error : <<return>> 
+	usecase.roomReservationUsecase ..> models.RoomReservation : <<use>> 
+	usecase.roomReservationUsecase ..> error : <<return>> 
+	usecase.roomReservationUsecase ..> models.RoomReservation : <<use>> 
+	usecase.roomReservationUsecase ..> error : <<return>> 
 
 package "usecase" {
 	class "roomUsecase" as usecase.roomUsecase <<V,Orchid>> {
@@ -230,7 +184,15 @@ package "usecase" {
 
 	usecase.roomUsecase --> repository.RoomRepository
 
+	usecase.roomUsecase ..> error : <<return>> 
+	usecase.roomUsecase ..> models.Room : <<return>> 
+	usecase.roomUsecase ..> error : <<return>> 
 	usecase.roomUsecase ..> models.Room : <<use>> 
+	usecase.roomUsecase ..> error : <<return>> 
+	usecase.roomUsecase ..> models.Room : <<use>> 
+	usecase.roomUsecase ..> error : <<return>> 
+	usecase.roomUsecase ..> models.Room : <<use>> 
+	usecase.roomUsecase ..> error : <<return>> 
 
 package "usecase" {
 	class "userDetailUsecase" as usecase.userDetailUsecase <<V,Orchid>> {
@@ -244,7 +206,14 @@ package "usecase" {
 
 	usecase.userDetailUsecase --> repository.UserDetailRepository
 
+	usecase.userDetailUsecase ..> models.UserDetail : <<return>> 
+	usecase.userDetailUsecase ..> error : <<return>> 
 	usecase.userDetailUsecase ..> models.UserDetail : <<use>> 
+	usecase.userDetailUsecase ..> error : <<return>> 
+	usecase.userDetailUsecase ..> models.UserDetail : <<use>> 
+	usecase.userDetailUsecase ..> error : <<return>> 
+	usecase.userDetailUsecase ..> models.UserDetail : <<use>> 
+	usecase.userDetailUsecase ..> error : <<return>> 
 
 package "usecase" {
 	class "userUsecase" as usecase.userUsecase <<V,Orchid>> {
@@ -256,170 +225,10 @@ package "usecase" {
 
 	usecase.userUsecase --> repository.UserRepository
 
+	usecase.userUsecase ..> models.User : <<return>> 
+	usecase.userUsecase ..> error : <<return>> 
 	usecase.userUsecase ..> models.User : <<use>> 
-
-package "repository" {
-	interface "ChatPostRepository" as repository.ChatPostRepository {
-		+DeleteChatPost(room: models.ChatPost): error
-		+FindAllChatPost(): (models.ChatPost, error)
-		+FindChatPostByRoomID(id: int64): (models.ChatPost, error)
-		+InsertChatPost(room: models.ChatPost): error
-	}
-}
-
-
-	repository.ChatPostRepository ..> models.ChatPost : <<use>> 
-
-package "repository" {
-	interface "RoomBlacklistRepository" as repository.RoomBlacklistRepository {
-		+DeleteBlacklist(room: models.RoomBlacklist): error
-		+FindAllBlacklist(): (models.RoomBlacklist, error)
-		+FindBlacklistByID(id: int64): (models.RoomBlacklist, error)
-		+InsertBlacklist(room: models.RoomBlacklist): error
-	}
-}
-
-
-	repository.RoomBlacklistRepository ..> models.RoomBlacklist : <<use>> 
-
-package "repository" {
-	interface "RoomRepository" as repository.RoomRepository {
-		+DeleteRoom(room: models.Room): error
-		+FindAllRoom(): (models.Room, error)
-		+FindRoomByID(id: int64): (models.Room, error)
-		+InsertRoom(room: models.Room): error
-		+UpdateRoom(room: models.Room): error
-	}
-}
-
-
-	repository.RoomRepository ..> models.Room : <<use>> 
-
-package "repository" {
-	interface "RoomReservationRepository" as repository.RoomReservationRepository {
-		+DeleteRoomReservation(room: models.RoomReservation): error
-		+FindAllRoomReservation(): (models.RoomReservation, error)
-		+FindRoomReservationByID(id: int64): (models.RoomReservation, error)
-		+InsertRoomReservation(room: models.RoomReservation): error
-		+UpdateRoomReservation(room: models.RoomReservation): error
-	}
-}
-
-
-	repository.RoomReservationRepository ..> models.RoomReservation : <<use>> 
-
-package "repository" {
-	interface "UserDetailRepository" as repository.UserDetailRepository {
-		+DeleteUserDetail(userDetail: models.UserDetail): error
-		+FindAllUserDetail(): (models.UserDetail, error)
-		+FindUserDetailByID(id: int64): (models.UserDetail, error)
-		+InsertUserDetail(userDetail: models.UserDetail): error
-		+UpdateUserDetail(userDetail: models.UserDetail): error
-	}
-}
-
-
-	repository.UserDetailRepository ..> models.UserDetail : <<use>> 
-
-package "repository" {
-	interface "UserRepository" as repository.UserRepository {
-		+DeleteUser(user: models.User): error
-		+FindAllUser(): (models.User, error)
-		+FindUserByID(id: int64): (models.User, error)
-		+FindUserByProviderID(provider: string, id: string): (models.User, error)
-		+InsertUser(user: models.User): error
-		+UpdateUser(user: models.User): error
-	}
-}
-
-
-	repository.UserRepository ..> models.User : <<use>> 
-
-package "handler" {
-	interface "ChatPostHandler" as handler.ChatPostHandler {
-		+CreateChatPost(: gin.Context)
-		+GetChatPostByRoomID(: gin.Context)
-	}
-}
-
-
-
-package "handler" {
-	interface "RoomHandler" as handler.RoomHandler {
-		+CreateBlacklist(: gin.Context)
-		+CreateRoom(: gin.Context)
-		+GetAllRoom(: gin.Context)
-		+GetBlacklist(: gin.Context)
-		+GetRoomByID(: gin.Context)
-	}
-}
-
-
-
-package "handler" {
-	interface "UserHandler" as handler.UserHandler {
-		+CreateUser(: gin.Context)
-		+DeleteUser(: gin.Context)
-		+GetUser(: gin.Context)
-		+UpdateUser(: gin.Context)
-	}
-}
-
-
-
-package "handler" {
-	class "chatPostHandler" as handler.chatPostHandler <<V,Orchid>> {
-		-chatPostUsecase: usecase.ChatPostUseCase
-		+GetChatPostByRoomID(c: gin.Context)
-		+CreateChatPost(c: gin.Context)
-	}
-}
-
-	handler.chatPostHandler --> usecase.ChatPostUseCase
-
-
-package "handler" {
-	class "roomHandler" as handler.roomHandler <<V,Orchid>> {
-		-roomUsecase: usecase.RoomUseCase
-		-roomBlacklistUseCase: usecase.RoomBlacklistUseCase
-		-roomReservationUseCase: usecase.RoomReservationUseCase
-		+GetAllRoom(c: gin.Context)
-		+GetRoomByID(c: gin.Context)
-		+CreateRoom(c: gin.Context)
-		+GetBlacklist(c: gin.Context)
-		+CreateBlacklist(c: gin.Context)
-	}
-}
-
-	handler.roomHandler --> usecase.RoomUseCase
-	handler.roomHandler --> usecase.RoomBlacklistUseCase
-	handler.roomHandler --> usecase.RoomReservationUseCase
-
-
-package "handler" {
-	class "userHandler" as handler.userHandler <<V,Orchid>> {
-		-userUsecase: usecase.UserUseCase
-		-userDetailUsecase: usecase.UserDetailUseCase
-		+GetUser(c: gin.Context)
-		+CreateUser(c: gin.Context)
-		+UpdateUser(c: gin.Context)
-		+DeleteUser(c: gin.Context)
-	}
-}
-
-	handler.userHandler --> usecase.UserUseCase
-	handler.userHandler --> usecase.UserDetailUseCase
-
-
-package "config" {
-	class "config" as config.config <<V,Orchid>> {
-		+Database: struct{Host: string; Port: string; User: string; Pass: string; DBName: string}
-		+Redis: struct{Size: int; Network: string; Addr: string; Pass: string; Key: string}
-		+GoogleOAuth: struct{RedirectURL: string; ClientID: string; ClientSecret: string}
-	}
-}
-
-
+	usecase.userUsecase ..> error : <<return>> 
 
 package "models" {
 	class "ChatPost" as models.ChatPost <<V,Orchid>> {
@@ -438,8 +247,10 @@ package "models" {
 		+ID: int
 		+Room: int
 		+User: int
+		+IsLeave: bool
 		+EntryTime: time.Time
-		+UpdateAt: time.Time
+		+LeaveTime: time.Time
+		+CreatedAt: time.Time
 	}
 }
 
@@ -538,6 +349,7 @@ package "models" {
 		+TwitterID: string
 		+IsAdmin: bool
 		+IsFrozen: bool
+		+IsDelete: bool
 		+CreatedAt: time.Time
 		+UpdateAt: time.Time
 	}
@@ -557,6 +369,386 @@ package "models" {
 
 
 
+package "handler" {
+	interface "ChatPostHandler" as handler.ChatPostHandler {
+		+CreateChatPost(: gin.Context)
+		+GetChatPostByRoomID(: gin.Context)
+	}
+}
+
+
+
+package "handler" {
+	interface "RoomHandler" as handler.RoomHandler {
+		+CreateBlacklist(: gin.Context)
+		+CreateRoom(: gin.Context)
+		+GetBlacklist(: gin.Context)
+		+GetRoom(: gin.Context)
+		+GetRoomByID(: gin.Context)
+	}
+}
+
+
+
+package "handler" {
+	interface "UserHandler" as handler.UserHandler {
+		+CreateUser(: gin.Context)
+		+DeleteUser(: gin.Context)
+		+GetUser(: gin.Context)
+		+UpdateUser(: gin.Context)
+	}
+}
+
+
+
+package "handler" {
+	class "chatPostHandler" as handler.chatPostHandler <<V,Orchid>> {
+		-chatPostUsecase: usecase.ChatPostUseCase
+		+GetChatPostByRoomID(c: gin.Context)
+		+CreateChatPost(c: gin.Context)
+	}
+}
+
+	handler.chatPostHandler --> usecase.ChatPostUseCase
+
+
+package "handler" {
+	class "roomHandler" as handler.roomHandler <<V,Orchid>> {
+		-userUsecase: usecase.UserUseCase
+		-roomUsecase: usecase.RoomUseCase
+		-roomBlacklistUseCase: usecase.RoomBlacklistUseCase
+		-roomReservationUseCase: usecase.RoomReservationUseCase
+		+GetRoom(c: gin.Context)
+		+GetRoomByID(c: gin.Context)
+		+CreateRoom(c: gin.Context)
+		+GetBlacklist(c: gin.Context)
+		+CreateBlacklist(c: gin.Context)
+	}
+}
+
+	handler.roomHandler --> usecase.UserUseCase
+	handler.roomHandler --> usecase.RoomUseCase
+	handler.roomHandler --> usecase.RoomBlacklistUseCase
+	handler.roomHandler --> usecase.RoomReservationUseCase
+
+
+package "handler" {
+	class "userHandler" as handler.userHandler <<V,Orchid>> {
+		-userUsecase: usecase.UserUseCase
+		-userDetailUsecase: usecase.UserDetailUseCase
+		+GetUser(c: gin.Context)
+		+CreateUser(c: gin.Context)
+		+UpdateUser(c: gin.Context)
+		+DeleteUser(c: gin.Context)
+	}
+}
+
+	handler.userHandler --> usecase.UserUseCase
+	handler.userHandler --> usecase.UserDetailUseCase
+
+
+package "config" {
+	class "config" as config.config <<V,Orchid>> {
+		+Database: struct{Host: string; Port: string; User: string; Pass: string; DBName: string}
+		+Redis: struct{Size: int; Network: string; Addr: string; Pass: string; Key: string}
+		+GoogleOAuth: struct{RedirectURL: string; ClientID: string; ClientSecret: string}
+	}
+}
+
+
+
+package "repository" {
+	interface "ChatPostRepository" as repository.ChatPostRepository {
+		+DeleteChatPost(room: models.ChatPost): error
+		+FindAllChatPost(): (models.ChatPost, error)
+		+FindChatPostByRoomID(id: int64): (models.ChatPost, error)
+		+InsertChatPost(room: models.ChatPost): error
+	}
+}
+
+
+	repository.ChatPostRepository ..> models.ChatPost : <<use>> 
+	repository.ChatPostRepository ..> error : <<return>> 
+	repository.ChatPostRepository ..> error : <<return>> 
+	repository.ChatPostRepository ..> error : <<return>> 
+	repository.ChatPostRepository ..> models.ChatPost : <<use>> 
+	repository.ChatPostRepository ..> error : <<return>> 
+
+package "repository" {
+	interface "RoomBlacklistRepository" as repository.RoomBlacklistRepository {
+		+DeleteBlacklist(room: models.RoomBlacklist): error
+		+FindAllBlacklist(): (models.RoomBlacklist, error)
+		+FindBlacklistByID(id: int64): (models.RoomBlacklist, error)
+		+InsertBlacklist(room: models.RoomBlacklist): error
+	}
+}
+
+
+	repository.RoomBlacklistRepository ..> models.RoomBlacklist : <<use>> 
+	repository.RoomBlacklistRepository ..> error : <<return>> 
+	repository.RoomBlacklistRepository ..> error : <<return>> 
+	repository.RoomBlacklistRepository ..> models.RoomBlacklist : <<return>> 
+	repository.RoomBlacklistRepository ..> error : <<return>> 
+	repository.RoomBlacklistRepository ..> models.RoomBlacklist : <<use>> 
+	repository.RoomBlacklistRepository ..> error : <<return>> 
+
+package "repository" {
+	interface "RoomRepository" as repository.RoomRepository {
+		+DeleteRoom(room: models.Room): error
+		+FindAllRoom(): (models.Room, error)
+		+FindRoomByID(id: int64): (models.Room, error)
+		+InsertRoom(room: models.Room): error
+		+UpdateRoom(room: models.Room): error
+	}
+}
+
+
+	repository.RoomRepository ..> models.Room : <<use>> 
+	repository.RoomRepository ..> error : <<return>> 
+	repository.RoomRepository ..> error : <<return>> 
+	repository.RoomRepository ..> models.Room : <<return>> 
+	repository.RoomRepository ..> error : <<return>> 
+	repository.RoomRepository ..> models.Room : <<use>> 
+	repository.RoomRepository ..> error : <<return>> 
+	repository.RoomRepository ..> models.Room : <<use>> 
+	repository.RoomRepository ..> error : <<return>> 
+
+package "repository" {
+	interface "RoomReservationRepository" as repository.RoomReservationRepository {
+		+DeleteRoomReservation(room: models.RoomReservation): error
+		+FindAllRoomReservation(): (models.RoomReservation, error)
+		+FindRoomReservationByID(id: int64): (models.RoomReservation, error)
+		+InsertRoomReservation(room: models.RoomReservation): error
+		+UpdateRoomReservation(room: models.RoomReservation): error
+	}
+}
+
+
+	repository.RoomReservationRepository ..> models.RoomReservation : <<use>> 
+	repository.RoomReservationRepository ..> error : <<return>> 
+	repository.RoomReservationRepository ..> error : <<return>> 
+	repository.RoomReservationRepository ..> models.RoomReservation : <<return>> 
+	repository.RoomReservationRepository ..> error : <<return>> 
+	repository.RoomReservationRepository ..> models.RoomReservation : <<use>> 
+	repository.RoomReservationRepository ..> error : <<return>> 
+	repository.RoomReservationRepository ..> models.RoomReservation : <<use>> 
+	repository.RoomReservationRepository ..> error : <<return>> 
+
+package "repository" {
+	interface "UserDetailRepository" as repository.UserDetailRepository {
+		+DeleteUserDetail(userDetail: models.UserDetail): error
+		+FindAllUserDetail(): (models.UserDetail, error)
+		+FindUserDetailByID(id: int64): (models.UserDetail, error)
+		+InsertUserDetail(userDetail: models.UserDetail): error
+		+UpdateUserDetail(userDetail: models.UserDetail): error
+	}
+}
+
+
+	repository.UserDetailRepository ..> models.UserDetail : <<use>> 
+	repository.UserDetailRepository ..> error : <<return>> 
+	repository.UserDetailRepository ..> error : <<return>> 
+	repository.UserDetailRepository ..> models.UserDetail : <<return>> 
+	repository.UserDetailRepository ..> error : <<return>> 
+	repository.UserDetailRepository ..> models.UserDetail : <<use>> 
+	repository.UserDetailRepository ..> error : <<return>> 
+	repository.UserDetailRepository ..> models.UserDetail : <<use>> 
+	repository.UserDetailRepository ..> error : <<return>> 
+
+package "repository" {
+	interface "UserRepository" as repository.UserRepository {
+		+DeleteUser(user: models.User): error
+		+FindAllUser(): (models.User, error)
+		+FindUserByID(id: int64): (models.User, error)
+		+FindUserByProviderID(provider: string, id: string): (models.User, error)
+		+InsertUser(user: models.User): error
+		+UpdateUser(user: models.User): error
+	}
+}
+
+
+	repository.UserRepository ..> models.User : <<use>> 
+	repository.UserRepository ..> error : <<return>> 
+	repository.UserRepository ..> error : <<return>> 
+	repository.UserRepository ..> models.User : <<return>> 
+	repository.UserRepository ..> error : <<return>> 
+	repository.UserRepository ..> models.User : <<return>> 
+	repository.UserRepository ..> error : <<return>> 
+	repository.UserRepository ..> models.User : <<use>> 
+	repository.UserRepository ..> error : <<return>> 
+	repository.UserRepository ..> models.User : <<use>> 
+	repository.UserRepository ..> error : <<return>> 
+
+package "datastore" {
+	class "chatPostDatastore" as datastore.chatPostDatastore <<V,Orchid>> {
+		-db: gorm.DB
+		+FindAllChatPost(): (models.ChatPost, error)
+		+FindChatPostByRoomID(id: int64): (models.ChatPost, error)
+		+InsertChatPost(chatpost: models.ChatPost): error
+		+DeleteChatPost(chatpost: models.ChatPost): error
+	}
+}
+
+
+	datastore.chatPostDatastore ..> error : <<return>> 
+	datastore.chatPostDatastore ..> error : <<return>> 
+	datastore.chatPostDatastore ..> models.ChatPost : <<use>> 
+	datastore.chatPostDatastore ..> error : <<return>> 
+	datastore.chatPostDatastore ..> models.ChatPost : <<use>> 
+	datastore.chatPostDatastore ..> error : <<return>> 
+
+package "datastore" {
+	class "roomBlacklistDatastore" as datastore.roomBlacklistDatastore <<V,Orchid>> {
+		-db: gorm.DB
+		+FindAllBlacklist(): (models.RoomBlacklist, error)
+		+FindBlacklistByID(id: int64): (models.RoomBlacklist, error)
+		+InsertBlacklist(blacklist: models.RoomBlacklist): error
+		+DeleteBlacklist(blacklist: models.RoomBlacklist): error
+	}
+}
+
+
+	datastore.roomBlacklistDatastore ..> error : <<return>> 
+	datastore.roomBlacklistDatastore ..> models.RoomBlacklist : <<return>> 
+	datastore.roomBlacklistDatastore ..> error : <<return>> 
+	datastore.roomBlacklistDatastore ..> models.RoomBlacklist : <<use>> 
+	datastore.roomBlacklistDatastore ..> error : <<return>> 
+	datastore.roomBlacklistDatastore ..> models.RoomBlacklist : <<use>> 
+	datastore.roomBlacklistDatastore ..> error : <<return>> 
+
+package "datastore" {
+	class "roomDatastore" as datastore.roomDatastore <<V,Orchid>> {
+		-db: gorm.DB
+		+FindAllRoom(): (models.Room, error)
+		+FindRoomByID(id: int64): (models.Room, error)
+		+InsertRoom(room: models.Room): error
+		+UpdateRoom(room: models.Room): error
+		+DeleteRoom(room: models.Room): error
+	}
+}
+
+
+	datastore.roomDatastore ..> error : <<return>> 
+	datastore.roomDatastore ..> models.Room : <<return>> 
+	datastore.roomDatastore ..> error : <<return>> 
+	datastore.roomDatastore ..> models.Room : <<use>> 
+	datastore.roomDatastore ..> error : <<return>> 
+	datastore.roomDatastore ..> models.Room : <<use>> 
+	datastore.roomDatastore ..> error : <<return>> 
+	datastore.roomDatastore ..> models.Room : <<use>> 
+	datastore.roomDatastore ..> error : <<return>> 
+
+package "datastore" {
+	class "roomReservationDatastore" as datastore.roomReservationDatastore <<V,Orchid>> {
+		-db: gorm.DB
+		+FindAllRoomReservation(): (models.RoomReservation, error)
+		+FindRoomReservationByID(id: int64): (models.RoomReservation, error)
+		+InsertRoomReservation(roomReservation: models.RoomReservation): error
+		+UpdateRoomReservation(roomReservation: models.RoomReservation): error
+		+DeleteRoomReservation(roomReservation: models.RoomReservation): error
+	}
+}
+
+
+	datastore.roomReservationDatastore ..> error : <<return>> 
+	datastore.roomReservationDatastore ..> models.RoomReservation : <<return>> 
+	datastore.roomReservationDatastore ..> error : <<return>> 
+	datastore.roomReservationDatastore ..> models.RoomReservation : <<use>> 
+	datastore.roomReservationDatastore ..> error : <<return>> 
+	datastore.roomReservationDatastore ..> models.RoomReservation : <<use>> 
+	datastore.roomReservationDatastore ..> error : <<return>> 
+	datastore.roomReservationDatastore ..> models.RoomReservation : <<use>> 
+	datastore.roomReservationDatastore ..> error : <<return>> 
+
+package "datastore" {
+	class "userDatastore" as datastore.userDatastore <<V,Orchid>> {
+		-db: gorm.DB
+		+FindAllUser(): (models.User, error)
+		+FindUserByID(id: int64): (models.User, error)
+		+FindUserByProviderID(provider: string, id: string): (models.User, error)
+		+InsertUser(user: models.User): error
+		+UpdateUser(user: models.User): error
+		+DeleteUser(user: models.User): error
+	}
+}
+
+
+	datastore.userDatastore ..> error : <<return>> 
+	datastore.userDatastore ..> models.User : <<return>> 
+	datastore.userDatastore ..> error : <<return>> 
+	datastore.userDatastore ..> models.User : <<return>> 
+	datastore.userDatastore ..> error : <<return>> 
+	datastore.userDatastore ..> models.User : <<use>> 
+	datastore.userDatastore ..> error : <<return>> 
+	datastore.userDatastore ..> models.User : <<use>> 
+	datastore.userDatastore ..> error : <<return>> 
+	datastore.userDatastore ..> models.User : <<use>> 
+	datastore.userDatastore ..> error : <<return>> 
+
+package "datastore" {
+	class "userDetailDatastore" as datastore.userDetailDatastore <<V,Orchid>> {
+		-db: gorm.DB
+		+FindAllUserDetail(): (models.UserDetail, error)
+		+FindUserDetailByID(id: int64): (models.UserDetail, error)
+		+InsertUserDetail(userDetail: models.UserDetail): error
+		+UpdateUserDetail(userDetail: models.UserDetail): error
+		+DeleteUserDetail(userDetail: models.UserDetail): error
+	}
+}
+
+
+	datastore.userDetailDatastore ..> error : <<return>> 
+	datastore.userDetailDatastore ..> models.UserDetail : <<return>> 
+	datastore.userDetailDatastore ..> error : <<return>> 
+	datastore.userDetailDatastore ..> models.UserDetail : <<use>> 
+	datastore.userDetailDatastore ..> error : <<return>> 
+	datastore.userDetailDatastore ..> models.UserDetail : <<use>> 
+	datastore.userDetailDatastore ..> error : <<return>> 
+	datastore.userDetailDatastore ..> models.UserDetail : <<use>> 
+	datastore.userDetailDatastore ..> error : <<return>> 
+
+package "auth" {
+	interface "InterfaceGoogleOAuthHandler" as auth.InterfaceGoogleOAuthHandler {
+		+Callback(c: gin.Context)
+		+Login(c: gin.Context)
+	}
+}
+
+
+
+package "auth" {
+	class "googleOAuthHandler" as auth.googleOAuthHandler <<E,#FFCC00>> {
+		-oauthConf: oauth2.Config
+		-uU: usecase.UserUseCase
+		+Login(c: gin.Context)
+		+Callback(c: gin.Context)
+	}
+}
+
+	auth.googleOAuthHandler --> usecase.UserUseCase
+
+
+	usecase.ChatPostUseCase -up-|> repository.ChatPostRepository
+	usecase.RoomBlacklistUseCase -up-|> repository.RoomBlacklistRepository
+	usecase.RoomReservationUseCase -up-|> repository.RoomReservationRepository
+	usecase.RoomUseCase -up-|> repository.RoomRepository
+	usecase.chatPostUsecase -up-|> usecase.ChatPostUseCase
+	usecase.chatPostUsecase -up-|> repository.ChatPostRepository
+	usecase.roomBlacklistUsecase -up-|> usecase.RoomBlacklistUseCase
+	usecase.roomBlacklistUsecase -up-|> repository.RoomBlacklistRepository
+	usecase.roomReservationUsecase -up-|> usecase.RoomReservationUseCase
+	usecase.roomReservationUsecase -up-|> repository.RoomReservationRepository
+	usecase.roomUsecase -up-|> usecase.RoomUseCase
+	usecase.roomUsecase -up-|> repository.RoomRepository
+	usecase.userDetailUsecase -up-|> usecase.UserDetailUseCase
+	usecase.userUsecase -up-|> usecase.UserUseCase
+	handler.chatPostHandler -up-|> handler.ChatPostHandler
+	handler.roomHandler -up-|> handler.RoomHandler
+	handler.userHandler -up-|> handler.UserHandler
+	repository.ChatPostRepository -up-|> usecase.ChatPostUseCase
+	repository.RoomBlacklistRepository -up-|> usecase.RoomBlacklistUseCase
+	repository.RoomRepository -up-|> usecase.RoomUseCase
+	repository.RoomReservationRepository -up-|> usecase.RoomReservationUseCase
 	datastore.chatPostDatastore -up-|> usecase.ChatPostUseCase
 	datastore.chatPostDatastore -up-|> repository.ChatPostRepository
 	datastore.roomBlacklistDatastore -up-|> usecase.RoomBlacklistUseCase
@@ -568,25 +760,6 @@ package "models" {
 	datastore.userDatastore -up-|> repository.UserRepository
 	datastore.userDetailDatastore -up-|> repository.UserDetailRepository
 	auth.googleOAuthHandler -up-|> auth.InterfaceGoogleOAuthHandler
-	usecase.ChatPostUseCase -up-|> repository.ChatPostRepository
-	usecase.RoomBlacklistUseCase -up-|> repository.RoomBlacklistRepository
-	usecase.RoomReservationUseCase -up-|> repository.RoomReservationRepository
-	usecase.RoomUseCase -up-|> repository.RoomRepository
-	usecase.chatPostUsecase -up-|> usecase.ChatPostUseCase
-	usecase.chatPostUsecase -up-|> repository.ChatPostRepository
-	usecase.roomBlacklistUsecase -up-|> usecase.RoomBlacklistUseCase
-	usecase.roomBlacklistUsecase -up-|> repository.RoomBlacklistRepository
-	usecase.roomUsecase -up-|> usecase.RoomUseCase
-	usecase.roomUsecase -up-|> repository.RoomRepository
-	usecase.userDetailUsecase -up-|> usecase.UserDetailUseCase
-	usecase.userUsecase -up-|> usecase.UserUseCase
-	repository.ChatPostRepository -up-|> usecase.ChatPostUseCase
-	repository.RoomBlacklistRepository -up-|> usecase.RoomBlacklistUseCase
-	repository.RoomRepository -up-|> usecase.RoomUseCase
-	repository.RoomReservationRepository -up-|> usecase.RoomReservationUseCase
-	handler.chatPostHandler -up-|> handler.ChatPostHandler
-	handler.roomHandler -up-|> handler.RoomHandler
-	handler.userHandler -up-|> handler.UserHandler
 
 
 @enduml

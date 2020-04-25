@@ -19,9 +19,6 @@ clean:
 run:
 	$(GOBUILD) -o $(BINARY_NAME) -v ./main.go
 	./$(BINARY_NAME)
-deps:
-	$(GOGET) github.com/markbates/goth
-	$(GOGET) github.com/markbates/pop
 
 # クロスコンパイル
 build-linux:

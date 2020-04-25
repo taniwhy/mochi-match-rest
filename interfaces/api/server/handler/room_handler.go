@@ -7,7 +7,7 @@ import (
 
 // RoomHandler : インターフェース
 type RoomHandler interface {
-	GetAllRoom(*gin.Context)
+	GetRoom(*gin.Context)
 	GetRoomByID(*gin.Context)
 	CreateRoom(*gin.Context)
 	GetBlacklist(*gin.Context)
@@ -15,6 +15,7 @@ type RoomHandler interface {
 }
 
 type roomHandler struct {
+	userUsecase            usecase.UserUseCase
 	roomUsecase            usecase.RoomUseCase
 	roomBlacklistUseCase   usecase.RoomBlacklistUseCase
 	roomReservationUseCase usecase.RoomReservationUseCase
@@ -22,17 +23,19 @@ type roomHandler struct {
 
 // NewRoomHandler : ユーザーのHandler生成
 func NewRoomHandler(
+	uU usecase.UserUseCase,
 	rU usecase.RoomUseCase,
 	rBU usecase.RoomBlacklistUseCase,
 	rRU usecase.RoomReservationUseCase) RoomHandler {
 	return &roomHandler{
+		userUsecase:            uU,
 		roomUsecase:            rU,
 		roomBlacklistUseCase:   rBU,
 		roomReservationUseCase: rRU,
 	}
 }
 
-func (rH roomHandler) GetAllRoom(c *gin.Context) {
+func (rH roomHandler) GetRoom(c *gin.Context) {
 
 }
 

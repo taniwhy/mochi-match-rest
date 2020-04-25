@@ -1,8 +1,6 @@
 package router
 
 import (
-	"log"
-
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -11,13 +9,21 @@ import (
 	"github.com/taniwhy/mochi-match-rest/infrastructure/dao"
 	"github.com/taniwhy/mochi-match-rest/infrastructure/persistence/datastore"
 	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/auth"
+	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/handler"
 )
 
 // InitRouter :　ルーティング
 func InitRouter(conn *gorm.DB) *gin.Engine {
 	// DI
-	userStore := datastore.NewUserDatastore(conn)
-	userUsecase := usecase.NewUserUsecase(userStore)
+	userDatastore := datastore.NewUserDatastore(conn)
+	roomDatastore := datastore.NewRoomDatastore(conn)
+	roomBalacklistDatastore := datastore.NewRoomBlacklistDatastore(conn)
+	roomReservationDatastore := datastore.NewRoomReservationDatastore(conn)
+	userUsecase := usecase.NewUserUsecase(userDatastore)
+	roomUsecase := usecase.NewRoomUsecase(roomDatastore)
+	roomBlacklistUsecase := usecase.NewRoomBlacklistUsecase(roomBalacklistDatastore)
+	roomReservationUsecase := usecase.NewRoomReservationUsecase(roomReservationDatastore)
+	roomHandler := handler.NewRoomHandler(userUsecase, roomUsecase, roomBlacklistUsecase, roomReservationUsecase)
 	googleAuthHandler := auth.NewGoogleOAuthHandler(userUsecase)
 
 	store := dao.NewRedisStore()
@@ -45,33 +51,10 @@ func InitRouter(conn *gorm.DB) *gin.Engine {
 		google.GET("/login", googleAuthHandler.Login)
 		google.GET("/callback", googleAuthHandler.Callback)
 	}
-	v1.Use(sessionCheck())
+	room := v1.Group("/room")
 	{
-		v1.GET("/", SigninFormRoute)
+		room.GET("/list", roomHandler.GetRoom)
 	}
 
 	return r
-}
-
-func SigninFormRoute(g *gin.Context) {
-	g.String(200, "hello")
-}
-
-func sessionCheck() gin.HandlerFunc {
-	return func(c *gin.Context) {
-
-		session := sessions.Default(c)
-		retrievedState := session.Get("state")
-
-		// セッションがない場合、ログインフォームをだす
-		if retrievedState == nil {
-			log.Println("ログインしていません")
-			c.String(200, "ログインしてません")
-			c.Abort() // これがないと続けて処理されてしまう
-		} else {
-			c.String(200, "ログインしてます")
-			c.Next()
-		}
-		log.Println("ログインチェック終わり")
-	}
 }

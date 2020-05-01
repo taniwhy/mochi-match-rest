@@ -17,8 +17,8 @@ import (
 
 const oauthGoogleURLAPI = "https://www.googleapis.com/oauth2/v2/userinfo?access_token="
 
-// InterfaceGoogleOAuthHandler : todo
-type InterfaceGoogleOAuthHandler interface {
+// GoogleOAuthHandler : todo
+type GoogleOAuthHandler interface {
 	Login(c *gin.Context)
 	Callback(c *gin.Context)
 }
@@ -29,7 +29,7 @@ type googleOAuthHandler struct {
 }
 
 // NewGoogleOAuthHandler :
-func NewGoogleOAuthHandler(uU usecase.UserUseCase) InterfaceGoogleOAuthHandler {
+func NewGoogleOAuthHandler(uU usecase.UserUseCase) GoogleOAuthHandler {
 	return &googleOAuthHandler{
 		oauthConf: config.ConfigureOAuthClient(),
 		uU:        uU,

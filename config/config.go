@@ -41,7 +41,6 @@ var (
 func InitConf() {
 	viper.SetConfigName("config")
 	viper.SetConfigType("yml")
-	// ファイルパスの設定。クロスプラットフォームで参照できるようにfilepathライブラリを使用
 	viper.AddConfigPath(filepath.Join("$GOPATH", "src", "github.com", "taniwhy", "mochi-match-rest", "config"))
 	// 環境変数から設定値を上書きできるように設定
 	viper.AutomaticEnv()

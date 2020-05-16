@@ -6,8 +6,8 @@ import (
 
 // FavorateGame : favorate_gameテーブルモデル
 type FavorateGame struct {
-	ID         int
-	UserDetail int
-	GameTitle  int
-	CreatedAt  time.Time
+	ID           int
+	UserDetailID int
+	GameTitle    int
+	CreatedAt    time.Time
 }

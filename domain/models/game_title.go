@@ -7,7 +7,7 @@ import (
 // GameTitle : game_titleテーブルモデル
 type GameTitle struct {
 	ID        int
-	GameTitle int
+	GameTitle string
 	CreatedAt time.Time
 	UpdateAt  time.Time
 }

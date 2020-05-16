@@ -1,0 +1,115 @@
+@startuml
+title APIServer
+left to right direction
+
+namespace APIServer {
+
+  package "interfaces"{
+    package "handlers" {
+      class UserHandler
+      class RoomHandler
+    }
+    package "auth" {
+      class GoogleAuthHandler
+    }
+  }
+
+  package "application" {
+    package "usecase" {
+      class UserUsecase
+      class UserDetailUsecase
+      class RoomUsecase
+      class RoomReservationUsecase
+      class RoomBlacklistUsecase
+      class ReportUsecase
+      class GoogleUserUsecase
+      class GameTitleUsecase
+      class FavorateGameUsecase
+      class EntryHistoryUsecase
+      class ChatPostUsecase
+    }
+  }
+
+  package "domain" {
+    package "model" {
+      class User
+      class UserDetail
+      class Room
+      class RoomReservation
+      class RoomBlacklist
+      class Report
+      class GoogleUser
+      class GameTitle
+      class FavorateGame
+      class EntryHistory
+      class ChatPost
+    }
+
+    package "repository" {
+      class UserRepository<<Repository>>
+      class UserDetailRepository<<Repository>>
+      class RoomRepository<<Repository>>
+      class RoomReservationRepository<<Repository>>
+      class RoomBlacklistRepository<<Repository>>
+      class ReportRepository<<Repository>>
+      class GameTitleRepository<<Repository>>
+      class FavorateGameRepository<<Repository>>
+      class EntryHistoryRepository<<Repository>>
+      class ChatPostRepository<<Repository>>
+    }
+  }
+
+  package "infrastructure" {
+
+    package "persistence" {
+
+      package "datastore"{
+        class UserDatastore
+        class UserDetailDatastore
+        class RoomDatastore
+        class RoomReservationDatastore
+        class RoomBlacklistDatastore
+        class ReportDatastore
+        class GoogleUserDatastore
+        class GameTitleDatastore
+        class FavorateGameDatastore
+        class EntryHistoryDatastore
+        class ChatPostDatastore
+      }
+    }
+  }
+}
+
+UserUsecase <. UserHandler
+UserDetailUsecase <. UserHandler
+FavorateGameUsecase <. UserHandler
+UserUsecase <. GoogleAuthHandler
+UserDetailUsecase <. GoogleAuthHandler
+RoomReservationUsecase <. RoomHandler
+RoomBlacklistUsecase <. RoomHandler
+RoomUsecase <. RoomHandler
+
+User <. UserRepository
+UserRepository <. UserDatastore
+UserRepository <. UserUsecase
+UserDetail <. UserDetailRepository
+UserDetailRepository <. UserDetailDatastore
+UserDetailRepository <. UserDetailUsecase
+Room <. RoomRepository
+RoomRepository <. RoomDatastore
+RoomRepository <. RoomUsecase
+Report <. ReportRepository
+ReportRepository <. ReportDatastore
+ReportRepository <. ReportUsecase
+FavorateGame <. FavorateGameRepository
+FavorateGameRepository <. FavorateGameDatastore
+FavorateGameRepository <. FavorateGameUsecase
+RoomBlacklist <. RoomBlacklistRepository
+RoomBlacklistRepository <. RoomBlacklistDatastore
+RoomBlacklistRepository <. RoomBlacklistUsecase
+RoomReservation <. RoomReservationRepository
+RoomReservationRepository <. RoomReservationDatastore
+RoomReservationRepository <. RoomBlacklistUsecase
+
+
+@enduml

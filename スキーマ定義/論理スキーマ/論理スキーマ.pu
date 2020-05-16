@@ -1,0 +1,105 @@
+@startuml
+title 論理スキーマ
+!define table(x) class x
+!define primary_key(x) - x
+left to right direction
+hide circle
+hide methods
+
+table(users) {
+    primary_key(id)
+    google_id
+    facebook_id
+    twitter_id
+    mailaddress
+    is_admin
+    is_frozen
+    created_at
+    update_at
+}
+
+table(user_detail) {
+    primary_key(id)
+    user（FK）
+    user_name
+    icon
+    update_at
+}
+
+table(favorate_game) {
+    primary_key(id)
+    user_detal（FK）
+    game_title（FK）
+    created_at
+}
+
+table(game_title) {
+    primary_key(id)
+    game_title
+    created_at
+    update_at
+}
+
+table(room) {
+    primary_key(id)
+    room_owner（FK）
+    game_title（FK）
+    capacity
+    is_lock
+    created_at
+}
+
+table(room_reservation) {
+    primary_key(id)
+    room（FK）
+    releasing_time
+    created_at
+}
+
+table(entry_history) {
+    primary_key(id)
+    room（FK）
+    user（FK）
+    entry_time
+}
+
+table(room_blacklist) {
+    primary_key(id)
+    room（FK）
+    block_user（FK）
+    created_at
+}
+
+table(chat_post) {
+    primary_key(id)
+    room（FK）
+    user（FK）
+    message
+    created_at
+}
+
+table(report) {
+    primary_key(id)
+    caller（FK）
+    vaiolator（FK）
+    vaiolation_detail
+    reported_room（FK）
+    created_at
+}
+
+users "1" -- "1" user_detail
+users "1" -- "0..*" room
+users "1" -- "0..*" report
+room "1" -- "0..*" chat_post
+room "1" -- "0..*" report
+room "0..1" -- "1" room_reservation
+entry_history "0..*" -- "1" room
+entry_history "1" -- "1" users
+favorate_game "1" -- "1" game_title
+game_title "1" -- "1" room
+chat_post "0..*" -- "1" users
+user_detail "1" -- "0..*" favorate_game
+room "1" -- "0..*" room_blacklist
+room_blacklist "0..*" -- "1" users
+
+@enduml

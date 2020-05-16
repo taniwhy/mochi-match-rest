@@ -1,0 +1,122 @@
+@startuml
+title ERDiagram
+
+entity "users" {
+    + user_id [PK]
+    ==
+    * google_id:TEXT
+    * facebook_id:TEXT
+    * twitter_id:TEXT
+    is_admin:BOOL
+    is_frozen:BOOL
+    is_delete:BOOL
+    created_at:TIMESTAMP
+    update_at:TIMESTAMP
+    delete_at:TIMESTAMP
+}
+
+entity "user_detail" {
+    + user_detail_id [PK]
+    ==
+    # user [FK(users,user_id)]
+    user_name:TEXT
+    icon:INTEGER
+    update_at:TIMESTAMP
+}
+
+entity "room" {
+    + room_id [PK]
+    ==
+    # room_owner [FK(users,user_id)]
+    # game_title [FK(game_title,game_title_id)]
+    # game_hard [FK(game_hard,game_hard_id)]
+    room_text:TEXT
+    capasity:INTEGER
+    is_lock:BOOL
+    created_at:TIMESTAMP
+}
+
+entity "room_blacklist" {
+    + room_blacklist_id [PK]
+    ==
+    # room [FK(room,room_id)]
+    # black_user [FK(users,user_id)]
+    created_at:TIMESTAMP
+}
+
+entity "room_reservation" {
+    + room_reservaion_id [PK]
+    ==
+    # room [FK(room,room_id)]
+    # relasing_time:TIMESTAMP
+    created_at:TIMESTAMP
+}
+
+entity "game_title" {
+    + game_title_id [PK]
+    ==
+    * game_title:TEXT
+    created_at:TIMESTAMP
+    update_at:TIMESTAMP
+}
+
+entity "game_hard" {
+    + game_hard_id [PK]
+    ==
+    * game_hard:INTEGER
+    created_at:TIMESTAMP
+    update_at:TIMESTAMP
+}
+
+entity "favorate_game" {
+    + favorate_game_id [PK]
+    ==
+    # user_detail [FK(user_detail,user_detail_id)]
+    # game_title [FK(game_title,game_title_id)]
+    created_at:TIMESTAMP
+}
+
+entity "chat_post" {
+    + chat_post_id [PK]
+    ==
+    # room [FK(room,room_id)]
+    # user [FK(users,user_id)]
+    message:TEXT
+    created_at:TIMESTAMP
+}
+
+entity "entry_history" {
+    + entry_history_id [PK]
+    ==
+    # room [FK(room,room_id)]
+    # user [FK(users,user_id)]
+    is_leave:BOOL
+    entry_time:TIMESTAMP
+}
+
+entity "report" {
+    + report_id [PK]
+    ==
+    # caller [FK(user,user_id)]
+    # vaiolator [FK(users,user_id)]
+    vaiolation_detail:INTEGER
+    # report_room [FK(room,room_id)]
+    created_at:TIMESTAMP
+}
+
+users ||--|| user_detail
+user_detail --o{ favorate_game
+favorate_game ||--|| game_title
+room }o-- users
+room ||--|| game_title
+room ||--|| game_hard
+room_blacklist }o-- room
+room_blacklist --o{ users
+room_reservation |o-- room
+chat_post }o-- room
+entry_history ||--|| users
+entry_history }-- room
+report }o-- users
+report }o-- room
+
+@enduml

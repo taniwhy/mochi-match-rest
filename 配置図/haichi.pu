@@ -1,0 +1,34 @@
+@startuml
+left to right direction
+
+actor ユーザー
+frame クライアントサイド {
+  folder Webブラウザ
+  folder スマートフォン
+}
+
+cloud "適当なクラウドサーバ" {
+  frame サーバーサイド {
+    package "Docker-compose" {
+      folder Docker_Go_RestAPI
+      folder Docker_Node.js_Websocket
+      folder Docker_React
+      database Docker_Postgres
+      database Docker_Redis
+      note right : セッション情報を格納する場合のみに使用
+      folder Docker_Nginx
+    }
+    note right : プロダクション環境リリースの際には\nSSL証明書の登録とリバースプロキシ設定が必須となる。
+  }
+}
+
+ユーザー -- クライアントサイド
+クライアントサイド -- Docker_Nginx
+Docker_Nginx -- Docker_Go_RestAPI
+Docker_Nginx -- Docker_Node.js_Websocket
+Docker_Nginx -- Docker_React
+Docker_Go_RestAPI -- Docker_Postgres
+Docker_Go_RestAPI -- Docker_Redis
+Docker_Node.js_Websocket -- Docker_Postgres
+
+@enduml

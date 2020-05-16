@@ -1,0 +1,20 @@
+@startuml
+title シーケンス図
+
+actor ユーザー
+
+participant ReactApp
+participant WebsocketServer
+participant RestAPIServer
+
+ユーザー -> ReactApp : ログイン状態でサイトにアクセス
+ReactApp -> RestAPIServer : ルーム一覧情報をリクエスト
+RestAPIServer -> ReactApp : ルーム一覧情報の返却
+ReactApp -> WebsocketServer : ルームキャパシティとルームIDを含むルーム情報でJOINリクエスト
+WebsocketServer -> WebsocketServer : 現在ルーム参加人数とルームキャパシティを確認
+WebsocketServer -> WebsocketServer : ルームIDをでルームにJOIN
+WebsocketServer -> ReactApp : 自分以外のユーザーに通知
+ReactApp -> RestAPIServer : チャット一覧をリクエスト
+
+
+@enduml

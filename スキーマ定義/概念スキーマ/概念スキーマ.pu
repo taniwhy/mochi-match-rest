@@ -1,0 +1,38 @@
+@startuml
+title 概念スキーマ
+!define table(x) class x
+!define primary_key(x) - x
+left to right direction
+hide circle
+hide methods
+
+table(ユーザー) {
+}
+
+table(ユーザープロフィール) {
+}
+
+table(お気に入りゲーム) {
+}
+
+table(ルーム) {
+}
+
+table(他人ユーザー設定) {
+}
+
+table(ルームブラックリスト) {
+}
+
+table(チャット投稿) {
+}
+
+ユーザー "1" -- "1" ユーザープロフィール
+ユーザー "1" -- "0..*" ルーム
+ユーザー "1" -- "0..*" 他人ユーザー設定
+ユーザープロフィール "1" -- "0..*" お気に入りゲーム
+ルーム "1" -- "0..*" ルームブラックリスト
+ルーム "1" -- "0..*" チャット投稿
+チャット投稿 "1" -- "1" ユーザー
+
+@enduml

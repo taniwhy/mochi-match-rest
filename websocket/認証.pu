@@ -1,0 +1,10 @@
+@startuml
+
+participant Client
+participant WebsocketServer
+
+Client -> WebsocketServer : トークンをクエリに含ませてwebsocket接続
+WebsocketServer -> WebsocketServer : トークンの有効性を確認
+WebsocketServer --> Client : （認証エラー時のみエラメッセージ応答）
+
+@enduml

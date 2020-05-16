@@ -1,0 +1,43 @@
+@startuml
+title WebsocketServer
+left to right direction
+
+namespace WebsocketServer {
+
+  package "interfaces"{
+    package "handlers" {
+      class WebsocketHandler
+    }
+  }
+
+  package "application" {
+    package "usecase" {
+      class WebsocketUsecase
+    }
+  }
+
+  package "domain" {
+    package "model" {
+      class User
+      class Room
+      class Message
+    }
+
+    package "repository" {
+      class UserRepository<<Repository>>
+      class RoomRepository<<Repository>>
+      class MessageRepository<<Repository>>
+    }
+  }
+
+  package "infrastructure" {
+
+    package "persistence" {
+      class UserPersistence
+      class RoomPersistence
+      class MessagePersistence
+    }
+  }
+}
+
+@enduml

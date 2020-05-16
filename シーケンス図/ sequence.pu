@@ -1,0 +1,39 @@
+@startuml
+title シーケンス図
+
+actor ユーザー
+
+participant ReactApp
+participant RestAPIServer
+participant 認証Server
+
+
+database Postgres
+database Redis
+
+ユーザー -> ReactApp : 1: OAuthを用いたサインアップ処理開始
+ReactApp -> RestAPIServer : 2: OAuthAPIを叩く
+RestAPIServer ->> Redis : 3:セッションにステートを保存
+RestAPIServer --> 認証Server : 4: リダイレクト
+認証Server -> ユーザー : 5: ログイン要求
+ユーザー -> 認証Server : 6: ログイン
+認証Server --> RestAPIServer : 7: トークン返却
+RestAPIServer ->> Redis : 8:クエリのステートとセッションのステートのバリデーション
+RestAPIServer -> Postgres : 9: ユーザーIDをキーにユーザー存在チェック
+RestAPIServer --> ReactApp : 10: ユーザー登録ページにリダイレクト
+ReactApp -> RestAPIServer : 11: ユーザー情報を入力し、ユーザー登録APIを叩く
+RestAPIServer ->> Postgres : 12: ユーザー名、email、ユーザIDでユーザーデータ登録
+RestAPIServer --> ReactApp : 13: トップページにリダイレクト
+
+ユーザー -> ReactApp : 1:OAuthを用いたログイン処理開始
+ReactApp -> RestAPIServer : 2: OAuthAPIを叩く
+RestAPIServer ->> Redis : 3:セッションにステートを保存
+RestAPIServer --> 認証Server : 4: リダイレクト
+認証Server -> ユーザー : 5: ログイン要求
+ユーザー -> 認証Server : 6: ログイン
+認証Server --> RestAPIServer : 7: トークン返却
+RestAPIServer ->> Redis : 8:クエリのステートとセッションのステートのバリデーション
+RestAPIServer -> Postgres : 9: ユーザーIDをキーにユーザー存在チェック
+RestAPIServer --> ReactApp : 11: トップページにリダイレクト
+
+@enduml

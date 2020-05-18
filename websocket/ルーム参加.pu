@@ -10,8 +10,9 @@ database Database
 ReactApp -> WebsocketServer : ルームID,ユーザーIDでルーム参加リクエストを送信
 WebsocketServer -> APIServer : ルームID,ユーザーIDでルーム参加APIを叩く
 APIServer -> Database : 入りたいルームの現在参加人数を確認した後、入室データ追加
-APIServer -> WebsocketServer : 成功レスポンスを送信　
-WebsocketServer -> ReactApp : 成功通知を送信
+APIServer --> WebsocketServer : 成功レスポンス
+WebsocketServer -> WebsocketServer : ルームIDでSocket.ioのルームにジョイン
+WebsocketServer --> ReactApp : 成功通知を送信
 
 
 @enduml

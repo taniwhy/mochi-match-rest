@@ -1,5 +1,4 @@
 @startuml
-title シーケンス図
 
 participant ReactApp
 participant WebsocketServer

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>websocket要件書.md</title>
+<title>websocket内部設計書.md</title>
 <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
 
 <style>
@@ -365,89 +365,58 @@ code {
           : 'default'
     });
   </script>
-<h1 id="websocket-%E3%82%B5%E3%83%BC%E3%83%90%E8%A6%81%E4%BB%B6%E6%9B%B8">Websocket サーバ要件書</h1>
-<h2 id="websocket-%E3%82%B5%E3%83%BC%E3%83%90%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6">Websocket サーバについて</h2>
-<ul>
-<li>クライアントからのリクエストに応じて、
-通知対象のクライアントにメッセージの転送を行います。</li>
-</ul>
-<h2 id="%E8%AA%8D%E8%A8%BC%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6">認証について</h2>
+<h1 id="websocket%E5%86%85%E9%83%A8%E8%A8%AD%E8%A8%88%E6%9B%B8">WebSocket内部設計書</h1>
+<p>最終更新日 : 2020 05 17</p>
+<h2 id="%E3%83%81%E3%83%A3%E3%83%83%E3%83%88%E3%83%AB%E3%83%BC%E3%83%A0%E5%86%85%E7%94%BB%E9%9D%A2">チャットルーム内画面</h2>
+<p><code>/chatroom</code>にwebsocketで接続。</p>
+<h3 id="%E3%83%AB%E3%83%BC%E3%83%A0%E3%83%AB%E3%83%BC%E3%83%A0%E5%8F%82%E5%8A%A0%E3%83%AA%E3%82%AF%E3%82%A8%E3%82%B9%E3%83%88">ルーム::ルーム参加リクエスト</h3>
 <ul>
 <li>
-<p>WebSocket を利用するには、初期接続時にトークンを用いた認証を行います。</p>
-</li>
-<li>
-<p>トークンを用いた認証は Websocket サーバにて行います。</p>
-</li>
-<li>
-<p>トークンは別サーバ（API）にて発行されたものを使用します。</p>
-</li>
-<li>
-<p>認証は以下の手順で行います。</p>
+<p>ルーム参加リクエストを受け取った際の処理の手順を以下に記載します。</p>
 <ol>
-<li>
-<p>クライアントとサーバ間で Websocket 接続を確立します。</p>
-</li>
-<li>
-<p>サーバはクエリで受け取ったトークンの有効性を確認します</p>
-</li>
-<li>
-<p>有効性が確認されたらそのまま Websocket 接続を継続します。</p>
-<ul>
-<li>認証エラーになった場合、エラーメッセージ送信後、Websocket 接続が切断されます。</li>
-<li>一定時間以内に認証のリクエストメッセージがサーバに通知されない場合 Websocket 接続が切断されます。</li>
-</ul>
-</li>
+<li>リクエストに含まれるルームIDとユーザーIDを用いて、APIサーバに参加リクエストを送ります。</li>
+<li>成功レスポンスを受け取った後、socket.ioのルームにルームIDでジョインさせます。</li>
+<li>'notify_joinイベント', 'join_resイベント'で、クライアントに通知します。</li>
 </ol>
 </li>
 <li>
-<p>認証シーケンス</p>
-<p><img src="https://github.com/taniwhy/mochi-match-rest/blob/doc/out/websocket/認証/認証.png?raw=true" alt="認証"></p>
+<p>シーケンス</p>
+</li>
+<li>
+<p>エラー</p>
+<ul>
+<li>APIサーバからのレスポンスがエラーだった際は、'errorイベント' でクライアントに通知します。</li>
+</ul>
 </li>
 </ul>
-<h2 id="%E9%80%9A%E4%BF%A1%E3%82%B1%E3%83%BC%E3%82%B9">通信ケース</h2>
-<table>
-<thead>
-<tr>
-<th>ケース</th>
-<th>通信方向</th>
-<th>イベント名</th>
-<th>概要</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>ルーム参加</td>
-<td>クライアント -&gt; サーバ</td>
-<td>join_req</td>
-<td>ルーム参加リクエスト時に使用します。</td>
-</tr>
-<tr>
-<td>ルーム参加通知</td>
-<td>サーバ -&gt; クライアント（送信者以外）</td>
-<td>notify_join</td>
-<td>ルーム参加者の通知に使用します。</td>
-</tr>
-<tr>
-<td>チャット送信</td>
-<td>クライアント -&gt; サーバ</td>
-<td>send_caht</td>
-<td>チャットメッセージの送信に使用します。</td>
-</tr>
-<tr>
-<td>チャット受信</td>
-<td>サーバ -&gt; クライアント（全員）</td>
-<td>receive_caht</td>
-<td>チャットメッセージの受信に使用します。</td>
-</tr>
-<tr>
-<td>エラー受信</td>
-<td>サーバ -&gt; クライアント</td>
-<td>error</td>
-<td>エラーメッセージ送信に使用します。</td>
-</tr>
-</tbody>
-</table>
+<p><strong>Emit  Event Name</strong>  : join_req<br>
+<strong>Emit Data Format</strong> :</p>
+<pre><code>{
+	'common' : {
+		'type' : string
+	},
+	'details' : {
+		user_id : string,
+		room_id : string
+	}
+}
+</code></pre>
+<h3 id="%E3%83%AB%E3%83%BC%E3%83%A0%E3%83%AB%E3%83%BC%E3%83%A0%E5%8F%82%E5%8A%A0%E9%80%9A%E7%9F%A5">ルーム::ルーム参加通知</h3>
+<p><strong>On Event Name</strong> : notify_join
+<strong>On Data Format</strong> :</p>
+<pre><code>{
+	
+}
+</code></pre>
+<h3 id="%E3%82%A8%E3%83%A9%E3%83%BC%E3%82%A8%E3%83%A9%E3%83%BC%E5%85%B1%E9%80%9A">エラー::エラー共通</h3>
+<p><strong>Emit Event Name</strong> : error<br>
+<strong>Emit Data Format</strong> :</p>
+<pre><code>{
+	'message' : string,
+	'code' : string,
+	'type' : string
+}
+</code></pre>
 
 </body>
 </html>

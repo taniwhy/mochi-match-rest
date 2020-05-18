@@ -374,13 +374,14 @@ code {
 <li>
 <p>ルーム参加リクエストを受け取った際の処理の手順を以下に記載します。</p>
 <ol>
-<li>リクエストに含まれるルームIDとユーザーIDを用いて、APIサーバに参加リクエストを送ります。</li>
+<li>リクエストに含まれるルームIDとユーザーIDを用いて、APIサーバのルーム参加APIを叩きます。</li>
 <li>成功レスポンスを受け取った後、socket.ioのルームにルームIDでジョインさせます。</li>
 <li>'notify_joinイベント', 'join_resイベント'で、クライアントに通知します。</li>
 </ol>
 </li>
 <li>
-<p>シーケンス</p>
+<p>シーケンス
+<img src="https://github.com/taniwhy/mochi-match-rest/blob/doc/out/websocket/ルーム参加/シーケンス図.png?raw=true" alt="認証"></p>
 </li>
 <li>
 <p>エラー</p>

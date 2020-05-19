@@ -19,6 +19,10 @@ func (uD userDatastore) FindAllUser() ([]*models.User, error) {
 	users := []*models.User{}
 
 	err := uD.db.Find(&users).Error
+	if gorm.IsRecordNotFoundError(err) {
+		return nil, err
+	}
+
 	if err != nil {
 		return nil, err
 	}

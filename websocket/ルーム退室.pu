@@ -1,0 +1,15 @@
+@startuml
+
+participant ReactApp
+participant WebsocketServer
+participant APIServer
+
+database Database
+
+ReactApp -> WebsocketServer : websocket接続切断
+WebsocketServer -> APIServer : disconnecctイベントを受け取り、ルームID,ユーザーIDでルーム退室PIを叩く
+APIServer -> Database : 入室データを削除
+APIServer --> WebsocketServer : 成功レスポンス
+WebsocketServer --> ReactApp : 残りのメンバーに通知
+
+@enduml

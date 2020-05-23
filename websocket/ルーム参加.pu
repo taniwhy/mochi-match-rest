@@ -1,17 +1,18 @@
 @startuml
 
+actor ユーザー
+
 participant ReactApp
 participant WebsocketServer
-participant APIServer
+participant RestAPIServer
 
-database Database
-
-ReactApp -> WebsocketServer : ルームID,ユーザーIDでルーム参加リクエストを送信
-WebsocketServer -> APIServer : ルームID,ユーザーIDでルーム参加APIを叩く
-APIServer -> Database : 入りたいルームの現在参加人数を確認した後、入室データ追加
-APIServer --> WebsocketServer : 成功レスポンス
-WebsocketServer -> WebsocketServer : ルームIDでSocket.ioのルームにジョイン
-WebsocketServer --> ReactApp : 成功通知を送信
+ユーザー -> ReactApp : ログイン状態でサイトにアクセス
+ReactApp -> RestAPIServer : ルーム一覧APIを叩く
+RestAPIServer --> ReactApp : レスポンス
+ReactApp -> RestAPIServer : ルーム参加APIを叩く
+RestAPIServer --> ReactApp : レスポンス
+ReactApp -> WebsocketServer : ルームにJOIN
+WebsocketServer -> ReactApp : ルーム参加者に通知
 
 
 @enduml

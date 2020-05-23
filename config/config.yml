@@ -1,0 +1,16 @@
+database:
+  host: "localhost"
+  port: "5432"
+  user: "postgres"
+  pass: "postgres"
+  dbname: "mochi_match"
+redis:
+  size: 10
+  network: "tcp"
+  addr: "localhost:6379"
+  pass: ""
+  key: "mochi"
+googleoauth:
+  redirecturl: "http://localhost:8080/v1/auth/google/callback"
+  clientid: "598391748066-83j002poq60tii3t5pi64e1578o6nq9c.apps.googleusercontent.com"
+  clientsecret: "a-x5Y8rKsF5WdMcxDy0R-g1P"

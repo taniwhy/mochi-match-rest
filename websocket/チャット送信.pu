@@ -1,0 +1,16 @@
+@startuml
+
+participant ReactApp
+participant WebsocketServer
+participant RestAPIServer
+
+database Redis
+
+ReactApp -> WebsocketServer : ルームにJOIN
+ReactApp -> RestAPIServer : メッセージと共にAPIを叩く
+RestAPIServer -> Redis : メッセージデータをRedisにPublish
+Redis -> WebsocketServer : SubscribeしてあるRedisからメッセージを受け取る
+WebsocketServer --> ReactApp : ルームメンバーにメッセージを送信
+
+
+@enduml

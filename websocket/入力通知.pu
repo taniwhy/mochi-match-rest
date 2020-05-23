@@ -1,0 +1,15 @@
+@startuml
+
+participant ReactApp
+participant WebsocketServer
+
+ReactApp -> WebsocketServer : ルームにJOIN
+
+ReactApp -> WebsocketServer : メッセージ入力を開始したら通知
+WebsocketServer --> ReactApp : ユーザー入力通知を送信
+
+ReactApp -> WebsocketServer : メッセージ送信 or 時間経過で通知
+WebsocketServer --> ReactApp : ユーザー入力停止通知を送信
+
+
+@enduml

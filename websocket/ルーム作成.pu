@@ -1,5 +1,4 @@
 @startuml
-title シーケンス図
 
 actor ユーザー
 
@@ -8,8 +7,10 @@ participant WebsocketServer
 participant RestAPIServer
 
 ユーザー -> ReactApp : ログイン状態でサイトにアクセス
-ReactApp -> RestAPIServer : ルーム作成
-RestAPIServer -> ReactApp : ルームIDを含むルーム情報返却
-ReactApp -> WebsocketServer : ルームIDをルーム名にしてルームにJOIN
+ReactApp -> RestAPIServer : ルーム作成APIを叩く
+RestAPIServer --> ReactApp : レスポンス
+ReactApp -> RestAPIServer : ルーム参加APIを叩く
+RestAPIServer --> ReactApp : レスポンス
+ReactApp -> WebsocketServer : ルームにJOIN
 
 @enduml

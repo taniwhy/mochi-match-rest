@@ -20,7 +20,8 @@
      - 一定時間以内に認証のリクエストメッセージがサーバに通知されない場合 Websocket 接続が切断されます。
 
 - 認証シーケンス
-  ![ww](https://drive.google.com/open?id=1BGm-J5k9U63h3KUO7Mqgq3MuOeTtpRRc)
+
+  ![認証](https://github.com/taniwhy/mochi-match-rest/blob/doc/out/websocket/%E8%AA%8D%E8%A8%BC/%E8%AA%8D%E8%A8%BC.png?raw=true)
 
 ## 通信ケース
 
@@ -31,7 +32,3 @@
 | チャット送信   | クライアント -> サーバ         | send_chat    | チャットメッセージの送信に使用します。 |
 | チャット受信   | サーバ -> クライアント（全員） | receive_chat | チャットメッセージの受信に使用します。 |
 | エラー受信     | サーバ -> クライアント         | error        | エラーメッセージ送信に使用します。     |
-
-## 通信ケースごとの詳細
-
-### ルーム参加

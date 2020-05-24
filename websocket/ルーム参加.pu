@@ -12,7 +12,7 @@ RestAPIServer --> ReactApp : レスポンス
 ReactApp -> RestAPIServer : ルーム参加APIを叩く
 RestAPIServer --> ReactApp : レスポンス
 ReactApp -> WebsocketServer : ルームにJOIN
-WebsocketServer -> ReactApp : ルーム参加者に通知
+WebsocketServer --> ReactApp : ルーム参加者に通知
 
 
 @enduml

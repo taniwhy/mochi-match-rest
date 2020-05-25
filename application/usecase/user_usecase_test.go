@@ -14,12 +14,14 @@ func TestFindUserByProviderID(t *testing.T) {
 
 	u := models.User{}
 
+	// メソッドの行いを定義
 	testMock := mock.NewMockUserRepository(ctrl)
 	testMock.EXPECT().FindUserByProviderID("foo", "bar").Return(&u, nil)
 	testMock.EXPECT().FindUserByProviderID("foo", "").Return(nil, nil)
 	testMock.EXPECT().FindUserByProviderID("", "bar").Return(nil, nil)
 	testMock.EXPECT().FindUserByProviderID("", "").Return(nil, nil)
 
+	// テスト対象をインスタンス化
 	test := NewUserUsecase(testMock)
 
 	var tests = []struct {

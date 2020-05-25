@@ -36,7 +36,7 @@ __On Data Format__ :
 
 ### ルーム::ルーム参加通知
 
-__Emit Event Name__ : notify_entry
+__Emit Event Name__ : notify_entry  
 __Emit Data Format__ :  
 
 	{

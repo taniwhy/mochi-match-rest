@@ -33,7 +33,38 @@ func NewChatPostHandler(cU usecase.ChatPostUseCase, rC redis.Conn) ChatPostHandl
 }
 
 func (cH chatPostHandler) GetChatPostByRoomID(c *gin.Context) {
-
+	limitStr := c.Query("limit")
+	offset := c.Query("offset")
+	roomID := c.Params.ByName("id")
+	// todo : limitのint変換処理の位置を要修正
+	switch {
+	case limitStr == "" && offset == "":
+		chats, err := cH.chatPostUsecase.FindChatPostByRoomID(roomID)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, err)
+		}
+		c.JSON(http.StatusOK, chats)
+	case offset == "":
+		limit, err := strconv.Atoi(limitStr)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, err)
+		}
+		chats, err := cH.chatPostUsecase.FindChatPostByRoomIDAndLimit(roomID, limit)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, err)
+		}
+		c.JSON(http.StatusOK, chats)
+	default:
+		limit, err := strconv.Atoi(limitStr)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, err)
+		}
+		chats, err := cH.chatPostUsecase.FindChatPostByRoomIDAndLimitAndOffset(roomID, offset, limit)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, err)
+		}
+		c.JSON(http.StatusOK, chats)
+	}
 }
 
 func (cH chatPostHandler) CreateChatPost(c *gin.Context) {
@@ -41,24 +72,29 @@ func (cH chatPostHandler) CreateChatPost(c *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
-	room, err := strconv.ParseInt(c.Params.ByName("id"), 10, 64)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": err})
-	}
+	roomID := c.Params.ByName("id")
+	// todo : テスト用に仮データを記述
+	// idをトークンから取得できるように
 	m := models.ChatPost{
 		ChatPostID: id.String(),
-		Room:       room,
-		UserID:     123,
+		RoomID:     roomID,
+		UserID:     "id",
 		CreatedAt:  time.Now(),
 	}
 	if err := c.BindJSON(&m); err != nil {
+		// todo : エラーメッセージを要修正
 		c.JSON(http.StatusBadRequest, gin.H{"message": err})
+		return
 	}
-	cH.chatPostUsecase.InsertChatPost(&m)
-
+	if err := cH.chatPostUsecase.InsertChatPost(&m); err != nil {
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
 	res, _ := json.Marshal(m)
+	// todo : publishのチャンネル名がハードコーディングされているため要修正
 	_, err = cH.redis.Do("PUBLISH", "channel_1", string(res))
 	if err != nil {
 		panic(err)
 	}
+	c.Status(http.StatusOK)
 }

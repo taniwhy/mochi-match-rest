@@ -57,10 +57,11 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 		google.GET("/login", googleAuthHandler.Login)
 		google.GET("/callback", googleAuthHandler.Callback)
 	}
-	room := v1.Group("/room")
+	room := v1.Group("/rooms")
 	{
-		room.GET("/list", roomHandler.GetRoom)
-		room.POST("/:id/chat", chatPostHandler.CreateChatPost)
+		room.GET("", roomHandler.GetRoom)
+		room.GET("/:id/messages", chatPostHandler.GetChatPostByRoomID)
+		room.POST("/:id/messages", chatPostHandler.CreateChatPost)
 	}
 
 	return r

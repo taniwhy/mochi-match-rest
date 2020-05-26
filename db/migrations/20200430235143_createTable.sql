@@ -4,10 +4,10 @@
 CREATE TABLE chat_posts
 (
     chat_post_id TEXT NOT NULL,
-    room INTEGER,
-    user_id INTEGER,
-    message TEXT,
-    created_at TIMESTAMP
+    room TEXT NOT NULL,
+    user_id TEXT NOT NULL,
+    message TEXT NOT NULL,
+    created_at TIMESTAMP NOT NULL
 );
 
 -- +goose Down

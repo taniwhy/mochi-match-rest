@@ -14,12 +14,15 @@ require (
 	github.com/go-openapi/swag v0.19.9 // indirect
 	github.com/golang/mock v1.4.3
 	github.com/golang/protobuf v1.4.2 // indirect
+	github.com/gomodule/redigo v2.0.0+incompatible
 	github.com/google/uuid v1.1.1
 	github.com/jinzhu/gorm v1.9.12
 	github.com/joho/godotenv v1.3.0 // indirect
 	github.com/mailru/easyjson v0.7.1 // indirect
 	github.com/spf13/viper v1.7.0
 	github.com/swaggo/swag v1.6.5 // indirect
+	github.com/taniwhy/css-study-game-WebAPI v0.0.0-20200117050318-f845b5ef3a45 // indirect
+	github.com/taniwhy/task-manager-api v0.0.0-20200316002504-399659419481 // indirect
 	github.com/urfave/cli v1.22.4 // indirect
 	github.com/xordataexchange/crypt v0.0.3-0.20170626215501-b2862e3d0a77 // indirect
 	golang.org/x/net v0.0.0-20200513185701-a91f0712d120 // indirect

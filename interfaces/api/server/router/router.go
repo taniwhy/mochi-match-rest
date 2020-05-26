@@ -4,6 +4,7 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"github.com/gomodule/redigo/redis"
 	"github.com/jinzhu/gorm"
 	"github.com/taniwhy/mochi-match-rest/application/usecase"
 	"github.com/taniwhy/mochi-match-rest/infrastructure/dao"
@@ -13,17 +14,22 @@ import (
 )
 
 // InitRouter :　ルーティング
-func InitRouter(conn *gorm.DB) *gin.Engine {
+func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 	// DI
-	userDatastore := datastore.NewUserDatastore(conn)
-	roomDatastore := datastore.NewRoomDatastore(conn)
-	roomBalacklistDatastore := datastore.NewRoomBlacklistDatastore(conn)
-	roomReservationDatastore := datastore.NewRoomReservationDatastore(conn)
+	userDatastore := datastore.NewUserDatastore(dbConn)
+	roomDatastore := datastore.NewRoomDatastore(dbConn)
+	roomBalacklistDatastore := datastore.NewRoomBlacklistDatastore(dbConn)
+	roomReservationDatastore := datastore.NewRoomReservationDatastore(dbConn)
+	chatPostDatastore := datastore.NewChatPostDatastore(dbConn)
+
 	userUsecase := usecase.NewUserUsecase(userDatastore)
 	roomUsecase := usecase.NewRoomUsecase(roomDatastore)
 	roomBlacklistUsecase := usecase.NewRoomBlacklistUsecase(roomBalacklistDatastore)
 	roomReservationUsecase := usecase.NewRoomReservationUsecase(roomReservationDatastore)
+	chatPostUsecase := usecase.NewChatPostUsecase(chatPostDatastore)
+
 	roomHandler := handler.NewRoomHandler(userUsecase, roomUsecase, roomBlacklistUsecase, roomReservationUsecase)
+	chatPostHandler := handler.NewChatPostHandler(chatPostUsecase, redisConn)
 	googleAuthHandler := auth.NewGoogleOAuthHandler(userUsecase)
 
 	store := dao.NewRedisStore()
@@ -54,6 +60,7 @@ func InitRouter(conn *gorm.DB) *gin.Engine {
 	room := v1.Group("/room")
 	{
 		room.GET("/list", roomHandler.GetRoom)
+		room.POST("/:id/chat", chatPostHandler.CreateChatPost)
 	}
 
 	return r

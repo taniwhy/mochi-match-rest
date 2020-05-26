@@ -6,9 +6,7 @@ import (
 
 // FavorateGameRepository : ユーザーのリポジトリ
 type FavorateGameRepository interface {
-	FindAllRoom() ([]*models.Room, error)
-	FindRoomByID(id int64) (*models.Room, error)
-	InsertRoom(room *models.Room) error
-	UpdateRoom(room *models.Room) error
-	DeleteRoom(room *models.Room) error
+	FindFavorateGameByID(id string) (*models.FavorateGame, error)
+	InsertFavorateGame(room *models.FavorateGame) error
+	DeleteFavorateGame(room *models.FavorateGame) error
 }

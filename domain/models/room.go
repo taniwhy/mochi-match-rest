@@ -6,9 +6,9 @@ import (
 
 // Room : roomテーブルモデル
 type Room struct {
-	ID        int64
-	RoomOwner int64
-	GameTitle int64
+	RoomID    string
+	RoomOwner string
+	GameTitle string
 	Capacity  int
 	IsLock    bool
 	CreatedAt time.Time

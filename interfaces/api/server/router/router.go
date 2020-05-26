@@ -57,11 +57,36 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 		google.GET("/login", googleAuthHandler.Login)
 		google.GET("/callback", googleAuthHandler.Callback)
 	}
+	users := v1.Group("/users")
+	{
+		users.GET("/:id")
+		users.POST("/:id")
+		users.PUT("/:id")
+		users.DELETE("/:id")
+	}
+	games := users.Group("/:id/favorate/games")
+	{
+		games.GET("")
+		games.POST("")
+	}
 	room := v1.Group("/rooms")
 	{
-		room.GET("", roomHandler.GetRoom)
+		room.GET("/:id", roomHandler.GetRoom)
 		room.GET("/:id/messages", chatPostHandler.GetChatPostByRoomID)
 		room.POST("/:id/messages", chatPostHandler.CreateChatPost)
+		room.GET("/:id/report")
+		room.POST("/:id/report")
+	}
+	gamelist := v1.Group("/gamelist")
+	{
+		gamelist.GET("")
+		gamelist.POST("")
+		gamelist.PUT("/:id")
+		gamelist.DELETE("/:id")
+	}
+	report := v1.Group("/report")
+	{
+		report.GET("")
 	}
 
 	return r

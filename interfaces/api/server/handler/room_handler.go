@@ -36,6 +36,7 @@ func NewRoomHandler(
 }
 
 func (rH roomHandler) GetRoom(c *gin.Context) {
+
 }
 
 func (rH roomHandler) GetRoomByID(c *gin.Context) {

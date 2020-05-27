@@ -4,7 +4,7 @@
 CREATE TABLE chat_posts
 (
     chat_post_id TEXT NOT NULL,
-    room TEXT NOT NULL,
+    room_id TEXT NOT NULL,
     user_id TEXT NOT NULL,
     message TEXT NOT NULL,
     created_at TIMESTAMP NOT NULL

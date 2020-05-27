@@ -3,7 +3,6 @@ package handler
 import (
 	"encoding/json"
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -33,38 +32,27 @@ func NewChatPostHandler(cU usecase.ChatPostUseCase, rC redis.Conn) ChatPostHandl
 }
 
 func (cH chatPostHandler) GetChatPostByRoomID(c *gin.Context) {
+	var (
+		messages []*models.ChatPost
+		err      error
+	)
+	roomID := c.Params.ByName("id")
 	limitStr := c.Query("limit")
 	offset := c.Query("offset")
-	roomID := c.Params.ByName("id")
-	// todo : limitのint変換処理の位置を要修正
 	switch {
 	case limitStr == "" && offset == "":
-		chats, err := cH.chatPostUsecase.FindChatPostByRoomID(roomID)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, err)
-		}
-		c.JSON(http.StatusOK, chats)
-	case offset == "":
-		limit, err := strconv.Atoi(limitStr)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, err)
-		}
-		chats, err := cH.chatPostUsecase.FindChatPostByRoomIDAndLimit(roomID, limit)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, err)
-		}
-		c.JSON(http.StatusOK, chats)
-	default:
-		limit, err := strconv.Atoi(limitStr)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, err)
-		}
-		chats, err := cH.chatPostUsecase.FindChatPostByRoomIDAndLimitAndOffset(roomID, offset, limit)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, err)
-		}
-		c.JSON(http.StatusOK, chats)
+		messages, err = cH.chatPostUsecase.FindChatPostByRoomID(roomID)
+	case limitStr != "" && offset == "":
+		messages, err = cH.chatPostUsecase.FindChatPostByRoomIDAndLimit(roomID, limitStr)
+	case limitStr == "" && offset != "":
+		messages, err = cH.chatPostUsecase.FindChatPostByRoomIDAndOffset(roomID, offset)
+	case limitStr != "" && offset != "":
+		messages, err = cH.chatPostUsecase.FindChatPostByRoomIDAndLimitAndOffset(roomID, limitStr, offset)
 	}
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": err})
+	}
+	c.JSON(http.StatusOK, messages)
 }
 
 func (cH chatPostHandler) CreateChatPost(c *gin.Context) {
@@ -75,7 +63,7 @@ func (cH chatPostHandler) CreateChatPost(c *gin.Context) {
 	roomID := c.Params.ByName("id")
 	// todo : テスト用に仮データを記述
 	// idをトークンから取得できるように
-	m := models.ChatPost{
+	m := &models.ChatPost{
 		ChatPostID: id.String(),
 		RoomID:     roomID,
 		UserID:     "id",
@@ -86,8 +74,8 @@ func (cH chatPostHandler) CreateChatPost(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": err})
 		return
 	}
-	if err := cH.chatPostUsecase.InsertChatPost(&m); err != nil {
-		c.JSON(http.StatusBadRequest, err)
+	if err := cH.chatPostUsecase.InsertChatPost(m); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": err})
 		return
 	}
 	res, _ := json.Marshal(m)

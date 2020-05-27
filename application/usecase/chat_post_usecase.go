@@ -1,6 +1,8 @@
 package usecase
 
 import (
+	"strconv"
+
 	"github.com/taniwhy/mochi-match-rest/domain/models"
 	"github.com/taniwhy/mochi-match-rest/domain/repository"
 )
@@ -9,8 +11,9 @@ import (
 type ChatPostUseCase interface {
 	FindAllChatPost() ([]*models.ChatPost, error)
 	FindChatPostByRoomID(id string) ([]*models.ChatPost, error)
-	FindChatPostByRoomIDAndLimit(id string, limit int) ([]*models.ChatPost, error)
-	FindChatPostByRoomIDAndLimitAndOffset(id, offset string, limit int) ([]*models.ChatPost, error)
+	FindChatPostByRoomIDAndLimit(id, limit string) ([]*models.ChatPost, error)
+	FindChatPostByRoomIDAndOffset(id, offset string) ([]*models.ChatPost, error)
+	FindChatPostByRoomIDAndLimitAndOffset(id, offset, limit string) ([]*models.ChatPost, error)
 	InsertChatPost(room *models.ChatPost) error
 	DeleteChatPost(room *models.ChatPost) error
 }
@@ -42,7 +45,11 @@ func (cU chatPostUsecase) FindChatPostByRoomID(id string) ([]*models.ChatPost, e
 	return chatposts, nil
 }
 
-func (cU chatPostUsecase) FindChatPostByRoomIDAndLimit(id string, limit int) ([]*models.ChatPost, error) {
+func (cU chatPostUsecase) FindChatPostByRoomIDAndLimit(id, limitStr string) ([]*models.ChatPost, error) {
+	limit, err := strconv.Atoi(limitStr)
+	if err != nil {
+		return nil, err
+	}
 	chatposts, err := cU.chatPostRepository.FindChatPostByRoomIDAndLimit(id, limit)
 	if err != nil {
 		return nil, err
@@ -50,7 +57,19 @@ func (cU chatPostUsecase) FindChatPostByRoomIDAndLimit(id string, limit int) ([]
 	return chatposts, nil
 }
 
-func (cU chatPostUsecase) FindChatPostByRoomIDAndLimitAndOffset(id, offset string, limit int) ([]*models.ChatPost, error) {
+func (cU chatPostUsecase) FindChatPostByRoomIDAndOffset(id, offset string) ([]*models.ChatPost, error) {
+	chatposts, err := cU.chatPostRepository.FindChatPostByRoomIDAndOffset(id, offset)
+	if err != nil {
+		return nil, err
+	}
+	return chatposts, nil
+}
+
+func (cU chatPostUsecase) FindChatPostByRoomIDAndLimitAndOffset(id, limitStr, offset string) ([]*models.ChatPost, error) {
+	limit, err := strconv.Atoi(limitStr)
+	if err != nil {
+		return nil, err
+	}
 	chatposts, err := cU.chatPostRepository.FindChatPostByRoomIDAndLimitAndOffset(id, offset, limit)
 	if err != nil {
 		return nil, err

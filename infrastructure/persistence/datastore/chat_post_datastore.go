@@ -27,7 +27,7 @@ func (cD chatPostDatastore) FindAllChatPost() ([]*models.ChatPost, error) {
 
 func (cD chatPostDatastore) FindChatPostByRoomID(roomID string) ([]*models.ChatPost, error) {
 	chatposts := []*models.ChatPost{}
-	err := cD.db.Order("created_at desc").Find(&chatposts, "room=?", roomID).Error
+	err := cD.db.Order("created_at desc").Find(&chatposts, "room_id=?", roomID).Error
 	if err != nil {
 		return nil, err
 	}
@@ -36,7 +36,16 @@ func (cD chatPostDatastore) FindChatPostByRoomID(roomID string) ([]*models.ChatP
 
 func (cD chatPostDatastore) FindChatPostByRoomIDAndLimit(roomID string, limit int) ([]*models.ChatPost, error) {
 	chatposts := []*models.ChatPost{}
-	err := cD.db.Order("created_at desc").Limit(limit).Find(&chatposts, "room=?", roomID).Error
+	err := cD.db.Order("created_at desc").Limit(limit).Find(&chatposts, "room_id=?", roomID).Error
+	if err != nil {
+		return nil, err
+	}
+	return chatposts, nil
+}
+
+func (cD chatPostDatastore) FindChatPostByRoomIDAndOffset(roomID, offset string) ([]*models.ChatPost, error) {
+	chatposts := []*models.ChatPost{}
+	err := cD.db.Order("created_at desc").Where("created_at < ?", offset).Find(&chatposts, "room_id=?", roomID).Error
 	if err != nil {
 		return nil, err
 	}
@@ -45,7 +54,7 @@ func (cD chatPostDatastore) FindChatPostByRoomIDAndLimit(roomID string, limit in
 
 func (cD chatPostDatastore) FindChatPostByRoomIDAndLimitAndOffset(roomID, offset string, limit int) ([]*models.ChatPost, error) {
 	chatposts := []*models.ChatPost{}
-	err := cD.db.Order("created_at desc").Limit(limit).Where("created_at < ?", offset).Find(&chatposts, "room=?", roomID).Error
+	err := cD.db.Order("created_at desc").Limit(limit).Where("created_at < ?", offset).Find(&chatposts, "room_id=?", roomID).Error
 	if err != nil {
 		return nil, err
 	}

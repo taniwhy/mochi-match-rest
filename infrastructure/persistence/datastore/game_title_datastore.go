@@ -28,8 +28,8 @@ func (gD gameTitleDatastore) InsertGameTitle(gameTitle *models.GameTitle) error 
 	return gD.db.Create(gameTitle).Error
 }
 
-func (gD gameTitleDatastore) UpdateGameTitle(gameTitle *models.GameTitle) error {
-	return gD.db.Updates(gameTitle).Error
+func (gD gameTitleDatastore) UpdateGameTitle(gT *models.GameTitle) error {
+	return gD.db.Model(gT).Where("game_title_id = ?", gT.GameTitleID).Updates(gT).Error
 }
 
 func (gD gameTitleDatastore) DeleteGameTitle(gameTitle *models.GameTitle) error {

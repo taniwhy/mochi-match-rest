@@ -7,7 +7,7 @@ import (
 
 // UserDetailUseCase :
 type UserDetailUseCase interface {
-	FindUserDetailByID(id int64) (*models.UserDetail, error)
+	FindUserDetailByID(id string) (*models.UserDetail, error)
 	CreateUserDetail(userDetail *models.UserDetail) error
 	UpdateUserDetail(userDetail *models.UserDetail) error
 	DeleteUserDetail(userDetail *models.UserDetail) error
@@ -24,7 +24,7 @@ func NewUserDetailUsecase(uR repository.UserDetailRepository) UserDetailUseCase 
 	}
 }
 
-func (uU userDetailUsecase) FindUserDetailByID(id int64) (*models.UserDetail, error) {
+func (uU userDetailUsecase) FindUserDetailByID(id string) (*models.UserDetail, error) {
 	userDetail, err := uU.userDetailRepository.FindUserDetailByID(id)
 	if err != nil {
 		return nil, err

@@ -25,8 +25,8 @@ func (uD userDetailDatastore) FindAllUserDetail() ([]*models.UserDetail, error) 
 	return userDetails, nil
 }
 
-func (uD userDetailDatastore) FindUserDetailByID(id int64) (*models.UserDetail, error) {
-	userDetails := models.UserDetail{ID: id}
+func (uD userDetailDatastore) FindUserDetailByID(id string) (*models.UserDetail, error) {
+	userDetails := models.UserDetail{UserDetailID: id}
 	err := uD.db.Take(&userDetails).Error
 	if err != nil {
 		return nil, err

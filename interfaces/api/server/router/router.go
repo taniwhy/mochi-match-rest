@@ -15,8 +15,10 @@ import (
 
 // InitRouter :　ルーティング
 func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
+	dbConn.LogMode(true)
 	// DI
 	userDatastore := datastore.NewUserDatastore(dbConn)
+	userDetailDatastore := datastore.NewUserDetailDatastore(dbConn)
 	roomDatastore := datastore.NewRoomDatastore(dbConn)
 	roomBalacklistDatastore := datastore.NewRoomBlacklistDatastore(dbConn)
 	roomReservationDatastore := datastore.NewRoomReservationDatastore(dbConn)
@@ -24,12 +26,14 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 	gameTitleDatastore := datastore.NewGameTitleDatastore(dbConn)
 
 	userUsecase := usecase.NewUserUsecase(userDatastore)
+	userDetailUsecase := usecase.NewUserDetailUsecase(userDetailDatastore)
 	roomUsecase := usecase.NewRoomUsecase(roomDatastore)
 	roomBlacklistUsecase := usecase.NewRoomBlacklistUsecase(roomBalacklistDatastore)
 	roomReservationUsecase := usecase.NewRoomReservationUsecase(roomReservationDatastore)
 	chatPostUsecase := usecase.NewChatPostUsecase(chatPostDatastore)
 	gameTitleUsecase := usecase.NewGameTitleUsecase(gameTitleDatastore)
 
+	userHandler := handler.NewUserHandler(userUsecase, userDetailUsecase)
 	roomHandler := handler.NewRoomHandler(userUsecase, roomUsecase, roomBlacklistUsecase, roomReservationUsecase)
 	chatPostHandler := handler.NewChatPostHandler(chatPostUsecase, redisConn)
 	gameTitleHandler := handler.NewGameTitleHandler(gameTitleUsecase)
@@ -63,7 +67,7 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 	users := v1.Group("/users")
 	{
 		users.GET("/:id")
-		users.POST("/:id")
+		users.POST("", userHandler.CreateUser)
 		users.PUT("/:id")
 		users.DELETE("/:id")
 	}

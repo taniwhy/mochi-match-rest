@@ -1,18 +1,20 @@
 package models
 
 import (
+	"database/sql"
 	"time"
 )
 
 // User : usersテーブルモデル
 type User struct {
-	ID         int64
-	GoogleID   string
-	FacebookID string
-	TwitterID  string
+	UserID     string
+	GoogleID   sql.NullString
+	FacebookID sql.NullString
+	TwitterID  sql.NullString
 	IsAdmin    bool
-	IsFrozen   bool
+	IsFreeze   bool
 	IsDelete   bool
 	CreatedAt  time.Time
 	UpdateAt   time.Time
+	DeleteAt   sql.NullTime
 }

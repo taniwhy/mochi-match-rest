@@ -12,6 +12,7 @@ func TestFindUserByProviderID(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
+	// 下記処理の返却値に使用
 	u := models.User{}
 
 	// メソッドの行いを定義
@@ -24,6 +25,7 @@ func TestFindUserByProviderID(t *testing.T) {
 	// テスト対象をインスタンス化
 	test := NewUserUsecase(testMock)
 
+	// テスト用の引数データの定義
 	var tests = []struct {
 		provider string
 		id       string
@@ -33,6 +35,7 @@ func TestFindUserByProviderID(t *testing.T) {
 		{"", "bar"},
 		{"", ""},
 	}
+
 	for _, tt := range tests {
 		u, err := test.FindUserByProviderID(tt.provider, tt.id)
 		if err != nil {
@@ -44,4 +47,8 @@ func TestFindUserByProviderID(t *testing.T) {
 			}
 		}
 	}
+}
+
+func TestCreateUser(t *testing.T) {
+	// todo
 }

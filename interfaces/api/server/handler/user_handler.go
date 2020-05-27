@@ -43,15 +43,15 @@ func (uH userHandler) CreateUser(c *gin.Context) {
 	}
 	u := &models.User{
 		UserID:     uid.String(),
-		GoogleID:   sql.NullString{"", false},
-		FacebookID: sql.NullString{"", false},
-		TwitterID:  sql.NullString{"", false},
+		GoogleID:   sql.NullString{String: "", Valid: false},
+		FacebookID: sql.NullString{String: "", Valid: false},
+		TwitterID:  sql.NullString{String: "", Valid: false},
 		IsAdmin:    false,
 		IsFreeze:   false,
 		IsDelete:   false,
 		CreatedAt:  time.Now(),
 		UpdateAt:   time.Now(),
-		DeleteAt:   sql.NullTime{time.Now(), false},
+		DeleteAt:   sql.NullTime{Time: time.Now(), Valid: false},
 	}
 	provider := c.Query("provider")
 	switch {
@@ -61,7 +61,7 @@ func (uH userHandler) CreateUser(c *gin.Context) {
 			c.JSON(http.StatusBadRequest, gin.H{"message": "Cockie error"})
 			return
 		}
-		u.GoogleID = sql.NullString{goid, true}
+		u.GoogleID = sql.NullString{String: goid, Valid: true}
 	default:
 		c.JSON(http.StatusBadRequest, gin.H{"message": "Query error"})
 		return

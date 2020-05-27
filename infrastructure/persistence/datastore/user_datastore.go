@@ -1,6 +1,8 @@
 package datastore
 
 import (
+	"database/sql"
+
 	"github.com/jinzhu/gorm"
 	"github.com/taniwhy/mochi-match-rest/domain/models"
 	"github.com/taniwhy/mochi-match-rest/domain/repository"
@@ -29,8 +31,8 @@ func (uD userDatastore) FindAllUser() ([]*models.User, error) {
 	return users, nil
 }
 
-func (uD userDatastore) FindUserByID(id int64) (*models.User, error) {
-	User := models.User{ID: id}
+func (uD userDatastore) FindUserByID(id string) (*models.User, error) {
+	User := models.User{UserID: id}
 	err := uD.db.Take(&User).Error
 	if err != nil {
 		return nil, err
@@ -42,7 +44,7 @@ func (uD userDatastore) FindUserByProviderID(provider, id string) (*models.User,
 	user := models.User{}
 	switch provider {
 	case "google":
-		user.GoogleID = id
+		user.GoogleID = sql.NullString{id, true}
 	}
 
 	err := uD.db.Take(&user).Error

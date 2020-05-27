@@ -6,9 +6,9 @@ import (
 
 // ChatPost : chat_postテーブルモデル
 type ChatPost struct {
-	ID        int64
-	Room      int64
-	User      int64
-	Message   string
-	CreatedAt time.Time
+	ChatPostID string    `json:"id"`
+	RoomID     string    `json:"room"`
+	UserID     string    `json:"user"`
+	Message    string    `json:"message" binding:"required"`
+	CreatedAt  time.Time `json:"created_at"`
 }

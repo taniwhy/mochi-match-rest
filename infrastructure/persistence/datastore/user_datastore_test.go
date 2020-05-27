@@ -13,7 +13,6 @@ func getDBMock() (*gorm.DB, sqlmock.Sqlmock, error) {
 	if err != nil {
 		return nil, nil, err
 	}
-
 	gdb, err := gorm.Open("postgres", db)
 	if err != nil {
 		return nil, nil, err
@@ -31,8 +30,7 @@ func TestFindAllUser(t *testing.T) {
 
 	test := NewUserDatastore(db)
 
-	mock.ExpectQuery(regexp.QuoteMeta(
-		`SELECT * FROM "users"`)).
+	mock.ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "users"`)).
 		WithArgs().
 		WillReturnRows(sqlmock.NewRows([]string{""}))
 

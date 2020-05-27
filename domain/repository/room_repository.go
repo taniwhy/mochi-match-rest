@@ -7,7 +7,7 @@ import (
 // RoomRepository : ユーザーのリポジトリ
 type RoomRepository interface {
 	FindAllRoom() ([]*models.Room, error)
-	FindRoomByID(id int64) (*models.Room, error)
+	FindRoomByID(id string) (*models.Room, error)
 	InsertRoom(room *models.Room) error
 	UpdateRoom(room *models.Room) error
 	DeleteRoom(room *models.Room) error

@@ -25,8 +25,8 @@ func (rD roomDatastore) FindAllRoom() ([]*models.Room, error) {
 	return rooms, nil
 }
 
-func (rD roomDatastore) FindRoomByID(id int64) (*models.Room, error) {
-	room := models.Room{ID: id}
+func (rD roomDatastore) FindRoomByID(id string) (*models.Room, error) {
+	room := models.Room{RoomID: id}
 	err := rD.db.Take(&room).Error
 	if err != nil {
 		return nil, err

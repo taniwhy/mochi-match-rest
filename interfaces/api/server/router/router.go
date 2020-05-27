@@ -4,6 +4,7 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"github.com/gomodule/redigo/redis"
 	"github.com/jinzhu/gorm"
 	"github.com/taniwhy/mochi-match-rest/application/usecase"
 	"github.com/taniwhy/mochi-match-rest/infrastructure/dao"
@@ -13,17 +14,29 @@ import (
 )
 
 // InitRouter :　ルーティング
-func InitRouter(conn *gorm.DB) *gin.Engine {
+func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
+	dbConn.LogMode(true)
 	// DI
-	userDatastore := datastore.NewUserDatastore(conn)
-	roomDatastore := datastore.NewRoomDatastore(conn)
-	roomBalacklistDatastore := datastore.NewRoomBlacklistDatastore(conn)
-	roomReservationDatastore := datastore.NewRoomReservationDatastore(conn)
+	userDatastore := datastore.NewUserDatastore(dbConn)
+	userDetailDatastore := datastore.NewUserDetailDatastore(dbConn)
+	roomDatastore := datastore.NewRoomDatastore(dbConn)
+	roomBalacklistDatastore := datastore.NewRoomBlacklistDatastore(dbConn)
+	roomReservationDatastore := datastore.NewRoomReservationDatastore(dbConn)
+	chatPostDatastore := datastore.NewChatPostDatastore(dbConn)
+	gameTitleDatastore := datastore.NewGameTitleDatastore(dbConn)
+
 	userUsecase := usecase.NewUserUsecase(userDatastore)
+	userDetailUsecase := usecase.NewUserDetailUsecase(userDetailDatastore)
 	roomUsecase := usecase.NewRoomUsecase(roomDatastore)
 	roomBlacklistUsecase := usecase.NewRoomBlacklistUsecase(roomBalacklistDatastore)
 	roomReservationUsecase := usecase.NewRoomReservationUsecase(roomReservationDatastore)
+	chatPostUsecase := usecase.NewChatPostUsecase(chatPostDatastore)
+	gameTitleUsecase := usecase.NewGameTitleUsecase(gameTitleDatastore)
+
+	userHandler := handler.NewUserHandler(userUsecase, userDetailUsecase)
 	roomHandler := handler.NewRoomHandler(userUsecase, roomUsecase, roomBlacklistUsecase, roomReservationUsecase)
+	chatPostHandler := handler.NewChatPostHandler(chatPostUsecase, redisConn)
+	gameTitleHandler := handler.NewGameTitleHandler(gameTitleUsecase)
 	googleAuthHandler := auth.NewGoogleOAuthHandler(userUsecase)
 
 	store := dao.NewRedisStore()
@@ -51,9 +64,36 @@ func InitRouter(conn *gorm.DB) *gin.Engine {
 		google.GET("/login", googleAuthHandler.Login)
 		google.GET("/callback", googleAuthHandler.Callback)
 	}
-	room := v1.Group("/room")
+	users := v1.Group("/users")
 	{
-		room.GET("/list", roomHandler.GetRoom)
+		users.GET("/:id")
+		users.POST("", userHandler.CreateUser)
+		users.PUT("/:id")
+		users.DELETE("/:id")
+	}
+	games := users.Group("/:id/favorate/games")
+	{
+		games.GET("")
+		games.POST("")
+	}
+	room := v1.Group("/rooms")
+	{
+		room.GET("/:id", roomHandler.GetRoom)
+		room.GET("/:id/messages", chatPostHandler.GetChatPostByRoomID)
+		room.POST("/:id/messages", chatPostHandler.CreateChatPost)
+		room.GET("/:id/report")
+		room.POST("/:id/report")
+	}
+	gamelist := v1.Group("/gamelist")
+	{
+		gamelist.GET("", gameTitleHandler.GetAllGameTitle)
+		gamelist.POST("", gameTitleHandler.CreateGameTitle)
+		gamelist.PUT("/:id", gameTitleHandler.UpdateGameTitle)
+		gamelist.DELETE("/:id", gameTitleHandler.DeleteGameTitle)
+	}
+	report := v1.Group("/report")
+	{
+		report.GET("")
 	}
 
 	return r

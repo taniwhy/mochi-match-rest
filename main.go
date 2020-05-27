@@ -14,10 +14,13 @@ func init() {
 }
 
 func main() {
-	conn := dao.NewDatabase()
-	defer conn.Close()
+	dbConn := dao.NewDatabase()
+	defer dbConn.Close()
 
-	routers := router.InitRouter(conn)
+	redisConn := dao.NewRedisConn()
+	defer redisConn.Close()
+
+	routers := router.InitRouter(dbConn, redisConn)
 
 	server := &http.Server{
 		Addr:           ":8080",

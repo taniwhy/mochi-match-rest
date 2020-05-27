@@ -8,7 +8,7 @@ import (
 // RoomUseCase :
 type RoomUseCase interface {
 	FindAllRoom() ([]*models.Room, error)
-	FindRoomByID(id int64) (*models.Room, error)
+	FindRoomByID(id string) (*models.Room, error)
 	InsertRoom(room *models.Room) error
 	UpdateRoom(room *models.Room) error
 	DeleteRoom(room *models.Room) error
@@ -33,7 +33,7 @@ func (rU roomUsecase) FindAllRoom() ([]*models.Room, error) {
 	return rooms, nil
 }
 
-func (rU roomUsecase) FindRoomByID(id int64) (*models.Room, error) {
+func (rU roomUsecase) FindRoomByID(id string) (*models.Room, error) {
 	room, err := rU.roomRepository.FindRoomByID(id)
 	if err != nil {
 		return nil, err

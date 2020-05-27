@@ -11,13 +11,12 @@ type gameTitleDatastore struct {
 }
 
 // NewGameTitleDatastore : .
-func NewGameTitleDatastore(db *gorm.DB) repository.ChatPostRepository {
-	return &chatPostDatastore{db}
+func NewGameTitleDatastore(db *gorm.DB) repository.GameTitleRepository {
+	return &gameTitleDatastore{db}
 }
 
 func (gD gameTitleDatastore) FindAllGameTitle() ([]*models.GameTitle, error) {
 	gameTitle := []*models.GameTitle{}
-
 	err := gD.db.Find(&gameTitle).Error
 	if err != nil {
 		return nil, err
@@ -29,11 +28,11 @@ func (gD gameTitleDatastore) InsertGameTitle(gameTitle *models.GameTitle) error 
 	return gD.db.Create(gameTitle).Error
 }
 
-func (gD roomDatastore) UpdateGameTitle(gameTitle *models.GameTitle) error {
+func (gD gameTitleDatastore) UpdateGameTitle(gameTitle *models.GameTitle) error {
 	return gD.db.Updates(gameTitle).Error
 }
 
-func (gD roomDatastore) DeleteGameTitle(gameTitle *models.GameTitle) error {
+func (gD gameTitleDatastore) DeleteGameTitle(gameTitle *models.GameTitle) error {
 	err := gD.db.Take(&gameTitle).Error
 	if err != nil {
 		return err

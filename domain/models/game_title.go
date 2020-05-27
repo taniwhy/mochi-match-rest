@@ -6,8 +6,8 @@ import (
 
 // GameTitle : game_titleテーブルモデル
 type GameTitle struct {
-	ID        int
-	GameTitle string
+	ID        string
+	GameTitle string `json:"game_title" binding:"required"`
 	CreatedAt time.Time
 	UpdateAt  time.Time
 }

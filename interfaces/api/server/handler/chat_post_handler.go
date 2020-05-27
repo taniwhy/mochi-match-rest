@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -9,6 +10,7 @@ import (
 	"github.com/gomodule/redigo/redis"
 	"github.com/google/uuid"
 	"github.com/taniwhy/mochi-match-rest/application/usecase"
+	"github.com/taniwhy/mochi-match-rest/auth"
 	"github.com/taniwhy/mochi-match-rest/domain/models"
 )
 
@@ -63,6 +65,8 @@ func (cH chatPostHandler) CreateChatPost(c *gin.Context) {
 	roomID := c.Params.ByName("id")
 	// todo : テスト用に仮データを記述
 	// idをトークンから取得できるように
+	token := auth.GenerateToken("aa")
+	fmt.Println(token)
 	m := &models.ChatPost{
 		ChatPostID: id.String(),
 		RoomID:     roomID,
@@ -72,6 +76,10 @@ func (cH chatPostHandler) CreateChatPost(c *gin.Context) {
 	if err := c.BindJSON(&m); err != nil {
 		// todo : エラーメッセージを要修正
 		c.JSON(http.StatusBadRequest, gin.H{"message": err})
+		return
+	}
+	if m.Message == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "message not found"})
 		return
 	}
 	if err := cH.chatPostUsecase.InsertChatPost(m); err != nil {

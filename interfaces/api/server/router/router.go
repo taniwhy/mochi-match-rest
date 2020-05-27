@@ -9,7 +9,6 @@ import (
 	"github.com/taniwhy/mochi-match-rest/application/usecase"
 	"github.com/taniwhy/mochi-match-rest/infrastructure/dao"
 	"github.com/taniwhy/mochi-match-rest/infrastructure/persistence/datastore"
-	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/auth"
 	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/handler"
 )
 
@@ -37,7 +36,7 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 	roomHandler := handler.NewRoomHandler(userUsecase, roomUsecase, roomBlacklistUsecase, roomReservationUsecase)
 	chatPostHandler := handler.NewChatPostHandler(chatPostUsecase, redisConn)
 	gameTitleHandler := handler.NewGameTitleHandler(gameTitleUsecase)
-	googleAuthHandler := auth.NewGoogleOAuthHandler(userUsecase)
+	googleAuthHandler := handler.NewGoogleOAuthHandler(userUsecase)
 
 	store := dao.NewRedisStore()
 	//f, err := os.Create("./config/log/access.log")
@@ -77,6 +76,7 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 		games.POST("")
 	}
 	room := v1.Group("/rooms")
+	room.Use(auth.TokenAuth())
 	{
 		room.GET("/:id", roomHandler.GetRoom)
 		room.GET("/:id/messages", chatPostHandler.GetChatPostByRoomID)

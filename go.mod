@@ -7,6 +7,7 @@ require (
 	github.com/alicebob/gopher-json v0.0.0-20200520072559-a9ecdc9d1d3a // indirect
 	github.com/alicebob/miniredis v2.5.0+incompatible // indirect
 	github.com/armon/consul-api v0.0.0-20180202201655-eb2c6b5be1b6 // indirect
+	github.com/auth0/go-jwt-middleware v0.0.0-20200507191422-d30d7b9ece63
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-contrib/cors v1.3.1
@@ -23,7 +24,7 @@ require (
 	github.com/mailru/easyjson v0.7.1 // indirect
 	github.com/spf13/viper v1.7.0
 	github.com/swaggo/swag v1.6.5 // indirect
-	github.com/taniwhy/css-study-game-WebAPI v0.0.0-20200117050318-f845b5ef3a45 // indirect
+	github.com/taniwhy/css-study-game-WebAPI v0.0.0-20200117050318-f845b5ef3a45
 	github.com/taniwhy/task-manager-api v0.0.0-20200316002504-399659419481 // indirect
 	github.com/urfave/cli v1.22.4 // indirect
 	github.com/xordataexchange/crypt v0.0.3-0.20170626215501-b2862e3d0a77 // indirect

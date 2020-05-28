@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -51,4 +52,37 @@ func TestFindUserByProviderID(t *testing.T) {
 
 func TestCreateUser(t *testing.T) {
 	// todo
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	EmptyUser := models.User{}
+	noEmptyUser := models.User{UserID: "testID"}
+
+	testMock := mock.NewMockUserRepository(ctrl)
+	testMock.EXPECT().InsertUser(&EmptyUser).Return(fmt.Errorf("構造体空じゃん"))
+	testMock.EXPECT().InsertUser(&noEmptyUser).Return(nil)
+
+	// テスト対象をインスタンス化
+	test := NewUserUsecase(testMock)
+
+	// テスト用の引数データの定義
+	var tests = []struct {
+		user models.User
+	}{
+		{models.User{}},
+		{models.User{UserID: "testID"}},
+	}
+
+	for _, tt := range tests {
+		err := test.CreateUser(&tt.user)
+		if tt.user.UserID == "" {
+			if err == nil {
+				t.Fatal(err)
+			}
+		} else {
+			if err != nil {
+				t.Fatal(err)
+			}
+		}
+	}
 }

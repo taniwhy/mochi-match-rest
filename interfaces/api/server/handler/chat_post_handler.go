@@ -65,7 +65,7 @@ func (cH chatPostHandler) CreateChatPost(c *gin.Context) {
 	roomID := c.Params.ByName("id")
 	// todo : テスト用に仮データを記述
 	// idをトークンから取得できるように
-	token := auth.GenerateToken("aa")
+	token := auth.GenerateAccessToken("a")
 	fmt.Println(token)
 	m := &models.ChatPost{
 		ChatPostID: id.String(),

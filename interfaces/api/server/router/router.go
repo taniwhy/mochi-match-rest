@@ -7,6 +7,7 @@ import (
 	"github.com/gomodule/redigo/redis"
 	"github.com/jinzhu/gorm"
 	"github.com/taniwhy/mochi-match-rest/application/usecase"
+	jwt_auth "github.com/taniwhy/mochi-match-rest/auth"
 	"github.com/taniwhy/mochi-match-rest/infrastructure/dao"
 	"github.com/taniwhy/mochi-match-rest/infrastructure/persistence/datastore"
 	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/handler"
@@ -76,7 +77,7 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 		games.POST("")
 	}
 	room := v1.Group("/rooms")
-	room.Use(auth.TokenAuth())
+	room.Use(jwt_auth.TokenAuth())
 	{
 		room.GET("/:id", roomHandler.GetRoom)
 		room.GET("/:id/messages", chatPostHandler.GetChatPostByRoomID)

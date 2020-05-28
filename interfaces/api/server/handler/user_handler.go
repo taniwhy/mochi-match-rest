@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/taniwhy/mochi-match-rest/application/usecase"
+	"github.com/taniwhy/mochi-match-rest/auth"
 	"github.com/taniwhy/mochi-match-rest/domain/models"
 )
 
@@ -93,8 +94,13 @@ func (uH userHandler) CreateUser(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": err})
 		return
 	}
+	accessToekn := auth.GenerateAccessToken(uD.UserID)
+	refleshToken := auth.GenerateRefreshToken(uD.UserID)
 
-	c.JSON(http.StatusOK, gin.H{"token": "testToken"})
+	c.JSON(http.StatusOK, gin.H{
+		"access_token": accessToekn,
+		"refreshToken": refleshToken,
+	})
 }
 
 func (uH userHandler) UpdateUser(c *gin.Context) {

@@ -11,6 +11,7 @@ type User struct {
 	GoogleID   sql.NullString
 	FacebookID sql.NullString
 	TwitterID  sql.NullString
+	Email      string `json:"email" binding:"required"`
 	IsAdmin    bool
 	IsFreeze   bool
 	IsDelete   bool

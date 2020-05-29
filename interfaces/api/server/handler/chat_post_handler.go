@@ -10,8 +10,8 @@ import (
 	"github.com/gomodule/redigo/redis"
 	"github.com/google/uuid"
 	"github.com/taniwhy/mochi-match-rest/application/usecase"
-	"github.com/taniwhy/mochi-match-rest/auth"
 	"github.com/taniwhy/mochi-match-rest/domain/models"
+	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/auth"
 )
 
 // ChatPostHandler : インターフェース

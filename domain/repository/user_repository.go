@@ -11,5 +11,5 @@ type UserRepository interface {
 	FindUserByProviderID(provider, id string) (*models.User, error)
 	InsertUser(user *models.User) error
 	UpdateUser(user *models.User) error
-	DeleteUser(user *models.User) error
+	DeleteUser(id string) error
 }

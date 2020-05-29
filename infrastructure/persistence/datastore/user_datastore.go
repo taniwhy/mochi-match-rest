@@ -1,6 +1,8 @@
 package datastore
 
 import (
+	"fmt"
+
 	"github.com/jinzhu/gorm"
 	"github.com/taniwhy/mochi-match-rest/domain/models"
 	"github.com/taniwhy/mochi-match-rest/domain/repository"
@@ -60,10 +62,11 @@ func (uD userDatastore) UpdateUser(user *models.User) error {
 	return uD.db.Updates(user).Error
 }
 
-func (uD userDatastore) DeleteUser(user *models.User) error {
-	err := uD.db.Take(&user).Error
-	if err != nil {
-		return err
+func (uD userDatastore) DeleteUser(id string) error {
+	user := models.User{}
+	recordNotFound := uD.db.Where("user_id = ?", id).Take(&user).RecordNotFound()
+	if recordNotFound {
+		return fmt.Errorf("Record not found : %v", id)
 	}
-	return uD.db.Delete(user).Error
+	return uD.db.Model(&user).Where("user_id = ?", id).Update("is_delete", true).Error
 }

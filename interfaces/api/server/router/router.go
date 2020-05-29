@@ -7,9 +7,9 @@ import (
 	"github.com/gomodule/redigo/redis"
 	"github.com/jinzhu/gorm"
 	"github.com/taniwhy/mochi-match-rest/application/usecase"
-	jwt_auth "github.com/taniwhy/mochi-match-rest/auth"
 	"github.com/taniwhy/mochi-match-rest/infrastructure/dao"
 	"github.com/taniwhy/mochi-match-rest/infrastructure/persistence/datastore"
+	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/auth"
 	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/handler"
 )
 
@@ -37,6 +37,7 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 	roomHandler := handler.NewRoomHandler(userUsecase, roomUsecase, roomBlacklistUsecase, roomReservationUsecase)
 	chatPostHandler := handler.NewChatPostHandler(chatPostUsecase, redisConn)
 	gameTitleHandler := handler.NewGameTitleHandler(gameTitleUsecase)
+	authHandler := handler.NewAuthHandler()
 	googleAuthHandler := handler.NewGoogleOAuthHandler(userUsecase)
 
 	store := dao.NewRedisStore()
@@ -58,8 +59,11 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 	r.Use(sessions.Sessions("session", store))
 
 	v1 := r.Group("/v1")
-	auth := v1.Group("/auth")
-	google := auth.Group("/google")
+	authHandle := v1.Group("/auth")
+	{
+		authHandle.POST("/refresh", authHandler.Refresh)
+	}
+	google := authHandle.Group("/google")
 	{
 		google.GET("/login", googleAuthHandler.Login)
 		google.GET("/callback", googleAuthHandler.Callback)
@@ -69,7 +73,7 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 		users.GET("/:id")
 		users.POST("", userHandler.CreateUser)
 		users.PUT("/:id")
-		users.DELETE("/:id")
+		users.DELETE("/:id", userHandler.DeleteUser)
 	}
 	games := users.Group("/:id/favorate/games")
 	{
@@ -77,10 +81,11 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 		games.POST("")
 	}
 	room := v1.Group("/rooms")
-	room.Use(jwt_auth.TokenAuth())
+	room.Use(auth.TokenAuth())
 	{
-		room.GET("/:id", roomHandler.GetRoom)
+		room.GET("")
 		room.GET("/:id/messages", chatPostHandler.GetChatPostByRoomID)
+		room.POST("", roomHandler.CreateRoom)
 		room.POST("/:id/messages", chatPostHandler.CreateChatPost)
 		room.GET("/:id/report")
 		room.POST("/:id/report")

@@ -9,6 +9,7 @@ import (
 type UserUseCase interface {
 	FindUserByProviderID(provider, id string) (*models.User, error)
 	CreateUser(user *models.User) error
+	DeleteUser(id string) error
 }
 
 type userUsecase struct {
@@ -32,6 +33,14 @@ func (uU userUsecase) FindUserByProviderID(provider, id string) (*models.User, e
 
 func (uU userUsecase) CreateUser(user *models.User) error {
 	err := uU.userRepository.InsertUser(user)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (uU userUsecase) DeleteUser(id string) error {
+	err := uU.userRepository.DeleteUser(id)
 	if err != nil {
 		return err
 	}

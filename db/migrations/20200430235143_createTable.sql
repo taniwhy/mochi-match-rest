@@ -8,6 +8,7 @@ CREATE TABLE users
     google_id TEXT,
     facebook_id TEXT,
     twitter_id TEXT,
+    email TEXT NOT NULL,
     is_admin BOOLEAN NOT NULL,
     is_freeze BOOLEAN NOT NULL,
     is_delete BOOLEAN NOT NULL,

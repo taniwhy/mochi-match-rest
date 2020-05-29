@@ -1,0 +1,55 @@
+FORMAT: 1A
+HOST: http://localhost
+
+# Mochi-Match API
+mochi-matchのバックエンドPIバックエンド日仕様書
+
+## ユーザ登録 [POST /v1/users]
+新規ユーザを登録する
+
++ Request (application/json)
+    + Attributes
+        + user_name: `username` (string, required) - ユーザ名
+        + email: `example@gmail.com` (string, required) - メールアドレス
+
++ Response 200 (application/json)
+    + Attributes
+        + access_token: `example token` (string) - アクセストークン
+        + refresh_token: `example token` (string) - リフレッシュトークン
+        + expires_in: `123456` (string) - UNIX形式のリフレッシュトークンの有効期限
+
+
+## トークンリフレッシュ [POST /v1/auth/refresh]
+リフレッシュトークンを用いてトークンを新しく発行する
+
++ Request (application/json)
+    + Attributes
+        + refresh_token: `example token` (string, required)
+
++ Response 200 (application/json)
+    + Attributes
+        + access_token: `{token}` (string)
+        + token_type: `bearer` (string)
+        + expire_in: `60` (number) - トークンの有効期限
+
+## ユーザ情報取得 [GET /user]
+自分自身のアカウント情報を取得する
+
++ Request
+    + Headers
+        ```
+        Authorization: Bearer {token}
+        ```
+
++ Response 200 (application/json)
+    + Body
+        ```
+        {
+            "id": 1,
+            "name": "oskamathis",
+            "email": "oskamathis@gmail.com",
+            "email_verified_at": null,
+            "created_at": "2019-05-23 12:19:26",
+            "updated_at": "2019-05-23 12:19:26"
+        }
+        ```

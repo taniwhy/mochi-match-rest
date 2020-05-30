@@ -60,21 +60,12 @@ func NewUserHandler(uU usecase.UserUseCase, uDU usecase.UserDetailUseCase, fGU u
 }
 
 func (uH userHandler) GetUser(c *gin.Context) {
-	userID := c.Params.ByName("id")
 	claims, err := auth.GetTokenClaims(c)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
 	claimsID := claims["sub"].(string)
-	if userID != claimsID {
-		c.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf("Params error: %v", userID)})
-		return
-	}
-	if userID != claimsID {
-		c.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf("Params error: %v", userID)})
-		return
-	}
 	_, err = uH.userDetailUsecase.FindUserDetailByID(claimsID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})

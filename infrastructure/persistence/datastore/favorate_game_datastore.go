@@ -5,7 +5,7 @@ import (
 
 	"github.com/jinzhu/gorm"
 	"github.com/taniwhy/mochi-match-rest/domain/models/dbmodel"
-	"github.com/taniwhy/mochi-match-rest/domain/models/response"
+	"github.com/taniwhy/mochi-match-rest/domain/models/dbres"
 	"github.com/taniwhy/mochi-match-rest/domain/repository"
 )
 
@@ -23,8 +23,8 @@ func NewFavoriteGameDatastore(db *gorm.DB) repository.FavoriteGameRepository {
 	return &favoriteGameDatastore{db}
 }
 
-func (eD favoriteGameDatastore) FindFavoriteGameByID(id string) ([]*response.FavoriteGamesRes, error) {
-	f := []*response.FavoriteGamesRes{}
+func (eD favoriteGameDatastore) FindFavoriteGameByID(id string) ([]*dbres.FavoriteGamesRes, error) {
+	f := []*dbres.FavoriteGamesRes{}
 	eD.db.Table("favorite_games").
 		Select("favorite_games.favorite_game_id, game_titles.game_title_id, game_titles.game_title").
 		Joins("left join game_titles on game_titles.game_title_id = favorite_games.game_title_id").

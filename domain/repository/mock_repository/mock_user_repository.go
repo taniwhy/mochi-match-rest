@@ -6,7 +6,7 @@ package mock_repository
 
 import (
 	gomock "github.com/golang/mock/gomock"
-	models "github.com/taniwhy/mochi-match-rest/domain/models"
+	dbmodel "github.com/taniwhy/mochi-match-rest/domain/models/dbmodel"
 	reflect "reflect"
 )
 
@@ -34,10 +34,10 @@ func (m *MockUserRepository) EXPECT() *MockUserRepositoryMockRecorder {
 }
 
 // FindAllUser mocks base method
-func (m *MockUserRepository) FindAllUser() ([]*models.User, error) {
+func (m *MockUserRepository) FindAllUser() ([]*dbmodel.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindAllUser")
-	ret0, _ := ret[0].([]*models.User)
+	ret0, _ := ret[0].([]*dbmodel.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -49,10 +49,10 @@ func (mr *MockUserRepositoryMockRecorder) FindAllUser() *gomock.Call {
 }
 
 // FindUserByID mocks base method
-func (m *MockUserRepository) FindUserByID(id string) (*models.User, error) {
+func (m *MockUserRepository) FindUserByID(id string) (*dbmodel.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindUserByID", id)
-	ret0, _ := ret[0].(*models.User)
+	ret0, _ := ret[0].(*dbmodel.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -64,10 +64,10 @@ func (mr *MockUserRepositoryMockRecorder) FindUserByID(id interface{}) *gomock.C
 }
 
 // FindUserByProviderID mocks base method
-func (m *MockUserRepository) FindUserByProviderID(provider, id string) (*models.User, error) {
+func (m *MockUserRepository) FindUserByProviderID(provider, id string) (*dbmodel.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindUserByProviderID", provider, id)
-	ret0, _ := ret[0].(*models.User)
+	ret0, _ := ret[0].(*dbmodel.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -79,7 +79,7 @@ func (mr *MockUserRepositoryMockRecorder) FindUserByProviderID(provider, id inte
 }
 
 // InsertUser mocks base method
-func (m *MockUserRepository) InsertUser(user *models.User) error {
+func (m *MockUserRepository) InsertUser(user *dbmodel.User) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "InsertUser", user)
 	ret0, _ := ret[0].(error)
@@ -93,7 +93,7 @@ func (mr *MockUserRepositoryMockRecorder) InsertUser(user interface{}) *gomock.C
 }
 
 // UpdateUser mocks base method
-func (m *MockUserRepository) UpdateUser(user *models.User) error {
+func (m *MockUserRepository) UpdateUser(user *dbmodel.User) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateUser", user)
 	ret0, _ := ret[0].(error)
@@ -107,15 +107,15 @@ func (mr *MockUserRepositoryMockRecorder) UpdateUser(user interface{}) *gomock.C
 }
 
 // DeleteUser mocks base method
-func (m *MockUserRepository) DeleteUser(user *models.User) error {
+func (m *MockUserRepository) DeleteUser(id string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteUser", user)
+	ret := m.ctrl.Call(m, "DeleteUser", id)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // DeleteUser indicates an expected call of DeleteUser
-func (mr *MockUserRepositoryMockRecorder) DeleteUser(user interface{}) *gomock.Call {
+func (mr *MockUserRepositoryMockRecorder) DeleteUser(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteUser", reflect.TypeOf((*MockUserRepository)(nil).DeleteUser), user)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteUser", reflect.TypeOf((*MockUserRepository)(nil).DeleteUser), id)
 }

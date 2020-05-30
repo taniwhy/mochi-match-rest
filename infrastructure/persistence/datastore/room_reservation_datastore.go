@@ -2,7 +2,7 @@ package datastore
 
 import (
 	"github.com/jinzhu/gorm"
-	"github.com/taniwhy/mochi-match-rest/domain/models"
+	"github.com/taniwhy/mochi-match-rest/domain/models/dbmodel"
 	"github.com/taniwhy/mochi-match-rest/domain/repository"
 )
 
@@ -15,8 +15,8 @@ func NewRoomReservationDatastore(db *gorm.DB) repository.RoomReservationReposito
 	return &roomReservationDatastore{db}
 }
 
-func (rD roomReservationDatastore) FindAllRoomReservation() ([]*models.RoomReservation, error) {
-	blacklist := []*models.RoomReservation{}
+func (rD roomReservationDatastore) FindAllRoomReservation() ([]*dbmodel.RoomReservation, error) {
+	blacklist := []*dbmodel.RoomReservation{}
 
 	err := rD.db.Find(&blacklist).Error
 	if err != nil {
@@ -25,8 +25,8 @@ func (rD roomReservationDatastore) FindAllRoomReservation() ([]*models.RoomReser
 	return blacklist, nil
 }
 
-func (rD roomReservationDatastore) FindRoomReservationByID(id int64) (*models.RoomReservation, error) {
-	roomReservation := models.RoomReservation{ID: id}
+func (rD roomReservationDatastore) FindRoomReservationByID(id int64) (*dbmodel.RoomReservation, error) {
+	roomReservation := dbmodel.RoomReservation{ID: id}
 	err := rD.db.Take(&roomReservation).Error
 	if err != nil {
 		return nil, err
@@ -34,15 +34,15 @@ func (rD roomReservationDatastore) FindRoomReservationByID(id int64) (*models.Ro
 	return &roomReservation, nil
 }
 
-func (rD roomReservationDatastore) InsertRoomReservation(roomReservation *models.RoomReservation) error {
+func (rD roomReservationDatastore) InsertRoomReservation(roomReservation *dbmodel.RoomReservation) error {
 	return rD.db.Create(roomReservation).Error
 }
 
-func (rD roomReservationDatastore) UpdateRoomReservation(roomReservation *models.RoomReservation) error {
+func (rD roomReservationDatastore) UpdateRoomReservation(roomReservation *dbmodel.RoomReservation) error {
 	return rD.db.Update(roomReservation).Error
 }
 
-func (rD roomReservationDatastore) DeleteRoomReservation(roomReservation *models.RoomReservation) error {
+func (rD roomReservationDatastore) DeleteRoomReservation(roomReservation *dbmodel.RoomReservation) error {
 	err := rD.db.Take(&roomReservation).Error
 	if err != nil {
 		return err

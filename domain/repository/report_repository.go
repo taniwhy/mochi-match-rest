@@ -1,12 +1,12 @@
 package repository
 
 import (
-	"github.com/taniwhy/mochi-match-rest/domain/models"
+	"github.com/taniwhy/mochi-match-rest/domain/models/dbmodel"
 )
 
 // ReportRepository :
 type ReportRepository interface {
-	FindAllReport() ([]*models.Report, error)
-	InsertReport(report *models.Report) error
-	DeleteReport(report *models.Report) error
+	FindAllReport() ([]*dbmodel.Report, error)
+	InsertReport(report *dbmodel.Report) error
+	DeleteReport(report *dbmodel.Report) error
 }

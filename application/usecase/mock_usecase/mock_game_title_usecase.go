@@ -6,7 +6,7 @@ package mock_usecase
 
 import (
 	gomock "github.com/golang/mock/gomock"
-	models "github.com/taniwhy/mochi-match-rest/domain/models"
+	dbmodel "github.com/taniwhy/mochi-match-rest/domain/models/dbmodel"
 	reflect "reflect"
 )
 
@@ -34,10 +34,10 @@ func (m *MockGameTitleUseCase) EXPECT() *MockGameTitleUseCaseMockRecorder {
 }
 
 // FindAllGameTitle mocks base method
-func (m *MockGameTitleUseCase) FindAllGameTitle() ([]*models.GameTitle, error) {
+func (m *MockGameTitleUseCase) FindAllGameTitle() ([]*dbmodel.GameTitle, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindAllGameTitle")
-	ret0, _ := ret[0].([]*models.GameTitle)
+	ret0, _ := ret[0].([]*dbmodel.GameTitle)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -49,7 +49,7 @@ func (mr *MockGameTitleUseCaseMockRecorder) FindAllGameTitle() *gomock.Call {
 }
 
 // InsertGameTitle mocks base method
-func (m *MockGameTitleUseCase) InsertGameTitle(gameTitle *models.GameTitle) error {
+func (m *MockGameTitleUseCase) InsertGameTitle(gameTitle *dbmodel.GameTitle) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "InsertGameTitle", gameTitle)
 	ret0, _ := ret[0].(error)
@@ -63,7 +63,7 @@ func (mr *MockGameTitleUseCaseMockRecorder) InsertGameTitle(gameTitle interface{
 }
 
 // UpdateGameTitle mocks base method
-func (m *MockGameTitleUseCase) UpdateGameTitle(gameTitle *models.GameTitle) error {
+func (m *MockGameTitleUseCase) UpdateGameTitle(gameTitle *dbmodel.GameTitle) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateGameTitle", gameTitle)
 	ret0, _ := ret[0].(error)
@@ -77,7 +77,7 @@ func (mr *MockGameTitleUseCaseMockRecorder) UpdateGameTitle(gameTitle interface{
 }
 
 // DeleteGameTitle mocks base method
-func (m *MockGameTitleUseCase) DeleteGameTitle(gameTitle *models.GameTitle) error {
+func (m *MockGameTitleUseCase) DeleteGameTitle(gameTitle *dbmodel.GameTitle) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteGameTitle", gameTitle)
 	ret0, _ := ret[0].(error)

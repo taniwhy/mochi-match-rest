@@ -1,14 +1,14 @@
 package repository
 
 import (
-	"github.com/taniwhy/mochi-match-rest/domain/models"
+	"github.com/taniwhy/mochi-match-rest/domain/models/dbmodel"
 )
 
 // RoomRepository : ユーザーのリポジトリ
 type RoomRepository interface {
-	FindAllRoom() ([]*models.Room, error)
-	FindRoomByID(id string) (*models.Room, error)
-	InsertRoom(room *models.Room) error
-	UpdateRoom(room *models.Room) error
-	DeleteRoom(room *models.Room) error
+	FindAllRoom() ([]*dbmodel.Room, error)
+	FindRoomByID(id string) (*dbmodel.Room, error)
+	InsertRoom(room *dbmodel.Room) error
+	UpdateRoom(room *dbmodel.Room) error
+	DeleteRoom(room *dbmodel.Room) error
 }

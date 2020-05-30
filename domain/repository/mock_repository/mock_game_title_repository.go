@@ -6,7 +6,7 @@ package mock_repository
 
 import (
 	gomock "github.com/golang/mock/gomock"
-	models "github.com/taniwhy/mochi-match-rest/domain/models"
+	dbmodel "github.com/taniwhy/mochi-match-rest/domain/models/dbmodel"
 	reflect "reflect"
 )
 
@@ -34,10 +34,10 @@ func (m *MockGameTitleRepository) EXPECT() *MockGameTitleRepositoryMockRecorder 
 }
 
 // FindAllGameTitle mocks base method
-func (m *MockGameTitleRepository) FindAllGameTitle() ([]*models.GameTitle, error) {
+func (m *MockGameTitleRepository) FindAllGameTitle() ([]*dbmodel.GameTitle, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindAllGameTitle")
-	ret0, _ := ret[0].([]*models.GameTitle)
+	ret0, _ := ret[0].([]*dbmodel.GameTitle)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -49,7 +49,7 @@ func (mr *MockGameTitleRepositoryMockRecorder) FindAllGameTitle() *gomock.Call {
 }
 
 // InsertGameTitle mocks base method
-func (m *MockGameTitleRepository) InsertGameTitle(gameTitle *models.GameTitle) error {
+func (m *MockGameTitleRepository) InsertGameTitle(gameTitle *dbmodel.GameTitle) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "InsertGameTitle", gameTitle)
 	ret0, _ := ret[0].(error)
@@ -63,7 +63,7 @@ func (mr *MockGameTitleRepositoryMockRecorder) InsertGameTitle(gameTitle interfa
 }
 
 // UpdateGameTitle mocks base method
-func (m *MockGameTitleRepository) UpdateGameTitle(gameTitle *models.GameTitle) error {
+func (m *MockGameTitleRepository) UpdateGameTitle(gameTitle *dbmodel.GameTitle) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateGameTitle", gameTitle)
 	ret0, _ := ret[0].(error)
@@ -77,7 +77,7 @@ func (mr *MockGameTitleRepositoryMockRecorder) UpdateGameTitle(gameTitle interfa
 }
 
 // DeleteGameTitle mocks base method
-func (m *MockGameTitleRepository) DeleteGameTitle(gameTitle *models.GameTitle) error {
+func (m *MockGameTitleRepository) DeleteGameTitle(gameTitle *dbmodel.GameTitle) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteGameTitle", gameTitle)
 	ret0, _ := ret[0].(error)

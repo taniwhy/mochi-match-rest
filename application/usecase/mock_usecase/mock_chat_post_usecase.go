@@ -6,7 +6,7 @@ package mock_usecase
 
 import (
 	gomock "github.com/golang/mock/gomock"
-	models "github.com/taniwhy/mochi-match-rest/domain/models"
+	dbmodel "github.com/taniwhy/mochi-match-rest/domain/models/dbmodel"
 	reflect "reflect"
 )
 
@@ -34,10 +34,10 @@ func (m *MockChatPostUseCase) EXPECT() *MockChatPostUseCaseMockRecorder {
 }
 
 // FindAllChatPost mocks base method
-func (m *MockChatPostUseCase) FindAllChatPost() ([]*models.ChatPost, error) {
+func (m *MockChatPostUseCase) FindAllChatPost() ([]*dbmodel.ChatPost, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindAllChatPost")
-	ret0, _ := ret[0].([]*models.ChatPost)
+	ret0, _ := ret[0].([]*dbmodel.ChatPost)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -49,10 +49,10 @@ func (mr *MockChatPostUseCaseMockRecorder) FindAllChatPost() *gomock.Call {
 }
 
 // FindChatPostByRoomID mocks base method
-func (m *MockChatPostUseCase) FindChatPostByRoomID(id string) ([]*models.ChatPost, error) {
+func (m *MockChatPostUseCase) FindChatPostByRoomID(id string) ([]*dbmodel.ChatPost, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindChatPostByRoomID", id)
-	ret0, _ := ret[0].([]*models.ChatPost)
+	ret0, _ := ret[0].([]*dbmodel.ChatPost)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -64,10 +64,10 @@ func (mr *MockChatPostUseCaseMockRecorder) FindChatPostByRoomID(id interface{}) 
 }
 
 // FindChatPostByRoomIDAndLimit mocks base method
-func (m *MockChatPostUseCase) FindChatPostByRoomIDAndLimit(id, limit string) ([]*models.ChatPost, error) {
+func (m *MockChatPostUseCase) FindChatPostByRoomIDAndLimit(id, limit string) ([]*dbmodel.ChatPost, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindChatPostByRoomIDAndLimit", id, limit)
-	ret0, _ := ret[0].([]*models.ChatPost)
+	ret0, _ := ret[0].([]*dbmodel.ChatPost)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -79,10 +79,10 @@ func (mr *MockChatPostUseCaseMockRecorder) FindChatPostByRoomIDAndLimit(id, limi
 }
 
 // FindChatPostByRoomIDAndOffset mocks base method
-func (m *MockChatPostUseCase) FindChatPostByRoomIDAndOffset(id, offset string) ([]*models.ChatPost, error) {
+func (m *MockChatPostUseCase) FindChatPostByRoomIDAndOffset(id, offset string) ([]*dbmodel.ChatPost, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindChatPostByRoomIDAndOffset", id, offset)
-	ret0, _ := ret[0].([]*models.ChatPost)
+	ret0, _ := ret[0].([]*dbmodel.ChatPost)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -94,10 +94,10 @@ func (mr *MockChatPostUseCaseMockRecorder) FindChatPostByRoomIDAndOffset(id, off
 }
 
 // FindChatPostByRoomIDAndLimitAndOffset mocks base method
-func (m *MockChatPostUseCase) FindChatPostByRoomIDAndLimitAndOffset(id, offset, limit string) ([]*models.ChatPost, error) {
+func (m *MockChatPostUseCase) FindChatPostByRoomIDAndLimitAndOffset(id, offset, limit string) ([]*dbmodel.ChatPost, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindChatPostByRoomIDAndLimitAndOffset", id, offset, limit)
-	ret0, _ := ret[0].([]*models.ChatPost)
+	ret0, _ := ret[0].([]*dbmodel.ChatPost)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -109,7 +109,7 @@ func (mr *MockChatPostUseCaseMockRecorder) FindChatPostByRoomIDAndLimitAndOffset
 }
 
 // InsertChatPost mocks base method
-func (m *MockChatPostUseCase) InsertChatPost(room *models.ChatPost) error {
+func (m *MockChatPostUseCase) InsertChatPost(room *dbmodel.ChatPost) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "InsertChatPost", room)
 	ret0, _ := ret[0].(error)
@@ -123,7 +123,7 @@ func (mr *MockChatPostUseCaseMockRecorder) InsertChatPost(room interface{}) *gom
 }
 
 // DeleteChatPost mocks base method
-func (m *MockChatPostUseCase) DeleteChatPost(room *models.ChatPost) error {
+func (m *MockChatPostUseCase) DeleteChatPost(room *dbmodel.ChatPost) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteChatPost", room)
 	ret0, _ := ret[0].(error)

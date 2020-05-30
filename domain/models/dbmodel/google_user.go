@@ -1,4 +1,4 @@
-package models
+package dbmodel
 
 // GoogleUser :
 type GoogleUser struct {

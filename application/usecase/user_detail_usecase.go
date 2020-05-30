@@ -1,16 +1,16 @@
 package usecase
 
 import (
-	"github.com/taniwhy/mochi-match-rest/domain/models"
+	"github.com/taniwhy/mochi-match-rest/domain/models/dbmodel"
 	"github.com/taniwhy/mochi-match-rest/domain/repository"
 )
 
 // UserDetailUseCase :
 type UserDetailUseCase interface {
-	FindUserDetailByID(id string) (*models.UserDetail, error)
-	CreateUserDetail(userDetail *models.UserDetail) error
-	UpdateUserDetail(userDetail *models.UserDetail) error
-	DeleteUserDetail(userDetail *models.UserDetail) error
+	FindUserDetailByID(id string) (*dbmodel.UserDetail, error)
+	CreateUserDetail(userDetail *dbmodel.UserDetail) error
+	UpdateUserDetail(userDetail *dbmodel.UserDetail) error
+	DeleteUserDetail(userDetail *dbmodel.UserDetail) error
 }
 
 type userDetailUsecase struct {
@@ -24,7 +24,7 @@ func NewUserDetailUsecase(uR repository.UserDetailRepository) UserDetailUseCase 
 	}
 }
 
-func (uU userDetailUsecase) FindUserDetailByID(id string) (*models.UserDetail, error) {
+func (uU userDetailUsecase) FindUserDetailByID(id string) (*dbmodel.UserDetail, error) {
 	userDetail, err := uU.userDetailRepository.FindUserDetailByID(id)
 	if err != nil {
 		return nil, err
@@ -32,7 +32,7 @@ func (uU userDetailUsecase) FindUserDetailByID(id string) (*models.UserDetail, e
 	return userDetail, nil
 }
 
-func (uU userDetailUsecase) CreateUserDetail(userDetail *models.UserDetail) error {
+func (uU userDetailUsecase) CreateUserDetail(userDetail *dbmodel.UserDetail) error {
 	err := uU.userDetailRepository.InsertUserDetail(userDetail)
 	if err != nil {
 		return err
@@ -40,15 +40,15 @@ func (uU userDetailUsecase) CreateUserDetail(userDetail *models.UserDetail) erro
 	return nil
 }
 
-func (uU userDetailUsecase) UpdateUserDetail(userDetail *models.UserDetail) error {
-	err := uU.userDetailRepository.InsertUserDetail(userDetail)
+func (uU userDetailUsecase) UpdateUserDetail(userDetail *dbmodel.UserDetail) error {
+	err := uU.userDetailRepository.UpdateUserDetail(userDetail)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (uU userDetailUsecase) DeleteUserDetail(userDetail *models.UserDetail) error {
+func (uU userDetailUsecase) DeleteUserDetail(userDetail *dbmodel.UserDetail) error {
 	err := uU.userDetailRepository.InsertUserDetail(userDetail)
 	if err != nil {
 		return err

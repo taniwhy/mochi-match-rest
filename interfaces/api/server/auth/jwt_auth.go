@@ -55,8 +55,7 @@ func GenerateRefreshToken(userID string) (string, string) {
 // GetTokenClaims : コンテキストからトークンClaimを取得
 func GetTokenClaims(c *gin.Context) (jwt.MapClaims, error) {
 	token, err := request.ParseFromRequest(c.Request, request.AuthorizationHeaderExtractor, func(token *jwt.Token) (interface{}, error) {
-		b := []byte(signBytes)
-		return b, nil
+		return signBytes, nil
 	})
 	if err != nil {
 		return nil, err

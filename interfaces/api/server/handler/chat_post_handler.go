@@ -10,7 +10,7 @@ import (
 	"github.com/gomodule/redigo/redis"
 	"github.com/google/uuid"
 	"github.com/taniwhy/mochi-match-rest/application/usecase"
-	"github.com/taniwhy/mochi-match-rest/domain/models"
+	"github.com/taniwhy/mochi-match-rest/domain/models/dbmodel"
 	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/auth"
 )
 
@@ -33,11 +33,12 @@ func NewChatPostHandler(cU usecase.ChatPostUseCase, rC redis.Conn) ChatPostHandl
 	}
 }
 
+var (
+	messages []*dbmodel.ChatPost
+	err      error
+)
+
 func (cH chatPostHandler) GetChatPostByRoomID(c *gin.Context) {
-	var (
-		messages []*models.ChatPost
-		err      error
-	)
 	roomID := c.Params.ByName("id")
 	limitStr := c.Query("limit")
 	offset := c.Query("offset")
@@ -67,7 +68,7 @@ func (cH chatPostHandler) CreateChatPost(c *gin.Context) {
 	// idをトークンから取得できるように
 	token := auth.GenerateAccessToken("a")
 	fmt.Println(token)
-	m := &models.ChatPost{
+	m := &dbmodel.ChatPost{
 		ChatPostID: id.String(),
 		RoomID:     roomID,
 		UserID:     "id",

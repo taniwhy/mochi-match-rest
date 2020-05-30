@@ -1,14 +1,14 @@
 package usecase
 
 import (
-	"github.com/taniwhy/mochi-match-rest/domain/models"
+	"github.com/taniwhy/mochi-match-rest/domain/models/dbmodel"
 	"github.com/taniwhy/mochi-match-rest/domain/repository"
 )
 
 // UserUseCase :
 type UserUseCase interface {
-	FindUserByProviderID(provider, id string) (*models.User, error)
-	CreateUser(user *models.User) error
+	FindUserByProviderID(provider, id string) (*dbmodel.User, error)
+	CreateUser(user *dbmodel.User) error
 	DeleteUser(id string) error
 }
 
@@ -23,7 +23,7 @@ func NewUserUsecase(uR repository.UserRepository) UserUseCase {
 	}
 }
 
-func (uU userUsecase) FindUserByProviderID(provider, id string) (*models.User, error) {
+func (uU userUsecase) FindUserByProviderID(provider, id string) (*dbmodel.User, error) {
 	user, err := uU.userRepository.FindUserByProviderID(provider, id)
 	if err != nil {
 		return nil, err
@@ -31,7 +31,7 @@ func (uU userUsecase) FindUserByProviderID(provider, id string) (*models.User, e
 	return user, nil
 }
 
-func (uU userUsecase) CreateUser(user *models.User) error {
+func (uU userUsecase) CreateUser(user *dbmodel.User) error {
 	err := uU.userRepository.InsertUser(user)
 	if err != nil {
 		return err

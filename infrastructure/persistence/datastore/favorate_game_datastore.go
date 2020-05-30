@@ -1,38 +1,47 @@
 package datastore
 
 import (
+	"fmt"
+
 	"github.com/jinzhu/gorm"
-	"github.com/taniwhy/mochi-match-rest/domain/models"
+	"github.com/taniwhy/mochi-match-rest/domain/models/dbmodel"
+	"github.com/taniwhy/mochi-match-rest/domain/models/response"
 	"github.com/taniwhy/mochi-match-rest/domain/repository"
 )
 
-type favorateGameDatastore struct {
+type favoriteGameDatastore struct {
 	db *gorm.DB
 }
 
-// NewFavorateGameDatastore :
-func NewFavorateGameDatastore(db *gorm.DB) repository.EntryHistoryRepository {
-	return &entryHistoryDatastore{db}
+type usersFavoriteGamesResBody struct {
+	UserID        string
+	FavoriteGames []favoriteGameDatastore
 }
 
-func (eD favorateGameDatastore) FindFavorateGameByID(id string) ([]*models.FavorateGame, error) {
-	favorateGames := []*models.FavorateGame{}
-
-	err := eD.db.Find(&favorateGames).Error
-	if err != nil {
-		return nil, err
-	}
-	return favorateGames, nil
+// NewFavoriteGameDatastore :
+func NewFavoriteGameDatastore(db *gorm.DB) repository.FavoriteGameRepository {
+	return &favoriteGameDatastore{db}
 }
 
-func (eD favorateGameDatastore) InsertFavorateGame(favgame *models.FavorateGame) error {
+func (eD favoriteGameDatastore) FindFavoriteGameByID(id string) ([]*response.FavoriteGamesRes, error) {
+	f := []*response.FavoriteGamesRes{}
+	eD.db.Table("favorite_games").
+		Select("favorite_games.favorite_game_id, game_titles.game_title_id, game_titles.game_title").
+		Joins("left join game_titles on game_titles.game_title_id = favorite_games.game_title_id").
+		Where("favorite_games.user_id = ?", id).
+		Scan(&f)
+	return f, nil
+}
+
+func (eD favoriteGameDatastore) InsertFavoriteGame(favgame *dbmodel.FavoriteGame) error {
 	return eD.db.Create(favgame).Error
 }
 
-func (eD favorateGameDatastore) DeleteFavorateGame(favgame *models.FavorateGame) error {
-	err := eD.db.Take(&favgame).Error
-	if err != nil {
-		return err
+func (eD favoriteGameDatastore) DeleteFavoriteGame(uID, fID string) error {
+	f := dbmodel.FavoriteGame{}
+	recordNotFound := eD.db.Where("user_id = ? AND game_title_id = ?", uID, fID).Delete(&f).RecordNotFound()
+	if recordNotFound {
+		return fmt.Errorf("Record not found : %v", uID)
 	}
-	return eD.db.Delete(favgame).Error
+	return nil
 }

@@ -2,7 +2,7 @@ package datastore
 
 import (
 	"github.com/jinzhu/gorm"
-	"github.com/taniwhy/mochi-match-rest/domain/models"
+	"github.com/taniwhy/mochi-match-rest/domain/models/dbmodel"
 	"github.com/taniwhy/mochi-match-rest/domain/repository"
 )
 
@@ -15,8 +15,8 @@ func NewGameTitleDatastore(db *gorm.DB) repository.GameTitleRepository {
 	return &gameTitleDatastore{db}
 }
 
-func (gD gameTitleDatastore) FindAllGameTitle() ([]*models.GameTitle, error) {
-	gameTitle := []*models.GameTitle{}
+func (gD gameTitleDatastore) FindAllGameTitle() ([]*dbmodel.GameTitle, error) {
+	gameTitle := []*dbmodel.GameTitle{}
 	err := gD.db.Find(&gameTitle).Error
 	if err != nil {
 		return nil, err
@@ -24,15 +24,15 @@ func (gD gameTitleDatastore) FindAllGameTitle() ([]*models.GameTitle, error) {
 	return gameTitle, nil
 }
 
-func (gD gameTitleDatastore) InsertGameTitle(gameTitle *models.GameTitle) error {
+func (gD gameTitleDatastore) InsertGameTitle(gameTitle *dbmodel.GameTitle) error {
 	return gD.db.Create(gameTitle).Error
 }
 
-func (gD gameTitleDatastore) UpdateGameTitle(gT *models.GameTitle) error {
+func (gD gameTitleDatastore) UpdateGameTitle(gT *dbmodel.GameTitle) error {
 	return gD.db.Model(gT).Where("game_title_id = ?", gT.GameTitleID).Updates(gT).Error
 }
 
-func (gD gameTitleDatastore) DeleteGameTitle(gameTitle *models.GameTitle) error {
+func (gD gameTitleDatastore) DeleteGameTitle(gameTitle *dbmodel.GameTitle) error {
 	err := gD.db.Take(&gameTitle).Error
 	if err != nil {
 		return err

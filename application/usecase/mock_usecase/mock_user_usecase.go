@@ -6,7 +6,7 @@ package mock_usecase
 
 import (
 	gomock "github.com/golang/mock/gomock"
-	models "github.com/taniwhy/mochi-match-rest/domain/models"
+	dbmodel "github.com/taniwhy/mochi-match-rest/domain/models/dbmodel"
 	reflect "reflect"
 )
 
@@ -34,10 +34,10 @@ func (m *MockUserUseCase) EXPECT() *MockUserUseCaseMockRecorder {
 }
 
 // FindUserByProviderID mocks base method
-func (m *MockUserUseCase) FindUserByProviderID(provider, id string) (*models.User, error) {
+func (m *MockUserUseCase) FindUserByProviderID(provider, id string) (*dbmodel.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindUserByProviderID", provider, id)
-	ret0, _ := ret[0].(*models.User)
+	ret0, _ := ret[0].(*dbmodel.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -49,7 +49,7 @@ func (mr *MockUserUseCaseMockRecorder) FindUserByProviderID(provider, id interfa
 }
 
 // CreateUser mocks base method
-func (m *MockUserUseCase) CreateUser(user *models.User) error {
+func (m *MockUserUseCase) CreateUser(user *dbmodel.User) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateUser", user)
 	ret0, _ := ret[0].(error)

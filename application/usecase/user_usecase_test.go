@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/taniwhy/mochi-match-rest/domain/models"
+	dbmodel "github.com/taniwhy/mochi-match-rest/domain/models/dbmodel"
 	mock "github.com/taniwhy/mochi-match-rest/domain/repository/mock_repository"
 )
 
@@ -14,7 +14,7 @@ func TestFindUserByProviderID(t *testing.T) {
 	defer ctrl.Finish()
 
 	// 下記処理の返却値に使用
-	u := models.User{}
+	u := dbmodel.User{}
 
 	// メソッドの行いを定義
 	testMock := mock.NewMockUserRepository(ctrl)
@@ -55,8 +55,8 @@ func TestCreateUser(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	EmptyUser := models.User{}
-	noEmptyUser := models.User{UserID: "testID"}
+	EmptyUser := dbmodel.User{}
+	noEmptyUser := dbmodel.User{UserID: "testID"}
 
 	testMock := mock.NewMockUserRepository(ctrl)
 	testMock.EXPECT().InsertUser(&EmptyUser).Return(fmt.Errorf("構造体空じゃん"))
@@ -67,10 +67,10 @@ func TestCreateUser(t *testing.T) {
 
 	// テスト用の引数データの定義
 	var tests = []struct {
-		user models.User
+		user dbmodel.User
 	}{
-		{models.User{}},
-		{models.User{UserID: "testID"}},
+		{dbmodel.User{}},
+		{dbmodel.User{UserID: "testID"}},
 	}
 
 	for _, tt := range tests {

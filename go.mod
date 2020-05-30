@@ -34,6 +34,7 @@ require (
 	github.com/yuin/gopher-lua v0.0.0-20200521060427-6ff375d91eab // indirect
 	golang.org/x/net v0.0.0-20200513185701-a91f0712d120 // indirect
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
+	golang.org/x/sync v0.0.0-20200317015054-43a5402ce75a
 	golang.org/x/sys v0.0.0-20200515095857-1151b9dac4a9 // indirect
 	golang.org/x/tools v0.0.0-20200515220128-d3bf790afa53 // indirect
 	gopkg.in/yaml.v2 v2.3.0 // indirect

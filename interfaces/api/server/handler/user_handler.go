@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"net/http"
@@ -11,6 +12,7 @@ import (
 	"github.com/taniwhy/mochi-match-rest/application/usecase"
 	"github.com/taniwhy/mochi-match-rest/domain/models/dbmodel"
 	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/auth"
+	"golang.org/x/sync/errgroup"
 )
 
 // UserHandler : インターフェース
@@ -207,6 +209,9 @@ func (uH userHandler) UpdateUser(c *gin.Context) {
 			deleteGames = append(deleteGames, a)
 		}
 	}
+	eg, ctx := errgroup.WithContext(context.Background())
+	ctx, cancel := context.WithCancel(ctx)
+	defer cancel()
 	for _, i := range insertGames {
 		id, err := uuid.NewRandom()
 		if err != nil {
@@ -218,16 +223,26 @@ func (uH userHandler) UpdateUser(c *gin.Context) {
 			GameTitleID:    i.GameID,
 			CreatedAt:      time.Now(),
 		}
-		if err := uH.favoriteGameUsecase.InsertFavoriteGame(&f); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
-			return
-		}
+		eg.Go(func() error {
+			if err := uH.favoriteGameUsecase.InsertFavoriteGame(&f); err != nil {
+				return err
+			}
+			return nil
+		})
 	}
 	for _, d := range deleteGames {
-		if err := uH.favoriteGameUsecase.DeleteFavoriteGame(claimsID, d.GameID); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
-			return
-		}
+		dG := d
+		eg.Go(func() error {
+			if err := uH.favoriteGameUsecase.DeleteFavoriteGame(claimsID, dG.GameID); err != nil {
+				return err
+			}
+			return nil
+		})
+	}
+	if err := eg.Wait(); err != nil {
+		cancel()
+		c.JSON(http.StatusBadRequest, err.Error())
+		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Updated user"})
 }

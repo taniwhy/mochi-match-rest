@@ -45,11 +45,6 @@ type getUserResbody struct {
 	FavoriteGames []favoriteGameRecord `json:"favorite_games" binding:"required"`
 }
 
-type signupReqBody struct {
-	UserName string `json:"user_name"`
-	Email    string `json:"email"`
-}
-
 // NewUserHandler : UserHandler生成
 func NewUserHandler(uU usecase.UserUseCase, uDU usecase.UserDetailUseCase, fGU usecase.FavoriteGameUsecase) UserHandler {
 	return &userHandler{
@@ -74,6 +69,11 @@ func (uH userHandler) GetUser(c *gin.Context) {
 }
 
 func (uH userHandler) CreateUser(c *gin.Context) {
+	type signupReqBody struct {
+		UserName string `json:"user_name"`
+		Email    string `json:"email"`
+	}
+
 	signupReq := signupReqBody{}
 	if err := c.Bind(&signupReq); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "Binding error"})

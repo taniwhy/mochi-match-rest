@@ -2,7 +2,7 @@ package datastore
 
 import (
 	"github.com/jinzhu/gorm"
-	"github.com/taniwhy/mochi-match-rest/domain/models"
+	"github.com/taniwhy/mochi-match-rest/domain/models/dbmodel"
 	"github.com/taniwhy/mochi-match-rest/domain/repository"
 )
 
@@ -15,8 +15,8 @@ func NewRoomDatastore(db *gorm.DB) repository.RoomRepository {
 	return &roomDatastore{db}
 }
 
-func (rD roomDatastore) FindAllRoom() ([]*models.Room, error) {
-	rooms := []*models.Room{}
+func (rD roomDatastore) FindAllRoom() ([]*dbmodel.Room, error) {
+	rooms := []*dbmodel.Room{}
 
 	err := rD.db.Find(&rooms).Error
 	if err != nil {
@@ -25,8 +25,8 @@ func (rD roomDatastore) FindAllRoom() ([]*models.Room, error) {
 	return rooms, nil
 }
 
-func (rD roomDatastore) FindRoomByID(id string) (*models.Room, error) {
-	room := models.Room{RoomID: id}
+func (rD roomDatastore) FindRoomByID(id string) (*dbmodel.Room, error) {
+	room := dbmodel.Room{RoomID: id}
 	err := rD.db.Take(&room).Error
 	if err != nil {
 		return nil, err
@@ -34,15 +34,15 @@ func (rD roomDatastore) FindRoomByID(id string) (*models.Room, error) {
 	return &room, nil
 }
 
-func (rD roomDatastore) InsertRoom(room *models.Room) error {
+func (rD roomDatastore) InsertRoom(room *dbmodel.Room) error {
 	return rD.db.Create(room).Error
 }
 
-func (rD roomDatastore) UpdateRoom(room *models.Room) error {
+func (rD roomDatastore) UpdateRoom(room *dbmodel.Room) error {
 	return rD.db.Updates(room).Error
 }
 
-func (rD roomDatastore) DeleteRoom(room *models.Room) error {
+func (rD roomDatastore) DeleteRoom(room *dbmodel.Room) error {
 	err := rD.db.Take(&room).Error
 	if err != nil {
 		return err

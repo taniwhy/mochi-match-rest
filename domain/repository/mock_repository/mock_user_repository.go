@@ -6,7 +6,7 @@ package mock_repository
 
 import (
 	gomock "github.com/golang/mock/gomock"
-	models "github.com/taniwhy/mochi-match-rest/domain/models"
+	"github.com/taniwhy/mochi-match-rest/domain/models"
 	reflect "reflect"
 )
 
@@ -107,15 +107,15 @@ func (mr *MockUserRepositoryMockRecorder) UpdateUser(user interface{}) *gomock.C
 }
 
 // DeleteUser mocks base method
-func (m *MockUserRepository) DeleteUser(user *models.User) error {
+func (m *MockUserRepository) DeleteUser(id string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteUser", user)
+	ret := m.ctrl.Call(m, "DeleteUser", id)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // DeleteUser indicates an expected call of DeleteUser
-func (mr *MockUserRepositoryMockRecorder) DeleteUser(user interface{}) *gomock.Call {
+func (mr *MockUserRepositoryMockRecorder) DeleteUser(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteUser", reflect.TypeOf((*MockUserRepository)(nil).DeleteUser), user)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteUser", reflect.TypeOf((*MockUserRepository)(nil).DeleteUser), id)
 }

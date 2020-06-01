@@ -9,6 +9,6 @@ type UserDetail struct {
 	UserDetailID string
 	UserID       string
 	UserName     string `json:"user_name" binding:"required"`
-	Icon         int
+	Icon         int    `json:"icon" binding:"required"`
 	UpdateAt     time.Time
 }

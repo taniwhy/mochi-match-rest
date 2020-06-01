@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -10,6 +11,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/taniwhy/mochi-match-rest/application/usecase"
 	"github.com/taniwhy/mochi-match-rest/domain/models"
+	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/auth"
 )
 
 // ChatPostHandler : インターフェース
@@ -31,11 +33,12 @@ func NewChatPostHandler(cU usecase.ChatPostUseCase, rC redis.Conn) ChatPostHandl
 	}
 }
 
+var (
+	messages []*models.ChatPost
+	err      error
+)
+
 func (cH chatPostHandler) GetChatPostByRoomID(c *gin.Context) {
-	var (
-		messages []*models.ChatPost
-		err      error
-	)
 	roomID := c.Params.ByName("id")
 	limitStr := c.Query("limit")
 	offset := c.Query("offset")
@@ -63,6 +66,8 @@ func (cH chatPostHandler) CreateChatPost(c *gin.Context) {
 	roomID := c.Params.ByName("id")
 	// todo : テスト用に仮データを記述
 	// idをトークンから取得できるように
+	token := auth.GenerateAccessToken("a")
+	fmt.Println(token)
 	m := &models.ChatPost{
 		ChatPostID: id.String(),
 		RoomID:     roomID,
@@ -72,6 +77,10 @@ func (cH chatPostHandler) CreateChatPost(c *gin.Context) {
 	if err := c.BindJSON(&m); err != nil {
 		// todo : エラーメッセージを要修正
 		c.JSON(http.StatusBadRequest, gin.H{"message": err})
+		return
+	}
+	if m.Message == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "message not found"})
 		return
 	}
 	if err := cH.chatPostUsecase.InsertChatPost(m); err != nil {

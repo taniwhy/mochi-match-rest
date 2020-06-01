@@ -24,6 +24,7 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 	roomReservationDatastore := datastore.NewRoomReservationDatastore(dbConn)
 	chatPostDatastore := datastore.NewChatPostDatastore(dbConn)
 	gameTitleDatastore := datastore.NewGameTitleDatastore(dbConn)
+	favorateGameDatastore := datastore.NewFavoriteGameDatastore(dbConn)
 
 	userUsecase := usecase.NewUserUsecase(userDatastore)
 	userDetailUsecase := usecase.NewUserDetailUsecase(userDetailDatastore)
@@ -32,12 +33,14 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 	roomReservationUsecase := usecase.NewRoomReservationUsecase(roomReservationDatastore)
 	chatPostUsecase := usecase.NewChatPostUsecase(chatPostDatastore)
 	gameTitleUsecase := usecase.NewGameTitleUsecase(gameTitleDatastore)
+	favorateGameUsecase := usecase.NewFavoriteGameUsecase(favorateGameDatastore)
 
-	userHandler := handler.NewUserHandler(userUsecase, userDetailUsecase)
+	userHandler := handler.NewUserHandler(userUsecase, userDetailUsecase, favorateGameUsecase)
 	roomHandler := handler.NewRoomHandler(userUsecase, roomUsecase, roomBlacklistUsecase, roomReservationUsecase)
 	chatPostHandler := handler.NewChatPostHandler(chatPostUsecase, redisConn)
 	gameTitleHandler := handler.NewGameTitleHandler(gameTitleUsecase)
-	googleAuthHandler := auth.NewGoogleOAuthHandler(userUsecase)
+	authHandler := handler.NewAuthHandler()
+	googleAuthHandler := handler.NewGoogleOAuthHandler(userUsecase)
 
 	store := dao.NewRedisStore()
 	//f, err := os.Create("./config/log/access.log")
@@ -58,18 +61,23 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 	r.Use(sessions.Sessions("session", store))
 
 	v1 := r.Group("/v1")
-	auth := v1.Group("/auth")
-	google := auth.Group("/google")
+	authHandle := v1.Group("/auth")
+	{
+		authHandle.POST("/refresh", authHandler.Refresh)
+	}
+	google := authHandle.Group("/google")
 	{
 		google.GET("/login", googleAuthHandler.Login)
 		google.GET("/callback", googleAuthHandler.Callback)
 	}
 	users := v1.Group("/users")
+	users.POST("", userHandler.CreateUser)
+	users.Use(auth.TokenAuth())
 	{
+		users.GET("", userHandler.GetUser)
 		users.GET("/:id")
-		users.POST("", userHandler.CreateUser)
-		users.PUT("/:id")
-		users.DELETE("/:id")
+		users.PUT("/:id", userHandler.UpdateUser)
+		users.DELETE("/:id", userHandler.DeleteUser)
 	}
 	games := users.Group("/:id/favorate/games")
 	{
@@ -77,9 +85,11 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 		games.POST("")
 	}
 	room := v1.Group("/rooms")
+	room.Use(auth.TokenAuth())
 	{
-		room.GET("/:id", roomHandler.GetRoom)
+		room.GET("")
 		room.GET("/:id/messages", chatPostHandler.GetChatPostByRoomID)
+		room.POST("", roomHandler.CreateRoom)
 		room.POST("/:id/messages", chatPostHandler.CreateChatPost)
 		room.GET("/:id/report")
 		room.POST("/:id/report")

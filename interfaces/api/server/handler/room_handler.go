@@ -7,7 +7,7 @@ import (
 
 // RoomHandler : インターフェース
 type RoomHandler interface {
-	GetRoom(*gin.Context)
+	GetRoomList(*gin.Context)
 	GetRoomByID(*gin.Context)
 	CreateRoom(*gin.Context)
 	GetBlacklist(*gin.Context)
@@ -35,7 +35,7 @@ func NewRoomHandler(
 	}
 }
 
-func (rH roomHandler) GetRoom(c *gin.Context) {
+func (rH roomHandler) GetRoomList(c *gin.Context) {
 
 }
 

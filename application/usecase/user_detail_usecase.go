@@ -41,7 +41,7 @@ func (uU userDetailUsecase) CreateUserDetail(userDetail *models.UserDetail) erro
 }
 
 func (uU userDetailUsecase) UpdateUserDetail(userDetail *models.UserDetail) error {
-	err := uU.userDetailRepository.InsertUserDetail(userDetail)
+	err := uU.userDetailRepository.UpdateUserDetail(userDetail)
 	if err != nil {
 		return err
 	}

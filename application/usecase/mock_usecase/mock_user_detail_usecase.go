@@ -6,7 +6,7 @@ package mock_usecase
 
 import (
 	gomock "github.com/golang/mock/gomock"
-	models "github.com/taniwhy/mochi-match-rest/domain/models"
+	dbmodel "github.com/taniwhy/mochi-match-rest/domain/models/dbmodel"
 	reflect "reflect"
 )
 
@@ -34,10 +34,10 @@ func (m *MockUserDetailUseCase) EXPECT() *MockUserDetailUseCaseMockRecorder {
 }
 
 // FindUserDetailByID mocks base method
-func (m *MockUserDetailUseCase) FindUserDetailByID(id string) (*models.UserDetail, error) {
+func (m *MockUserDetailUseCase) FindUserDetailByID(id string) (*dbmodel.UserDetail, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindUserDetailByID", id)
-	ret0, _ := ret[0].(*models.UserDetail)
+	ret0, _ := ret[0].(*dbmodel.UserDetail)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -49,7 +49,7 @@ func (mr *MockUserDetailUseCaseMockRecorder) FindUserDetailByID(id interface{}) 
 }
 
 // CreateUserDetail mocks base method
-func (m *MockUserDetailUseCase) CreateUserDetail(userDetail *models.UserDetail) error {
+func (m *MockUserDetailUseCase) CreateUserDetail(userDetail *dbmodel.UserDetail) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateUserDetail", userDetail)
 	ret0, _ := ret[0].(error)
@@ -63,7 +63,7 @@ func (mr *MockUserDetailUseCaseMockRecorder) CreateUserDetail(userDetail interfa
 }
 
 // UpdateUserDetail mocks base method
-func (m *MockUserDetailUseCase) UpdateUserDetail(userDetail *models.UserDetail) error {
+func (m *MockUserDetailUseCase) UpdateUserDetail(userDetail *dbmodel.UserDetail) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateUserDetail", userDetail)
 	ret0, _ := ret[0].(error)
@@ -77,7 +77,7 @@ func (mr *MockUserDetailUseCaseMockRecorder) UpdateUserDetail(userDetail interfa
 }
 
 // DeleteUserDetail mocks base method
-func (m *MockUserDetailUseCase) DeleteUserDetail(userDetail *models.UserDetail) error {
+func (m *MockUserDetailUseCase) DeleteUserDetail(userDetail *dbmodel.UserDetail) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteUserDetail", userDetail)
 	ret0, _ := ret[0].(error)

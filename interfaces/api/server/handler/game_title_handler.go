@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/taniwhy/mochi-match-rest/application/usecase"
-	"github.com/taniwhy/mochi-match-rest/domain/models/dbmodel"
+	"github.com/taniwhy/mochi-match-rest/domain/models"
 )
 
 // GameTitleHandler : インターフェース
@@ -43,7 +43,7 @@ func (gH gameTitleHandler) CreateGameTitle(c *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
-	g := &dbmodel.GameTitle{
+	g := &models.GameTitle{
 		GameTitleID: id.String(),
 		CreatedAt:   time.Now(),
 		UpdateAt:    time.Now(),
@@ -66,7 +66,7 @@ func (gH gameTitleHandler) CreateGameTitle(c *gin.Context) {
 
 func (gH gameTitleHandler) UpdateGameTitle(c *gin.Context) {
 	gameTitleID := c.Params.ByName("id")
-	g := &dbmodel.GameTitle{
+	g := &models.GameTitle{
 		GameTitleID: gameTitleID,
 		UpdateAt:    time.Now(),
 	}

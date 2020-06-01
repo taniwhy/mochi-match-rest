@@ -1,17 +1,17 @@
 package usecase
 
 import (
-	"github.com/taniwhy/mochi-match-rest/domain/models/dbmodel"
+	"github.com/taniwhy/mochi-match-rest/domain/models"
 	"github.com/taniwhy/mochi-match-rest/domain/repository"
 )
 
 // RoomUseCase :
 type RoomUseCase interface {
-	FindAllRoom() ([]*dbmodel.Room, error)
-	FindRoomByID(id string) (*dbmodel.Room, error)
-	InsertRoom(room *dbmodel.Room) error
-	UpdateRoom(room *dbmodel.Room) error
-	DeleteRoom(room *dbmodel.Room) error
+	FindAllRoom() ([]*models.Room, error)
+	FindRoomByID(id string) (*models.Room, error)
+	InsertRoom(room *models.Room) error
+	UpdateRoom(room *models.Room) error
+	DeleteRoom(room *models.Room) error
 }
 
 type roomUsecase struct {
@@ -25,7 +25,7 @@ func NewRoomUsecase(rR repository.RoomRepository) RoomUseCase {
 	}
 }
 
-func (rU roomUsecase) FindAllRoom() ([]*dbmodel.Room, error) {
+func (rU roomUsecase) FindAllRoom() ([]*models.Room, error) {
 	rooms, err := rU.roomRepository.FindAllRoom()
 	if err != nil {
 		return nil, err
@@ -33,7 +33,7 @@ func (rU roomUsecase) FindAllRoom() ([]*dbmodel.Room, error) {
 	return rooms, nil
 }
 
-func (rU roomUsecase) FindRoomByID(id string) (*dbmodel.Room, error) {
+func (rU roomUsecase) FindRoomByID(id string) (*models.Room, error) {
 	room, err := rU.roomRepository.FindRoomByID(id)
 	if err != nil {
 		return nil, err
@@ -41,7 +41,7 @@ func (rU roomUsecase) FindRoomByID(id string) (*dbmodel.Room, error) {
 	return room, nil
 }
 
-func (rU roomUsecase) InsertRoom(room *dbmodel.Room) error {
+func (rU roomUsecase) InsertRoom(room *models.Room) error {
 	err := rU.roomRepository.InsertRoom(room)
 	if err != nil {
 		return err
@@ -49,7 +49,7 @@ func (rU roomUsecase) InsertRoom(room *dbmodel.Room) error {
 	return nil
 }
 
-func (rU roomUsecase) UpdateRoom(room *dbmodel.Room) error {
+func (rU roomUsecase) UpdateRoom(room *models.Room) error {
 	err := rU.roomRepository.UpdateRoom(room)
 	if err != nil {
 		return err
@@ -57,7 +57,7 @@ func (rU roomUsecase) UpdateRoom(room *dbmodel.Room) error {
 	return nil
 }
 
-func (rU roomUsecase) DeleteRoom(room *dbmodel.Room) error {
+func (rU roomUsecase) DeleteRoom(room *models.Room) error {
 	err := rU.roomRepository.DeleteRoom(room)
 	if err != nil {
 		return err

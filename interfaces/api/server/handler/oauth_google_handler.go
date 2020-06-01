@@ -11,7 +11,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/taniwhy/mochi-match-rest/application/usecase"
 	"github.com/taniwhy/mochi-match-rest/config"
-	"github.com/taniwhy/mochi-match-rest/domain/models/dbmodel"
+	"github.com/taniwhy/mochi-match-rest/domain/models"
 	"golang.org/x/oauth2"
 )
 
@@ -80,7 +80,7 @@ func (gA *googleOAuthHandler) Callback(c *gin.Context) {
 		c.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
-	gU := dbmodel.GoogleUser{}
+	gU := models.GoogleUser{}
 	err = json.Unmarshal(data, &gU)
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)

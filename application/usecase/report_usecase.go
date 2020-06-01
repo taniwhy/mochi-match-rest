@@ -1,15 +1,15 @@
 package usecase
 
 import (
-	"github.com/taniwhy/mochi-match-rest/domain/models/dbmodel"
+	"github.com/taniwhy/mochi-match-rest/domain/models"
 	"github.com/taniwhy/mochi-match-rest/domain/repository"
 )
 
 // ReportUsecase :
 type ReportUsecase interface {
-	FindAllReport() ([]*dbmodel.Report, error)
-	InsertReport(report *dbmodel.Report) error
-	DeleteReport(report *dbmodel.Report) error
+	FindAllReport() ([]*models.Report, error)
+	InsertReport(report *models.Report) error
+	DeleteReport(report *models.Report) error
 }
 
 type reportUsecase struct {
@@ -23,7 +23,7 @@ func NewReportUsecase(rR repository.ReportRepository) ReportUsecase {
 	}
 }
 
-func (rU reportUsecase) FindAllReport() ([]*dbmodel.Report, error) {
+func (rU reportUsecase) FindAllReport() ([]*models.Report, error) {
 	chatposts, err := rU.reportRepository.FindAllReport()
 	if err != nil {
 		return nil, err
@@ -31,7 +31,7 @@ func (rU reportUsecase) FindAllReport() ([]*dbmodel.Report, error) {
 	return chatposts, nil
 }
 
-func (rU reportUsecase) InsertReport(report *dbmodel.Report) error {
+func (rU reportUsecase) InsertReport(report *models.Report) error {
 	err := rU.reportRepository.InsertReport(report)
 	if err != nil {
 		return err
@@ -39,7 +39,7 @@ func (rU reportUsecase) InsertReport(report *dbmodel.Report) error {
 	return nil
 }
 
-func (rU reportUsecase) DeleteReport(report *dbmodel.Report) error {
+func (rU reportUsecase) DeleteReport(report *models.Report) error {
 	err := rU.reportRepository.DeleteReport(report)
 	if err != nil {
 		return err

@@ -1,13 +1,13 @@
 package repository
 
 import (
-	"github.com/taniwhy/mochi-match-rest/domain/models/dbmodel"
+	"github.com/taniwhy/mochi-match-rest/domain/models"
 )
 
 // EntryHistoryRepository :
 type EntryHistoryRepository interface {
-	FindAllEntryHistory() ([]*dbmodel.EntryHistory, error)
-	InsertEntryHistory(entryHistory *dbmodel.EntryHistory) error
-	UpdateEntryHistory(entryHistory *dbmodel.EntryHistory) error
-	DeleteEntryHistory(entryHistory *dbmodel.EntryHistory) error
+	FindAllEntryHistory() ([]*models.EntryHistory, error)
+	InsertEntryHistory(entryHistory *models.EntryHistory) error
+	UpdateEntryHistory(entryHistory *models.EntryHistory) error
+	DeleteEntryHistory(entryHistory *models.EntryHistory) error
 }

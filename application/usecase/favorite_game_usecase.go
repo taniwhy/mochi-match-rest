@@ -1,7 +1,7 @@
 package usecase
 
 import (
-	"github.com/taniwhy/mochi-match-rest/domain/models/dbmodel"
+	"github.com/taniwhy/mochi-match-rest/domain/models"
 	"github.com/taniwhy/mochi-match-rest/domain/models/response"
 	"github.com/taniwhy/mochi-match-rest/domain/repository"
 )
@@ -9,7 +9,7 @@ import (
 // FavoriteGameUsecase :
 type FavoriteGameUsecase interface {
 	FindFavoriteGameByID(id string) ([]*response.FavoriteGamesRes, error)
-	InsertFavoriteGame(favgame *dbmodel.FavoriteGame) error
+	InsertFavoriteGame(favgame *models.FavoriteGame) error
 	DeleteFavoriteGame(uID, fID string) error
 }
 
@@ -32,7 +32,7 @@ func (fU favoriteGameUsecase) FindFavoriteGameByID(id string) ([]*response.Favor
 	return favoriteGames, nil
 }
 
-func (fU favoriteGameUsecase) InsertFavoriteGame(favgame *dbmodel.FavoriteGame) error {
+func (fU favoriteGameUsecase) InsertFavoriteGame(favgame *models.FavoriteGame) error {
 	err := fU.favoriteGameRepository.InsertFavoriteGame(favgame)
 	if err != nil {
 		return err

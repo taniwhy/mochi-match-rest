@@ -6,7 +6,7 @@ package mock_repository
 
 import (
 	gomock "github.com/golang/mock/gomock"
-	dbmodel "github.com/taniwhy/mochi-match-rest/domain/models/dbmodel"
+	"github.com/taniwhy/mochi-match-rest/domain/models"
 	reflect "reflect"
 )
 
@@ -34,10 +34,10 @@ func (m *MockUserDetailRepository) EXPECT() *MockUserDetailRepositoryMockRecorde
 }
 
 // FindAllUserDetail mocks base method
-func (m *MockUserDetailRepository) FindAllUserDetail() ([]*dbmodel.UserDetail, error) {
+func (m *MockUserDetailRepository) FindAllUserDetail() ([]*models.UserDetail, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindAllUserDetail")
-	ret0, _ := ret[0].([]*dbmodel.UserDetail)
+	ret0, _ := ret[0].([]*models.UserDetail)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -49,10 +49,10 @@ func (mr *MockUserDetailRepositoryMockRecorder) FindAllUserDetail() *gomock.Call
 }
 
 // FindUserDetailByID mocks base method
-func (m *MockUserDetailRepository) FindUserDetailByID(id string) (*dbmodel.UserDetail, error) {
+func (m *MockUserDetailRepository) FindUserDetailByID(id string) (*models.UserDetail, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindUserDetailByID", id)
-	ret0, _ := ret[0].(*dbmodel.UserDetail)
+	ret0, _ := ret[0].(*models.UserDetail)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -64,7 +64,7 @@ func (mr *MockUserDetailRepositoryMockRecorder) FindUserDetailByID(id interface{
 }
 
 // InsertUserDetail mocks base method
-func (m *MockUserDetailRepository) InsertUserDetail(userDetail *dbmodel.UserDetail) error {
+func (m *MockUserDetailRepository) InsertUserDetail(userDetail *models.UserDetail) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "InsertUserDetail", userDetail)
 	ret0, _ := ret[0].(error)
@@ -78,7 +78,7 @@ func (mr *MockUserDetailRepositoryMockRecorder) InsertUserDetail(userDetail inte
 }
 
 // UpdateUserDetail mocks base method
-func (m *MockUserDetailRepository) UpdateUserDetail(userDetail *dbmodel.UserDetail) error {
+func (m *MockUserDetailRepository) UpdateUserDetail(userDetail *models.UserDetail) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateUserDetail", userDetail)
 	ret0, _ := ret[0].(error)
@@ -92,7 +92,7 @@ func (mr *MockUserDetailRepositoryMockRecorder) UpdateUserDetail(userDetail inte
 }
 
 // DeleteUserDetail mocks base method
-func (m *MockUserDetailRepository) DeleteUserDetail(userDetail *dbmodel.UserDetail) error {
+func (m *MockUserDetailRepository) DeleteUserDetail(userDetail *models.UserDetail) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteUserDetail", userDetail)
 	ret0, _ := ret[0].(error)

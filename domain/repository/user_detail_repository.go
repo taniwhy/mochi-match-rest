@@ -1,14 +1,14 @@
 package repository
 
 import (
-	"github.com/taniwhy/mochi-match-rest/domain/models/dbmodel"
+	"github.com/taniwhy/mochi-match-rest/domain/models"
 )
 
 // UserDetailRepository : ユーザーのリポジトリ
 type UserDetailRepository interface {
-	FindAllUserDetail() ([]*dbmodel.UserDetail, error)
-	FindUserDetailByID(id string) (*dbmodel.UserDetail, error)
-	InsertUserDetail(userDetail *dbmodel.UserDetail) error
-	UpdateUserDetail(userDetail *dbmodel.UserDetail) error
-	DeleteUserDetail(userDetail *dbmodel.UserDetail) error
+	FindAllUserDetail() ([]*models.UserDetail, error)
+	FindUserDetailByID(id string) (*models.UserDetail, error)
+	InsertUserDetail(userDetail *models.UserDetail) error
+	UpdateUserDetail(userDetail *models.UserDetail) error
+	DeleteUserDetail(userDetail *models.UserDetail) error
 }

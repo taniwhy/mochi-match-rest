@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/taniwhy/mochi-match-rest/application/usecase"
-	"github.com/taniwhy/mochi-match-rest/domain/models/dbmodel"
+	"github.com/taniwhy/mochi-match-rest/domain/models"
 	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/auth"
 	"golang.org/x/sync/errgroup"
 )
@@ -60,21 +60,12 @@ func NewUserHandler(uU usecase.UserUseCase, uDU usecase.UserDetailUseCase, fGU u
 }
 
 func (uH userHandler) GetUser(c *gin.Context) {
-	userID := c.Params.ByName("id")
 	claims, err := auth.GetTokenClaims(c)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
 	claimsID := claims["sub"].(string)
-	if userID != claimsID {
-		c.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf("Params error: %v", userID)})
-		return
-	}
-	if userID != claimsID {
-		c.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf("Params error: %v", userID)})
-		return
-	}
 	_, err = uH.userDetailUsecase.FindUserDetailByID(claimsID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
@@ -105,7 +96,7 @@ func (uH userHandler) CreateUser(c *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
-	u := &dbmodel.User{
+	u := &models.User{
 		UserID:     uid.String(),
 		GoogleID:   sql.NullString{String: "", Valid: false},
 		FacebookID: sql.NullString{String: "", Valid: false},
@@ -135,7 +126,7 @@ func (uH userHandler) CreateUser(c *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
-	uD := &dbmodel.UserDetail{
+	uD := &models.UserDetail{
 		UserDetailID: udid.String(),
 		UserID:       uid.String(),
 		UserName:     signupReq.UserName,
@@ -176,7 +167,7 @@ func (uH userHandler) UpdateUser(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf("Params error: %v", userID)})
 		return
 	}
-	updateUserDetail := dbmodel.UserDetail{
+	updateUserDetail := models.UserDetail{
 		UserID:   claimsID,
 		UserName: u.UserName,
 		Icon:     u.Icon,
@@ -217,7 +208,7 @@ func (uH userHandler) UpdateUser(c *gin.Context) {
 		if err != nil {
 			panic(err)
 		}
-		f := dbmodel.FavoriteGame{
+		f := models.FavoriteGame{
 			FavoriteGameID: id.String(),
 			UserID:         claimsID,
 			GameTitleID:    i.GameID,
@@ -230,10 +221,9 @@ func (uH userHandler) UpdateUser(c *gin.Context) {
 			return nil
 		})
 	}
-	for _, d := range deleteGames {
-		dG := d
+	for _, g := range deleteGames {
 		eg.Go(func() error {
-			if err := uH.favoriteGameUsecase.DeleteFavoriteGame(claimsID, dG.GameID); err != nil {
+			if err := uH.favoriteGameUsecase.DeleteFavoriteGame(claimsID, g.GameID); err != nil {
 				return err
 			}
 			return nil
@@ -266,9 +256,9 @@ func (uH userHandler) DeleteUser(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "ok"})
 }
 
-func contains(s []favoriteGameRecord, e string) bool {
-	for _, v := range s {
-		if e == v.GameID {
+func contains(gr []favoriteGameRecord, id string) bool {
+	for _, r := range gr {
+		if id == r.GameID {
 			return true
 		}
 	}

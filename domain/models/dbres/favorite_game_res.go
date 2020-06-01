@@ -1,4 +1,4 @@
-package response
+package dbres
 
 // FavoriteGamesRes :
 type FavoriteGamesRes struct {

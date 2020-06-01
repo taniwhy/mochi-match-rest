@@ -74,7 +74,8 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 	users.POST("", userHandler.CreateUser)
 	users.Use(auth.TokenAuth())
 	{
-		users.GET("/:id", userHandler.GetUser)
+		users.GET("", userHandler.GetUser)
+		users.GET("/:id")
 		users.PUT("/:id", userHandler.UpdateUser)
 		users.DELETE("/:id", userHandler.DeleteUser)
 	}

@@ -12,6 +12,7 @@ import (
 	"github.com/taniwhy/mochi-match-rest/application/usecase"
 	"github.com/taniwhy/mochi-match-rest/config"
 	"github.com/taniwhy/mochi-match-rest/domain/models"
+	"github.com/taniwhy/mochi-match-rest/domain/service"
 	"golang.org/x/oauth2"
 )
 
@@ -24,15 +25,17 @@ type GoogleOAuthHandler interface {
 }
 
 type googleOAuthHandler struct {
-	oauthConf *oauth2.Config
-	uU        usecase.UserUseCase
+	oauthConf   *oauth2.Config
+	userUsecase usecase.UserUseCase
+	userService service.IUserService
 }
 
 // NewGoogleOAuthHandler :
-func NewGoogleOAuthHandler(uU usecase.UserUseCase) GoogleOAuthHandler {
+func NewGoogleOAuthHandler(uU usecase.UserUseCase, uS service.IUserService) GoogleOAuthHandler {
 	return &googleOAuthHandler{
-		oauthConf: config.ConfigureOAuthClient(),
-		uU:        uU,
+		oauthConf:   config.ConfigureOAuthClient(),
+		userUsecase: uU,
+		userService: uS,
 	}
 }
 
@@ -87,12 +90,15 @@ func (gA *googleOAuthHandler) Callback(c *gin.Context) {
 		return
 	}
 	// todo : errのpanic処理
-	res, _ := gA.uU.FindUserByProviderID("google", gU.ID)
-	if res != nil {
-		// ログインしリダイレクト
-		c.Writer.WriteString(`<!DOCTYPE html><html><body>ログイン完了</body></html>`)
+	ok, err := gA.userService.IsExist("google", gU.ID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 	}
-	c.SetCookie("pid", gU.ID, 0, "/", "", false, true)
-	// ユーザー登録ページにリダイレクト
-	c.Writer.WriteString(`<!DOCTYPE html><html><body>ユーザー登録ページです</body></html>`)
+	if ok {
+		c.SetCookie("pid", gU.ID, 0, "/", "", false, true)
+		// ユーザー登録ページにリダイレクト
+		c.Writer.WriteString(`<!DOCTYPE html><html><body>ユーザー登録ページです</body></html>`)
+	}
+	// ログインしリダイレクト
+	c.Writer.WriteString(`<!DOCTYPE html><html><body>ログイン完了</body></html>`)
 }

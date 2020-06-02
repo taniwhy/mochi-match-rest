@@ -2,13 +2,12 @@ package usecase
 
 import (
 	"github.com/taniwhy/mochi-match-rest/domain/models"
-	"github.com/taniwhy/mochi-match-rest/domain/models/response"
 	"github.com/taniwhy/mochi-match-rest/domain/repository"
 )
 
 // FavoriteGameUsecase :
 type FavoriteGameUsecase interface {
-	FindFavoriteGameByID(id string) ([]*response.FavoriteGamesRes, error)
+	FindFavoriteGameByID(id string) ([]*models.FavoriteGame, error)
 	InsertFavoriteGame(favgame *models.FavoriteGame) error
 	DeleteFavoriteGame(uID, fID string) error
 }
@@ -24,8 +23,8 @@ func NewFavoriteGameUsecase(fR repository.FavoriteGameRepository) FavoriteGameUs
 	}
 }
 
-func (fU favoriteGameUsecase) FindFavoriteGameByID(id string) ([]*response.FavoriteGamesRes, error) {
-	favoriteGames, err := fU.favoriteGameRepository.FindFavoriteGameByID(id)
+func (fU favoriteGameUsecase) FindFavoriteGameByID(id string) ([]*models.FavoriteGame, error) {
+	favoriteGames, err := fU.favoriteGameRepository.FindByID(id)
 	if err != nil {
 		return nil, err
 	}
@@ -33,7 +32,7 @@ func (fU favoriteGameUsecase) FindFavoriteGameByID(id string) ([]*response.Favor
 }
 
 func (fU favoriteGameUsecase) InsertFavoriteGame(favgame *models.FavoriteGame) error {
-	err := fU.favoriteGameRepository.InsertFavoriteGame(favgame)
+	err := fU.favoriteGameRepository.Insert(favgame)
 	if err != nil {
 		return err
 	}
@@ -41,7 +40,7 @@ func (fU favoriteGameUsecase) InsertFavoriteGame(favgame *models.FavoriteGame) e
 }
 
 func (fU favoriteGameUsecase) DeleteFavoriteGame(uID, fID string) error {
-	err := fU.favoriteGameRepository.DeleteFavoriteGame(uID, fID)
+	err := fU.favoriteGameRepository.Delete(uID, fID)
 	if err != nil {
 		return err
 	}

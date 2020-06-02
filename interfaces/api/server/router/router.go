@@ -7,6 +7,7 @@ import (
 	"github.com/gomodule/redigo/redis"
 	"github.com/jinzhu/gorm"
 	"github.com/taniwhy/mochi-match-rest/application/usecase"
+	"github.com/taniwhy/mochi-match-rest/domain/service"
 	"github.com/taniwhy/mochi-match-rest/infrastructure/dao"
 	"github.com/taniwhy/mochi-match-rest/infrastructure/persistence/datastore"
 	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/auth"
@@ -26,8 +27,9 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 	gameTitleDatastore := datastore.NewGameTitleDatastore(dbConn)
 	favorateGameDatastore := datastore.NewFavoriteGameDatastore(dbConn)
 
-	userUsecase := usecase.NewUserUsecase(userDatastore)
-	userDetailUsecase := usecase.NewUserDetailUsecase(userDetailDatastore)
+	userService := service.NewUserService(userDatastore)
+
+	userUsecase := usecase.NewUserUsecase(userDatastore, userDetailDatastore, userService, favorateGameDatastore)
 	roomUsecase := usecase.NewRoomUsecase(roomDatastore)
 	roomBlacklistUsecase := usecase.NewRoomBlacklistUsecase(roomBalacklistDatastore)
 	roomReservationUsecase := usecase.NewRoomReservationUsecase(roomReservationDatastore)
@@ -35,12 +37,12 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 	gameTitleUsecase := usecase.NewGameTitleUsecase(gameTitleDatastore)
 	favorateGameUsecase := usecase.NewFavoriteGameUsecase(favorateGameDatastore)
 
-	userHandler := handler.NewUserHandler(userUsecase, userDetailUsecase, favorateGameUsecase)
+	userHandler := handler.NewUserHandler(userUsecase, favorateGameUsecase)
 	roomHandler := handler.NewRoomHandler(userUsecase, roomUsecase, roomBlacklistUsecase, roomReservationUsecase)
 	chatPostHandler := handler.NewChatPostHandler(chatPostUsecase, redisConn)
 	gameTitleHandler := handler.NewGameTitleHandler(gameTitleUsecase)
 	authHandler := handler.NewAuthHandler()
-	googleAuthHandler := handler.NewGoogleOAuthHandler(userUsecase)
+	googleAuthHandler := handler.NewGoogleOAuthHandler(userUsecase, userService)
 
 	store := dao.NewRedisStore()
 	//f, err := os.Create("./config/log/access.log")
@@ -71,12 +73,13 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 		google.GET("/callback", googleAuthHandler.Callback)
 	}
 	users := v1.Group("/users")
-	users.POST("", userHandler.CreateUser)
+	users.POST("", userHandler.Create)
 	users.Use(auth.TokenAuth())
 	{
-		users.GET("/:id", userHandler.GetUser)
-		users.PUT("/:id", userHandler.UpdateUser)
-		users.DELETE("/:id", userHandler.DeleteUser)
+		users.GET("", userHandler.GetMe)
+		users.GET("/:id", userHandler.GetByID)
+		users.PUT("/:id", userHandler.Update)
+		users.DELETE("/:id", userHandler.Delete)
 	}
 	games := users.Group("/:id/favorate/games")
 	{

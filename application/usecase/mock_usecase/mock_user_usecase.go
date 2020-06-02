@@ -5,8 +5,9 @@
 package mock_usecase
 
 import (
+	gin "github.com/gin-gonic/gin"
 	gomock "github.com/golang/mock/gomock"
-	dbmodel "github.com/taniwhy/mochi-match-rest/domain/models/dbmodel"
+	models "github.com/taniwhy/mochi-match-rest/domain/models"
 	reflect "reflect"
 )
 
@@ -33,31 +34,31 @@ func (m *MockUserUseCase) EXPECT() *MockUserUseCaseMockRecorder {
 	return m.recorder
 }
 
-// FindUserByProviderID mocks base method
-func (m *MockUserUseCase) FindUserByProviderID(provider, id string) (*dbmodel.User, error) {
+// Create mocks base method
+func (m *MockUserUseCase) Create(c *gin.Context) (*models.UserDetail, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FindUserByProviderID", provider, id)
-	ret0, _ := ret[0].(*dbmodel.User)
+	ret := m.ctrl.Call(m, "Create", c)
+	ret0, _ := ret[0].(*models.UserDetail)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// FindUserByProviderID indicates an expected call of FindUserByProviderID
-func (mr *MockUserUseCaseMockRecorder) FindUserByProviderID(provider, id interface{}) *gomock.Call {
+// Create indicates an expected call of Create
+func (mr *MockUserUseCaseMockRecorder) Create(c interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindUserByProviderID", reflect.TypeOf((*MockUserUseCase)(nil).FindUserByProviderID), provider, id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockUserUseCase)(nil).Create), c)
 }
 
-// CreateUser mocks base method
-func (m *MockUserUseCase) CreateUser(user *dbmodel.User) error {
+// Delete mocks base method
+func (m *MockUserUseCase) Delete(id string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateUser", user)
+	ret := m.ctrl.Call(m, "Delete", id)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// CreateUser indicates an expected call of CreateUser
-func (mr *MockUserUseCaseMockRecorder) CreateUser(user interface{}) *gomock.Call {
+// Delete indicates an expected call of Delete
+func (mr *MockUserUseCaseMockRecorder) Delete(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateUser", reflect.TypeOf((*MockUserUseCase)(nil).CreateUser), user)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockUserUseCase)(nil).Delete), id)
 }

@@ -24,7 +24,7 @@ CREATE TABLE user_details
     user_detail_id TEXT NOT NULL,
     user_id TEXT NOT NULL,
     user_name TEXT NOT NULL,
-    icon INTEGER NOT NULL,
+    icon TEXT NOT NULL,
     update_at TIMESTAMP NOT NULL,
     PRIMARY KEY(user_detail_id),
     UNIQUE(user_id),
@@ -53,20 +53,21 @@ CREATE TABLE game_titles
     game_title TEXT NOT NULL,
     created_at TIMESTAMP NOT NULL,
     update_at TIMESTAMP NOT NULL,
-    PRIMARY KEY(game_title_id)
+    PRIMARY KEY(game_title_id),
+    UNIQUE(game_title)
 );
 
 CREATE TABLE favorite_games
 (
     favorite_game_id TEXT NOT NULL,
     user_id TEXT NOT NULL,
-    game_title_id TEXT NOT NULL,
+    game_title TEXT NOT NULL,
     created_at TIMESTAMP NOT NULL,
     PRIMARY KEY(favorite_game_id),
     FOREIGN KEY(user_id)REFERENCES users(user_id)
         ON UPDATE CASCADE
         ON DELETE SET NULL,
-    FOREIGN KEY(game_title_id)REFERENCES game_titles(game_title_id)
+    FOREIGN KEY(game_title)REFERENCES game_titles(game_title)
         ON UPDATE CASCADE
         ON DELETE SET NULL
 );

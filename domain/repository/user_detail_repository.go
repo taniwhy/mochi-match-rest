@@ -6,9 +6,8 @@ import (
 
 // UserDetailRepository : ユーザーのリポジトリ
 type UserDetailRepository interface {
-	FindAllUserDetail() ([]*models.UserDetail, error)
-	FindUserDetailByID(id string) (*models.UserDetail, error)
-	InsertUserDetail(userDetail *models.UserDetail) error
-	UpdateUserDetail(userDetail *models.UserDetail) error
-	DeleteUserDetail(userDetail *models.UserDetail) error
+	FindByID(id string) (*models.UserDetail, error)
+	Insert(userDetail *models.UserDetail) error
+	Update(id, name, icon string) error
+	Delete(userDetail *models.UserDetail) error
 }

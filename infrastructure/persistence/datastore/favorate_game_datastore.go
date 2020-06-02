@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/jinzhu/gorm"
-	"github.com/taniwhy/mochi-match-rest/domain/models/dbmodel"
-	"github.com/taniwhy/mochi-match-rest/domain/models/response"
+	"github.com/taniwhy/mochi-match-rest/domain/errors"
+	"github.com/taniwhy/mochi-match-rest/domain/models"
 	"github.com/taniwhy/mochi-match-rest/domain/repository"
 )
 
@@ -23,23 +23,27 @@ func NewFavoriteGameDatastore(db *gorm.DB) repository.FavoriteGameRepository {
 	return &favoriteGameDatastore{db}
 }
 
-func (eD favoriteGameDatastore) FindFavoriteGameByID(id string) ([]*response.FavoriteGamesRes, error) {
-	f := []*response.FavoriteGamesRes{}
-	eD.db.Table("favorite_games").
-		Select("favorite_games.favorite_game_id, game_titles.game_title_id, game_titles.game_title").
-		Joins("left join game_titles on game_titles.game_title_id = favorite_games.game_title_id").
-		Where("favorite_games.user_id = ?", id).
-		Scan(&f)
+func (eD favoriteGameDatastore) FindByID(id string) ([]*models.FavoriteGame, error) {
+	f := []*models.FavoriteGame{}
+	err := eD.db.Table("favorite_games").
+		Where("user_id = ?", id).
+		Scan(&f).Error
+	if gorm.IsRecordNotFoundError(err) {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, errors.ErrDataBase{Detail: err}
+	}
 	return f, nil
 }
 
-func (eD favoriteGameDatastore) InsertFavoriteGame(favgame *dbmodel.FavoriteGame) error {
+func (eD favoriteGameDatastore) Insert(favgame *models.FavoriteGame) error {
 	return eD.db.Create(favgame).Error
 }
 
-func (eD favoriteGameDatastore) DeleteFavoriteGame(uID, fID string) error {
-	f := dbmodel.FavoriteGame{}
-	recordNotFound := eD.db.Where("user_id = ? AND game_title_id = ?", uID, fID).Delete(&f).RecordNotFound()
+func (eD favoriteGameDatastore) Delete(uID, gT string) error {
+	f := models.FavoriteGame{}
+	recordNotFound := eD.db.Where("user_id = ? AND game_title = ?", uID, gT).Delete(&f).RecordNotFound()
 	if recordNotFound {
 		return fmt.Errorf("Record not found : %v", uID)
 	}

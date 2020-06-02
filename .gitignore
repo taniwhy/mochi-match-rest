@@ -21,3 +21,5 @@ access.log
 memo
 main
 key
+
+.DS_Store

@@ -18,6 +18,8 @@ config.yml
 dbconf.yml
 
 access.log
+server.log
+
 memo
 main
 key

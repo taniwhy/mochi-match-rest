@@ -4,9 +4,13 @@ import (
 	"net/http"
 	"time"
 
+	log "github.com/sirupsen/logrus"
 	"github.com/taniwhy/mochi-match-rest/config"
 	"github.com/taniwhy/mochi-match-rest/infrastructure/dao"
 	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/router"
+
+	// logging driver
+	_ "github.com/taniwhy/mochi-match-rest/logging"
 )
 
 func init() {
@@ -29,5 +33,8 @@ func main() {
 		WriteTimeout:   10 * time.Second,
 		MaxHeaderBytes: 1 << 20,
 	}
-	server.ListenAndServe()
+	if err := server.ListenAndServe(); err != nil {
+		log.Fatal("Serve failed")
+		panic(err)
+	}
 }

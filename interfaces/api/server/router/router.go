@@ -35,9 +35,8 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 	roomReservationUsecase := usecase.NewRoomReservationUsecase(roomReservationDatastore)
 	chatPostUsecase := usecase.NewChatPostUsecase(chatPostDatastore)
 	gameTitleUsecase := usecase.NewGameTitleUsecase(gameTitleDatastore)
-	favorateGameUsecase := usecase.NewFavoriteGameUsecase(favorateGameDatastore)
 
-	userHandler := handler.NewUserHandler(userUsecase, favorateGameUsecase)
+	userHandler := handler.NewUserHandler(userUsecase)
 	roomHandler := handler.NewRoomHandler(userUsecase, roomUsecase, roomBlacklistUsecase, roomReservationUsecase)
 	chatPostHandler := handler.NewChatPostHandler(chatPostUsecase, redisConn)
 	gameTitleHandler := handler.NewGameTitleHandler(gameTitleUsecase)

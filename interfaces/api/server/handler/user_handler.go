@@ -20,25 +20,45 @@ type UserHandler interface {
 }
 
 type userHandler struct {
-	userUsecase         usecase.UserUseCase
-	favoriteGameUsecase usecase.FavoriteGameUsecase
+	userUsecase usecase.UserUseCase
 }
 
 // NewUserHandler : UserHandler生成
-func NewUserHandler(uU usecase.UserUseCase, fGU usecase.FavoriteGameUsecase) UserHandler {
+func NewUserHandler(uU usecase.UserUseCase) UserHandler {
 	return &userHandler{
-		userUsecase:         uU,
-		favoriteGameUsecase: fGU,
+		userUsecase: uU,
 	}
 }
 
 func (uH userHandler) GetMe(c *gin.Context) {
-	u, _ := uH.userUsecase.GetMe(c)
+	u, err := uH.userUsecase.GetMe(c)
+	switch err := err.(type) {
+	case errors.ErrGetTokenClaims:
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
+	case errors.ErrRecordNotFound:
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
+	case errors.ErrDataBase:
+		c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+		return
+	}
 	c.JSON(http.StatusOK, u)
 }
 
 func (uH userHandler) GetByID(c *gin.Context) {
-	u, _ := uH.userUsecase.GetByID(c)
+	u, err := uH.userUsecase.GetByID(c)
+	switch err := err.(type) {
+	case errors.ErrGetTokenClaims:
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
+	case errors.ErrRecordNotFound:
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
+	case errors.ErrDataBase:
+		c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+		return
+	}
 	c.JSON(http.StatusOK, u)
 }
 

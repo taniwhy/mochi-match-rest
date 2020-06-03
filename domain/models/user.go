@@ -5,10 +5,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-<<<<<<< HEAD
 	"github.com/taniwhy/mochi-match-rest/domain/errors"
-=======
->>>>>>> 9a70d396a44f4ff618d89b4dafe030a585b76c6f
 )
 
 // User : usersテーブルモデル
@@ -27,21 +24,12 @@ type User struct {
 }
 
 // NewUser :
-<<<<<<< HEAD
 func NewUser(email string) (*User, error) {
 	uid, err := uuid.NewRandom()
 	if err != nil {
 		return nil, errors.ErrGenerateID{}
 	}
 	return &User{
-=======
-func NewUser(email) (User, err error) {
-	uid, err := uuid.NewRandom()
-	if err != nil {
-		return nil, err
-	}
-	return User{
->>>>>>> 9a70d396a44f4ff618d89b4dafe030a585b76c6f
 		UserID:     uid.String(),
 		GoogleID:   sql.NullString{String: "", Valid: false},
 		FacebookID: sql.NullString{String: "", Valid: false},

@@ -2,7 +2,7 @@ package datastore
 
 import (
 	"github.com/jinzhu/gorm"
-	"github.com/taniwhy/mochi-match-rest/domain/models/dbmodel"
+	"github.com/taniwhy/mochi-match-rest/domain/models"
 	"github.com/taniwhy/mochi-match-rest/domain/repository"
 )
 
@@ -15,8 +15,8 @@ func NewEntryHistoryDatastore(db *gorm.DB) repository.EntryHistoryRepository {
 	return &entryHistoryDatastore{db}
 }
 
-func (eD entryHistoryDatastore) FindAllEntryHistory() ([]*dbmodel.EntryHistory, error) {
-	entryHistorys := []*dbmodel.EntryHistory{}
+func (eD entryHistoryDatastore) FindAllEntryHistory() ([]*models.EntryHistory, error) {
+	entryHistorys := []*models.EntryHistory{}
 
 	err := eD.db.Find(&entryHistorys).Error
 	if err != nil {
@@ -25,15 +25,15 @@ func (eD entryHistoryDatastore) FindAllEntryHistory() ([]*dbmodel.EntryHistory, 
 	return entryHistorys, nil
 }
 
-func (eD entryHistoryDatastore) InsertEntryHistory(entryHistory *dbmodel.EntryHistory) error {
+func (eD entryHistoryDatastore) InsertEntryHistory(entryHistory *models.EntryHistory) error {
 	return eD.db.Create(entryHistory).Error
 }
 
-func (eD entryHistoryDatastore) UpdateEntryHistory(entryHistory *dbmodel.EntryHistory) error {
+func (eD entryHistoryDatastore) UpdateEntryHistory(entryHistory *models.EntryHistory) error {
 	return eD.db.Update(entryHistory).Error
 }
 
-func (eD entryHistoryDatastore) DeleteEntryHistory(entryHistory *dbmodel.EntryHistory) error {
+func (eD entryHistoryDatastore) DeleteEntryHistory(entryHistory *models.EntryHistory) error {
 	err := eD.db.Take(&entryHistory).Error
 	if err != nil {
 		return err

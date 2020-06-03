@@ -1,8 +1,11 @@
 package datastore
 
 import (
+	"time"
+
 	"github.com/jinzhu/gorm"
-	"github.com/taniwhy/mochi-match-rest/domain/models/dbmodel"
+	"github.com/taniwhy/mochi-match-rest/domain/errors"
+	"github.com/taniwhy/mochi-match-rest/domain/models"
 	"github.com/taniwhy/mochi-match-rest/domain/repository"
 )
 
@@ -14,18 +17,9 @@ type userDetailDatastore struct {
 func NewUserDetailDatastore(db *gorm.DB) repository.UserDetailRepository {
 	return &userDetailDatastore{db}
 }
-func (uD userDetailDatastore) FindAllUserDetail() ([]*dbmodel.UserDetail, error) {
-	userDetails := []*dbmodel.UserDetail{}
 
-	err := uD.db.Find(&userDetails).Error
-	if err != nil {
-		return nil, err
-	}
-	return userDetails, nil
-}
-
-func (uD userDetailDatastore) FindUserDetailByID(id string) (*dbmodel.UserDetail, error) {
-	userDetails := dbmodel.UserDetail{UserDetailID: id}
+func (uD userDetailDatastore) FindByID(id string) (*models.UserDetail, error) {
+	userDetails := models.UserDetail{UserDetailID: id}
 	err := uD.db.Take(&userDetails).Error
 	if err != nil {
 		return nil, err
@@ -33,21 +27,27 @@ func (uD userDetailDatastore) FindUserDetailByID(id string) (*dbmodel.UserDetail
 	return &userDetails, nil
 }
 
-func (uD userDetailDatastore) InsertUserDetail(userDetail *dbmodel.UserDetail) error {
+func (uD userDetailDatastore) Insert(userDetail *models.UserDetail) error {
 	return uD.db.Create(userDetail).Error
 }
 
-func (uD userDetailDatastore) UpdateUserDetail(userDetail *dbmodel.UserDetail) error {
-	u := dbmodel.UserDetail{}
-	// todo : 更新対象が見つからないとクラッシュ
-	return uD.db.Model(&u).Where("user_id = ?", userDetail.UserID).Updates(dbmodel.UserDetail{
-		UserName: userDetail.UserName,
-		Icon:     userDetail.Icon,
-		UpdateAt: userDetail.UpdateAt,
+func (uD userDetailDatastore) Update(id, name, icon string) error {
+	u := models.UserDetail{}
+	err := uD.db.Model(&u).Where("user_id = ?", id).Updates(models.UserDetail{
+		UserName: name,
+		Icon:     icon,
+		UpdateAt: time.Now(),
 	}).Error
+	if gorm.IsRecordNotFoundError(err) {
+		return errors.ErrRecordNotFound{Detail: err.Error()}
+	}
+	if err != nil {
+		return errors.ErrDataBase{Detail: err.Error()}
+	}
+	return nil
 }
 
-func (uD userDetailDatastore) DeleteUserDetail(userDetail *dbmodel.UserDetail) error {
+func (uD userDetailDatastore) Delete(userDetail *models.UserDetail) error {
 	err := uD.db.Take(&userDetail).Error
 	if err != nil {
 		return err

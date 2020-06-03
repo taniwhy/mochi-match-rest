@@ -4,7 +4,8 @@ import (
 	"fmt"
 
 	"github.com/jinzhu/gorm"
-	"github.com/taniwhy/mochi-match-rest/domain/models/dbmodel"
+	"github.com/taniwhy/mochi-match-rest/domain/errors"
+	"github.com/taniwhy/mochi-match-rest/domain/models"
 	"github.com/taniwhy/mochi-match-rest/domain/repository"
 )
 
@@ -17,53 +18,45 @@ func NewUserDatastore(db *gorm.DB) repository.UserRepository {
 	return &userDatastore{db}
 }
 
-func (uD userDatastore) FindAllUser() ([]*dbmodel.User, error) {
-	users := []*dbmodel.User{}
-
-	err := uD.db.Find(&users).Error
+func (uD userDatastore) FindByID(id string) (*models.User, error) {
+	u := models.User{UserID: id}
+	err := uD.db.First(&u).Error
 	if gorm.IsRecordNotFoundError(err) {
-		return nil, err
+		return nil, nil
 	}
-
 	if err != nil {
-		return nil, err
+		return nil, errors.ErrDataBase{Detail: err}
 	}
-	return users, nil
+	return &u, nil
 }
 
-func (uD userDatastore) FindUserByID(id string) (*dbmodel.User, error) {
-	User := dbmodel.User{UserID: id}
-	err := uD.db.Take(&User).Error
-	if err != nil {
-		return nil, err
-	}
-	return &User, nil
-}
-
-func (uD userDatastore) FindUserByProviderID(provider, id string) (*dbmodel.User, error) {
-	var err error
-	user := dbmodel.User{}
-
+func (uD userDatastore) FindByProviderID(provider, id string) (*models.User, error) {
+	u := models.User{}
 	switch provider {
 	case "google":
-		err = uD.db.Where("google_id = ?", id).Take(&user).Error
+		err := uD.db.Where("google_id = ?", id).First(&u).Error
+		if gorm.IsRecordNotFoundError(err) {
+			return nil, nil
+		}
+		if err != nil {
+			return nil, errors.ErrDataBase{Detail: err}
+		}
+		return nil, errors.ErrIDAlreadyExists{Provider: provider, ID: id}
+	default:
+		return nil, errors.ErrUnexpectedQueryProvider{Provider: provider}
 	}
-	if err != nil {
-		return nil, err
-	}
-	return &user, nil
 }
 
-func (uD userDatastore) InsertUser(user *dbmodel.User) error {
+func (uD userDatastore) Insert(user *models.User) error {
 	return uD.db.Create(user).Error
 }
 
-func (uD userDatastore) UpdateUser(user *dbmodel.User) error {
+func (uD userDatastore) Update(user *models.User) error {
 	return uD.db.Updates(user).Error
 }
 
-func (uD userDatastore) DeleteUser(id string) error {
-	user := dbmodel.User{}
+func (uD userDatastore) Delete(id string) error {
+	user := models.User{}
 	recordNotFound := uD.db.Where("user_id = ?", id).Take(&user).RecordNotFound()
 	if recordNotFound {
 		return fmt.Errorf("Record not found : %v", id)

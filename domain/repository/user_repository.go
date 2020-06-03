@@ -6,10 +6,9 @@ import (
 
 // UserRepository : ユーザーのリポジトリ
 type UserRepository interface {
-	FindAllUser() ([]*models.User, error)
-	FindUserByID(id string) (*models.User, error)
-	FindUserByProviderID(provider, id string) (*models.User, error)
-	InsertUser(user *models.User) error
-	UpdateUser(user *models.User) error
-	DeleteUser(id string) error
+	FindByID(id string) (*models.User, error)
+	FindByProviderID(provider, id string) (*models.User, error)
+	Insert(user *models.User) error
+	Update(user *models.User) error
+	Delete(id string) error
 }

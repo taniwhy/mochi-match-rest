@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/taniwhy/mochi-match-rest/domain/errors"
 )
 
 // User : usersテーブルモデル
@@ -23,12 +24,12 @@ type User struct {
 }
 
 // NewUser :
-func NewUser(email) (User, err error) {
+func NewUser(email string) (*User, error) {
 	uid, err := uuid.NewRandom()
 	if err != nil {
-		return nil, err
+		return nil, errors.ErrGenerateID{}
 	}
-	return User{
+	return &User{
 		UserID:     uid.String(),
 		GoogleID:   sql.NullString{String: "", Valid: false},
 		FacebookID: sql.NullString{String: "", Valid: false},

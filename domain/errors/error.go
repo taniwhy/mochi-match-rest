@@ -102,6 +102,15 @@ func (e ErrDataBase) Error() string {
 	return fmt.Sprintf("Database error! - detail: %s", e.Detail)
 }
 
+// ErrNotFound :
+type ErrNotFound struct {
+	Detail interface{}
+}
+
+func (n ErrNotFound) Error() string {
+	return fmt.Sprintf("Not found!")
+}
+
 // ErrRecordNotFound :
 type ErrRecordNotFound struct {
 	Detail interface{}

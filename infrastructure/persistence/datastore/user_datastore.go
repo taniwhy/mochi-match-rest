@@ -19,8 +19,8 @@ func NewUserDatastore(db *gorm.DB) repository.UserRepository {
 }
 
 func (uD userDatastore) FindByID(id string) (*models.User, error) {
-	u := models.User{UserID: id}
-	err := uD.db.First(&u).Error
+	u := models.User{}
+	err := uD.db.Where("user_id = ?", id).First(&u).Error
 	if gorm.IsRecordNotFoundError(err) {
 		return nil, nil
 	}

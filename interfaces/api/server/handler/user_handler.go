@@ -1,13 +1,14 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/taniwhy/mochi-match-rest/application/usecase"
 	"github.com/taniwhy/mochi-match-rest/domain/errors"
 	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/auth"
+
+	log "github.com/sirupsen/logrus"
 )
 
 // UserHandler : インターフェース
@@ -32,32 +33,50 @@ func NewUserHandler(uU usecase.UserUseCase) UserHandler {
 
 func (uH userHandler) GetMe(c *gin.Context) {
 	u, err := uH.userUsecase.GetMe(c)
-	switch err := err.(type) {
-	case errors.ErrGetTokenClaims:
-		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
-		return
-	case errors.ErrRecordNotFound:
-		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
-		return
-	case errors.ErrDataBase:
-		c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
-		return
+	if err != nil {
+		switch err := err.(type) {
+		case errors.ErrGetTokenClaims:
+			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+			return
+		case errors.ErrRecordNotFound:
+			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+			return
+		case errors.ErrNotFound:
+			c.JSON(http.StatusNotFound, err.Error())
+			return
+		case errors.ErrDataBase:
+			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			return
+		default:
+			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			log.Fatal("Unexpected error")
+			panic(err)
+		}
 	}
 	c.JSON(http.StatusOK, u)
 }
 
 func (uH userHandler) GetByID(c *gin.Context) {
 	u, err := uH.userUsecase.GetByID(c)
-	switch err := err.(type) {
-	case errors.ErrGetTokenClaims:
-		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
-		return
-	case errors.ErrRecordNotFound:
-		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
-		return
-	case errors.ErrDataBase:
-		c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
-		return
+	if err != nil {
+		switch err := err.(type) {
+		case errors.ErrNotFound:
+			c.JSON(http.StatusNotFound, gin.H{"message": err.Error()})
+			return
+		case errors.ErrGetTokenClaims:
+			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+			return
+		case errors.ErrRecordNotFound:
+			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+			return
+		case errors.ErrDataBase:
+			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			return
+		default:
+			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			log.Warn("Unexpected error")
+			panic(err)
+		}
 	}
 	c.JSON(http.StatusOK, u)
 }
@@ -83,6 +102,7 @@ func (uH userHandler) Create(c *gin.Context) {
 			return
 		default:
 			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			log.Warn("Unexpected error")
 			panic(err)
 		}
 	}
@@ -118,26 +138,30 @@ func (uH userHandler) Update(c *gin.Context) {
 		case errors.ErrDataBase:
 			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 			return
+		default:
+			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			log.Warn("Unexpected error")
+			panic(err)
 		}
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Updated user"})
 }
 
 func (uH userHandler) Delete(c *gin.Context) {
-	userID := c.Params.ByName("id")
-	claims, err := auth.GetTokenClaims(c)
+	err := uH.userUsecase.Delete(c)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
-		return
+		switch err := err.(type) {
+		case errors.ErrParams:
+			c.JSON(http.StatusBadRequest, err.Error())
+			return
+		case errors.ErrGetTokenClaims:
+			c.JSON(http.StatusBadRequest, err.Error())
+			return
+		default:
+			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			log.Warn("Unexpected error")
+			panic(err)
+		}
 	}
-	claimsID := claims["sub"].(string)
-	if userID != claimsID {
-		c.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf("Params error: %v", userID)})
-		return
-	}
-	if err := uH.userUsecase.Delete(claimsID); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
-		return
-	}
-	c.JSON(http.StatusOK, gin.H{"message": "ok"})
+	c.JSON(http.StatusOK, gin.H{"message": "deleted user"})
 }

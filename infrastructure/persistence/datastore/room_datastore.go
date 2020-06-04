@@ -18,8 +18,16 @@ func NewRoomDatastore(db *gorm.DB) repository.RoomRepository {
 
 func (rD roomDatastore) FindList() ([]*models.Room, error) {
 	rooms := []*models.Room{}
-
 	err := rD.db.Find(&rooms).Error
+	if err != nil {
+		return nil, err
+	}
+	return rooms, nil
+}
+
+func (rD roomDatastore) FindByLimitAndOffset(limit, offset int) ([]*models.Room, error) {
+	rooms := []*models.Room{}
+	err := rD.db.Order("created_at desc").Limit(limit).Offset(offset).Find(&rooms).Error
 	if err != nil {
 		return nil, err
 	}

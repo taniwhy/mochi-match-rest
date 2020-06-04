@@ -1,6 +1,8 @@
 package usecase
 
 import (
+	"strconv"
+
 	"github.com/gin-gonic/gin"
 	"github.com/taniwhy/mochi-match-rest/domain/errors"
 	"github.com/taniwhy/mochi-match-rest/domain/models"
@@ -32,7 +34,18 @@ func NewRoomUsecase(rR repository.RoomRepository, rS service.IRoomService) RoomU
 }
 
 func (rU roomUsecase) GetList(c *gin.Context) ([]*models.Room, error) {
-	return nil, nil
+	pageStr := c.Query("page")
+	page, err := strconv.Atoi(pageStr)
+	if err != nil {
+		return nil, errors.ErrParams{Need: "page", Got: pageStr}
+	}
+	limit := 8
+	offset := 8 * (page - 1)
+	if page == 1 {
+		offset = 0
+	}
+	r, err := rU.roomRepository.FindByLimitAndOffset(limit, offset)
+	return r, nil
 }
 
 func (rU roomUsecase) GetByID(c *gin.Context) (*models.Room, error) {

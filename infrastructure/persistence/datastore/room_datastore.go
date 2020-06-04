@@ -38,8 +38,11 @@ func (rD roomDatastore) FindByID(id string) ([]*models.Room, error) {
 func (rD roomDatastore) FindUnlockByID(id string) (*models.Room, error) {
 	rooms := &models.Room{}
 	err := rD.db.Where("user_id = ? AND is_lock = ?", id, false).First(&rooms).Error
+	if gorm.IsRecordNotFoundError(err) {
+		return nil, nil
+	}
 	if err != nil {
-		return nil, err
+		return nil, errors.ErrDataBase{Detail: err.Error()}
 	}
 	return rooms, nil
 }

@@ -49,10 +49,13 @@ func (rH roomHandler) Create(c *gin.Context) {
 	if err != nil {
 		switch err := err.(type) {
 		case errors.ErrRoomCreateReqBinding:
-			c.JSON(http.StatusBadRequest, err.Error())
+			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 			return
 		case errors.ErrGetTokenClaims:
-			c.JSON(http.StatusBadRequest, err.Error())
+			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+			return
+		case errors.ErrRoomAlreadyExists:
+			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 			return
 		case errors.ErrGenerateID:
 			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})

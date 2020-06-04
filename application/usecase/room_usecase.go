@@ -54,7 +54,7 @@ func (rU roomUsecase) Create(c *gin.Context) error {
 		return errors.ErrGetTokenClaims{Detail: err.Error()}
 	}
 	claimsID := claims["sub"].(string)
-	//  既に開いてるルームが無いか確認します
+
 	ok, err := rU.roomService.CanInsert(claimsID)
 	if err != nil {
 		return err

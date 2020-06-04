@@ -35,14 +35,14 @@ func (uH userHandler) GetMe(c *gin.Context) {
 	u, err := uH.userUsecase.GetMe(c)
 	if err != nil {
 		switch err := err.(type) {
+		case errors.ErrNotFound:
+			c.JSON(http.StatusNotFound, gin.H{"message": err.Error()})
+			return
 		case errors.ErrGetTokenClaims:
 			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 			return
 		case errors.ErrRecordNotFound:
 			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
-			return
-		case errors.ErrNotFound:
-			c.JSON(http.StatusNotFound, err.Error())
 			return
 		case errors.ErrDataBase:
 			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
@@ -85,10 +85,13 @@ func (uH userHandler) Create(c *gin.Context) {
 	uD, err := uH.userUsecase.Create(c)
 	if err != nil {
 		switch err := err.(type) {
-		case errors.ErrCreateReqBinding:
+		case errors.ErrUserCreateReqBinding:
 			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 			return
 		case errors.ErrCoockie:
+			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+			return
+		case errors.ErrUnexpectedQueryProvider:
 			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 			return
 		case errors.ErrIDAlreadyExists:
@@ -120,7 +123,10 @@ func (uH userHandler) Update(c *gin.Context) {
 	err := uH.userUsecase.Update(c)
 	if err != nil {
 		switch err := err.(type) {
-		case errors.ErrUpdateReqBinding:
+		case errors.ErrNotFound:
+			c.JSON(http.StatusNotFound, gin.H{"message": err.Error()})
+			return
+		case errors.ErrUserUpdateReqBinding:
 			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 			return
 		case errors.ErrGetTokenClaims:
@@ -151,11 +157,14 @@ func (uH userHandler) Delete(c *gin.Context) {
 	err := uH.userUsecase.Delete(c)
 	if err != nil {
 		switch err := err.(type) {
+		case errors.ErrNotFound:
+			c.JSON(http.StatusNotFound, gin.H{"message": err.Error()})
+			return
 		case errors.ErrParams:
-			c.JSON(http.StatusBadRequest, err.Error())
+			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 			return
 		case errors.ErrGetTokenClaims:
-			c.JSON(http.StatusBadRequest, err.Error())
+			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 			return
 		default:
 			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})

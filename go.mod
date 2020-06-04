@@ -14,7 +14,7 @@ require (
 	github.com/google/uuid v1.1.1
 	github.com/jinzhu/gorm v1.9.12
 	github.com/k-washi/gologger v0.0.0-20200119183124-3c165c038726 // indirect
-	github.com/labstack/gommon v0.3.0
+	github.com/labstack/gommon v0.3.0 // indirect
 	github.com/sirupsen/logrus v1.6.0
 	github.com/spf13/viper v1.7.0
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d

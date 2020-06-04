@@ -16,3 +16,12 @@ type UserResBody struct {
 	CreatedAt     time.Time          `json:"created_at" binding:"required"`
 	FavoriteGames []FavoriteGamesRes `json:"favorite_games" binding:"required"`
 }
+
+// RoomResBody :
+type RoomResBody struct {
+	RoomID        string             `json:"id" binding:"required"`
+	OwnerID       string             `json:"user_name" binding:"required"`
+	Icon          string             `json:"icon" binding:"required"`
+	Name          time.Time          `json:"created_at" binding:"required"`
+	FavoriteGames []FavoriteGamesRes `json:"favorite_games" binding:"required"`
+}

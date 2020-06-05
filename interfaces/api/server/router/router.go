@@ -90,6 +90,8 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 		room.GET("/:id", roomHandler.GetByID)
 		room.POST("", roomHandler.Create)
 		room.PUT("/:id", roomHandler.Update)
+		room.POST("/:id/join", roomHandler.Join)
+		room.DELETE("/:id/leave", roomHandler.Leave)
 		room.GET("/:id/messages", chatPostHandler.GetChatPostByRoomID)
 		room.POST("/:id/messages", chatPostHandler.CreateChatPost)
 		room.GET("/:id/report")

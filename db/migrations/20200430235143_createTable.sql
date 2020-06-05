@@ -87,6 +87,7 @@ CREATE TABLE rooms
     game_hard_id TEXT NOT NULL,
     capacity INTEGER NOT NULL,
     is_lock BOOLEAN NOT NULL,
+    start TIMESTAMP,
     created_at TIMESTAMP NOT NULL,
     update_at TIMESTAMP NOT NULL,
     PRIMARY KEY(room_id),

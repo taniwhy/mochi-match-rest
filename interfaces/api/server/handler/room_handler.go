@@ -16,6 +16,8 @@ type RoomHandler interface {
 	Create(*gin.Context)
 	Update(*gin.Context)
 	Delete(*gin.Context)
+	Join(*gin.Context)
+	Leave(*gin.Context)
 }
 
 type roomHandler struct {
@@ -82,5 +84,12 @@ func (rH roomHandler) Update(c *gin.Context) {
 }
 
 func (rH roomHandler) Delete(c *gin.Context) {
+
+}
+func (rH roomHandler) Join(c *gin.Context) {
+
+}
+
+func (rH roomHandler) Leave(c *gin.Context) {
 
 }

@@ -18,6 +18,9 @@ type RoomUseCase interface {
 	GetByID(*gin.Context) (*models.Room, error)
 	Create(*gin.Context) error
 	Update(*gin.Context) error
+	Delete(*gin.Context) error
+	Join(*gin.Context) error
+	Leave(*gin.Context) error
 }
 
 type roomUsecase struct {
@@ -60,6 +63,7 @@ func (rU roomUsecase) Create(c *gin.Context) error {
 			GameTitleID: b.GameTitleID,
 			GameHardID:  b.GameHardID,
 			Capacity:    b.Capacity,
+			Start:       b.Start.Time,
 		}
 	}
 	claims, err := auth.GetTokenClaims(c)
@@ -76,7 +80,7 @@ func (rU roomUsecase) Create(c *gin.Context) error {
 		return errors.ErrRoomAlreadyExists{}
 	}
 
-	r, err := models.NewRoom(claimsID, b.RoomText, b.GameTitleID, b.GameHardID, b.Capacity)
+	r, err := models.NewRoom(claimsID, b.RoomText, b.GameTitleID, b.GameHardID, b.Capacity, b.Start.Time)
 	if err != nil {
 		return err
 	}
@@ -87,5 +91,17 @@ func (rU roomUsecase) Create(c *gin.Context) error {
 }
 
 func (rU roomUsecase) Update(c *gin.Context) error {
+	return nil
+}
+
+func (rU roomUsecase) Delete(c *gin.Context) error {
+	return nil
+}
+
+func (rU roomUsecase) Join(c *gin.Context) error {
+	return nil
+}
+
+func (rU roomUsecase) Leave(c *gin.Context) error {
 	return nil
 }

@@ -3,6 +3,7 @@ package errors
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/taniwhy/mochi-match-rest/domain/models/input"
 )
@@ -53,6 +54,7 @@ type ErrRoomCreateReqBinding struct {
 	GameTitleID string
 	GameHardID  string
 	Capacity    int
+	Start       time.Time
 }
 
 func (b ErrRoomCreateReqBinding) Error() string {
@@ -68,6 +70,9 @@ func (b ErrRoomCreateReqBinding) Error() string {
 	}
 	if b.Capacity == 0 {
 		errMsg = append(errMsg, "capacity")
+	}
+	if b.Start.IsZero() == true {
+		errMsg = append(errMsg, "start")
 	}
 	errMsgs := strings.Join(errMsg, ", ")
 	return fmt.Sprintf("Binding error! - " + errMsgs + " is required")

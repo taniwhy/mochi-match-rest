@@ -1,5 +1,7 @@
 package input
 
+import "gopkg.in/guregu/null.v4"
+
 // UserCreateReqBody :
 type UserCreateReqBody struct {
 	UserName string `json:"user_name" binding:"required"`
@@ -20,8 +22,9 @@ type UserUpdateReqBody struct {
 
 // RoomCreateReqBody :
 type RoomCreateReqBody struct {
-	RoomText    string `json:"room_text" binding:"required"`
-	GameTitleID string `json:"game_title_id" binding:"required"`
-	GameHardID  string `json:"game_hard_id" binding:"required"`
-	Capacity    int    `json:"capacity" binding:"required"`
+	RoomText    string    `json:"room_text" binding:"required"`
+	GameTitleID string    `json:"game_title_id" binding:"required"`
+	GameHardID  string    `json:"game_hard_id" binding:"required"`
+	Capacity    int       `json:"capacity" binding:"required"`
+	Start       null.Time `json:"start" binding:"required"`
 }

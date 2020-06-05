@@ -46,6 +46,23 @@ INSERT INTO "game_titles"
 VALUES
     ('44ef66a2-c469-4410-8516-ccb500145a70', 'test9', '2020-05-27 16:38:04', '2020-05-27 16:38:04');
 
+
+
+INSERT INTO "game_hards"
+    ("game_hard_id","game_hard","created_at","update_at")
+VALUES
+    ('4', 'ps4', '2020-05-27 16:38:04', '2020-05-27 16:38:04');
+
+INSERT INTO "game_hards"
+    ("game_hard_id","game_hard","created_at","update_at")
+VALUES
+    ('3', 'ps3', '2020-05-27 16:38:04', '2020-05-27 16:38:04');
+
+INSERT INTO "game_hards"
+    ("game_hard_id","game_hard","created_at","update_at")
+VALUES
+    ('2', 'ps2', '2020-05-27 16:38:04', '2020-05-27 16:38:04');
+
 -- +goose Down
 -- SQL section 'Down' is executed when this migration is rolled back
 

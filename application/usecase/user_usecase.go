@@ -3,7 +3,6 @@ package usecase
 import (
 	"context"
 	"database/sql"
-	"fmt"
 
 	"github.com/gin-gonic/gin"
 	"github.com/taniwhy/mochi-match-rest/domain/errors"
@@ -22,7 +21,7 @@ type UserUseCase interface {
 	GetByID(c *gin.Context) (*output.UserResBody, error)
 	Create(c *gin.Context) (*models.UserDetail, error)
 	Update(c *gin.Context) error
-	Delete(id string) error
+	Delete(c *gin.Context) error
 }
 
 type userUsecase struct {
@@ -56,6 +55,10 @@ func (uU userUsecase) GetMe(c *gin.Context) (*output.UserResBody, error) {
 	if err != nil {
 		return nil, err
 	}
+	ok, err := uU.userService.IsDelete(claimsID)
+	if !ok {
+		return nil, errors.ErrNotFound{}
+	}
 	uD, err := uU.userDetailRepository.FindByID(claimsID)
 	if err != nil {
 		return nil, err
@@ -82,6 +85,10 @@ func (uU userUsecase) GetMe(c *gin.Context) (*output.UserResBody, error) {
 
 func (uU userUsecase) GetByID(c *gin.Context) (*output.UserResBody, error) {
 	uid := c.Params.ByName("id")
+	ok, err := uU.userService.IsDelete(uid)
+	if !ok {
+		return nil, errors.ErrNotFound{}
+	}
 	u, err := uU.userRepository.FindByID(uid)
 	if err != nil {
 		return nil, err
@@ -110,9 +117,9 @@ func (uU userUsecase) GetByID(c *gin.Context) (*output.UserResBody, error) {
 }
 
 func (uU userUsecase) Create(c *gin.Context) (*models.UserDetail, error) {
-	b := input.CreateReqBody{}
-	if err := c.Bind(&b); err != nil {
-		return nil, errors.ErrCreateReqBinding{UserName: b.UserName, Email: b.Email}
+	b := input.UserCreateReqBody{}
+	if err := c.BindJSON(&b); err != nil {
+		return nil, errors.ErrUserCreateReqBinding{UserName: b.UserName, Email: b.Email}
 	}
 	pid, err := c.Cookie("pid")
 	if err != nil {
@@ -134,7 +141,7 @@ func (uU userUsecase) Create(c *gin.Context) (*models.UserDetail, error) {
 		}
 		u.GoogleID = sql.NullString{String: pid, Valid: true}
 	default:
-		return nil, fmt.Errorf("Unexpected query provider: %v", provider)
+		return nil, errors.ErrUnexpectedQueryProvider{Provider: provider}
 	}
 	ud, err := models.NewUserDetail(u.UserID, b.UserName)
 	if err != nil {
@@ -152,9 +159,9 @@ func (uU userUsecase) Create(c *gin.Context) (*models.UserDetail, error) {
 
 //todo 存在しないユーザーでも正常処理される
 func (uU userUsecase) Update(c *gin.Context) error {
-	b := input.UpdateReqBody{}
-	if err := c.Bind(&b); err != nil {
-		return errors.ErrUpdateReqBinding{UserName: b.UserName, Icon: b.Icon, FavoriteGames: b.FavoriteGames}
+	b := input.UserUpdateReqBody{}
+	if err := c.BindJSON(&b); err != nil {
+		return errors.ErrUserUpdateReqBinding{UserName: b.UserName, Icon: b.Icon, FavoriteGames: b.FavoriteGames}
 	}
 	userID := c.Params.ByName("id")
 	claims, err := auth.GetTokenClaims(c)
@@ -220,19 +227,18 @@ func (uU userUsecase) Update(c *gin.Context) error {
 	return nil
 }
 
-func (uU userUsecase) Delete(id string) error {
-	err := uU.userRepository.Delete(id)
+func (uU userUsecase) Delete(c *gin.Context) error {
+	userID := c.Params.ByName("id")
+	claims, err := auth.GetTokenClaims(c)
 	if err != nil {
 		return err
 	}
-	return nil
-}
-
-func contains(gr []input.FavoriteGameRecord, id string) bool {
-	for _, r := range gr {
-		if id == r.GameTitle {
-			return true
-		}
+	claimsID := claims["sub"].(string)
+	if userID != claimsID {
+		return errors.ErrParams{Need: claimsID, Got: userID}
 	}
-	return false
+	if err := uU.userRepository.Delete(claimsID); err != nil {
+		return err
+	}
+	return nil
 }

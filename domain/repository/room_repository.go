@@ -6,9 +6,10 @@ import (
 
 // RoomRepository : ユーザーのリポジトリ
 type RoomRepository interface {
-	FindAllRoom() ([]*models.Room, error)
-	FindRoomByID(id string) (*models.Room, error)
-	InsertRoom(room *models.Room) error
-	UpdateRoom(room *models.Room) error
-	DeleteRoom(room *models.Room) error
+	FindList() ([]*models.Room, error)
+	FindByID(id string) ([]*models.Room, error)
+	FindUnlockByID(id string) (*models.Room, error)
+	Insert(room *models.Room) error
+	Update(room *models.Room) error
+	Delete(room *models.Room) error
 }

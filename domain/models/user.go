@@ -25,12 +25,12 @@ type User struct {
 
 // NewUser :
 func NewUser(email string) (*User, error) {
-	uid, err := uuid.NewRandom()
+	id, err := uuid.NewRandom()
 	if err != nil {
 		return nil, errors.ErrGenerateID{}
 	}
 	return &User{
-		UserID:     uid.String(),
+		UserID:     id.String(),
 		GoogleID:   sql.NullString{String: "", Valid: false},
 		FacebookID: sql.NullString{String: "", Valid: false},
 		TwitterID:  sql.NullString{String: "", Valid: false},

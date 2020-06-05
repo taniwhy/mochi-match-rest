@@ -1,8 +1,6 @@
 package datastore
 
 import (
-	"fmt"
-
 	"github.com/jinzhu/gorm"
 	"github.com/taniwhy/mochi-match-rest/domain/errors"
 	"github.com/taniwhy/mochi-match-rest/domain/models"
@@ -19,15 +17,15 @@ func NewUserDatastore(db *gorm.DB) repository.UserRepository {
 }
 
 func (uD userDatastore) FindByID(id string) (*models.User, error) {
-	u := models.User{UserID: id}
-	err := uD.db.First(&u).Error
+	u := &models.User{}
+	err := uD.db.Where("user_id = ?", id).First(&u).Error
 	if gorm.IsRecordNotFoundError(err) {
 		return nil, nil
 	}
 	if err != nil {
 		return nil, errors.ErrDataBase{Detail: err}
 	}
-	return &u, nil
+	return u, nil
 }
 
 func (uD userDatastore) FindByProviderID(provider, id string) (*models.User, error) {
@@ -57,9 +55,12 @@ func (uD userDatastore) Update(user *models.User) error {
 
 func (uD userDatastore) Delete(id string) error {
 	user := models.User{}
-	recordNotFound := uD.db.Where("user_id = ?", id).Take(&user).RecordNotFound()
-	if recordNotFound {
-		return fmt.Errorf("Record not found : %v", id)
+	err := uD.db.Model(&user).Where("user_id = ?", id).Update("is_delete", true).Error
+	if gorm.IsRecordNotFoundError(err) {
+		return errors.ErrNotFound{Detail: err.Error()}
 	}
-	return uD.db.Model(&user).Where("user_id = ?", id).Update("is_delete", true).Error
+	if err != nil {
+		return err
+	}
+	return nil
 }

@@ -1,8 +1,6 @@
 package datastore
 
 import (
-	"fmt"
-
 	"github.com/jinzhu/gorm"
 	"github.com/taniwhy/mochi-match-rest/domain/errors"
 	"github.com/taniwhy/mochi-match-rest/domain/models"
@@ -13,11 +11,6 @@ type favoriteGameDatastore struct {
 	db *gorm.DB
 }
 
-type usersFavoriteGamesResBody struct {
-	UserID        string
-	FavoriteGames []favoriteGameDatastore
-}
-
 // NewFavoriteGameDatastore :
 func NewFavoriteGameDatastore(db *gorm.DB) repository.FavoriteGameRepository {
 	return &favoriteGameDatastore{db}
@@ -25,9 +18,7 @@ func NewFavoriteGameDatastore(db *gorm.DB) repository.FavoriteGameRepository {
 
 func (eD favoriteGameDatastore) FindByID(id string) ([]*models.FavoriteGame, error) {
 	f := []*models.FavoriteGame{}
-	err := eD.db.Table("favorite_games").
-		Where("user_id = ?", id).
-		Scan(&f).Error
+	err := eD.db.Where("user_id = ?", id).Find(&f).Error
 	if gorm.IsRecordNotFoundError(err) {
 		return nil, nil
 	}
@@ -43,9 +34,12 @@ func (eD favoriteGameDatastore) Insert(favgame *models.FavoriteGame) error {
 
 func (eD favoriteGameDatastore) Delete(uID, gT string) error {
 	f := models.FavoriteGame{}
-	recordNotFound := eD.db.Where("user_id = ? AND game_title = ?", uID, gT).Delete(&f).RecordNotFound()
-	if recordNotFound {
-		return fmt.Errorf("Record not found : %v", uID)
+	err := eD.db.Where("user_id = ? AND game_title = ?", uID, gT).Delete(&f).Error
+	if gorm.IsRecordNotFoundError(err) {
+		return nil
+	}
+	if err != nil {
+		return errors.ErrDataBase{Detail: err}
 	}
 	return nil
 }

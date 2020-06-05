@@ -2,56 +2,82 @@ package errors
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/taniwhy/mochi-match-rest/domain/models/input"
 )
+
+// ErrUserCreateReqBinding :
+type ErrUserCreateReqBinding struct {
+	UserName string
+	Email    string
+}
+
+func (b ErrUserCreateReqBinding) Error() string {
+	var errMsg []string
+	if b.UserName == "" {
+		errMsg = append(errMsg, "user_name")
+	}
+	if b.Email == "" {
+		errMsg = append(errMsg, "email")
+	}
+	errMsgs := strings.Join(errMsg, ", ")
+	return fmt.Sprintf("Binding error! - " + errMsgs + " is required")
+}
+
+// ErrUserUpdateReqBinding :
+type ErrUserUpdateReqBinding struct {
+	UserName      string
+	Icon          string
+	FavoriteGames []input.FavoriteGameRecord
+}
+
+func (b ErrUserUpdateReqBinding) Error() string {
+	var errMsg []string
+	if b.UserName == "" {
+		errMsg = append(errMsg, "user_name")
+	}
+	if b.Icon == "" {
+		errMsg = append(errMsg, "icon")
+	}
+	if b.FavoriteGames == nil {
+		errMsg = append(errMsg, "favorite_games")
+	}
+	errMsgs := strings.Join(errMsg, ", ")
+	return fmt.Sprintf("Binding error! - " + errMsgs + " is required")
+}
+
+// ErrRoomCreateReqBinding :
+type ErrRoomCreateReqBinding struct {
+	RoomText    string
+	GameTitleID string
+	GameHardID  string
+	Capacity    int
+}
+
+func (b ErrRoomCreateReqBinding) Error() string {
+	var errMsg []string
+	if b.RoomText == "" {
+		errMsg = append(errMsg, "room_text")
+	}
+	if b.GameTitleID == "" {
+		errMsg = append(errMsg, "game_title_id")
+	}
+	if b.GameHardID == "" {
+		errMsg = append(errMsg, "game_hard_id")
+	}
+	if b.Capacity == 0 {
+		errMsg = append(errMsg, "capacity")
+	}
+	errMsgs := strings.Join(errMsg, ", ")
+	return fmt.Sprintf("Binding error! - " + errMsgs + " is required")
+}
 
 // ErrGenerateID :
 type ErrGenerateID struct{}
 
 func (b ErrGenerateID) Error() string {
 	return fmt.Sprintf("Failed generate ID")
-}
-
-// ErrCreateReqBinding :
-type ErrCreateReqBinding struct {
-	UserName string
-	Email    string
-}
-
-func (b ErrCreateReqBinding) Error() string {
-	if b.UserName == "" && b.Email == "" {
-		return fmt.Sprintf("Binding error! - user_name, email is required")
-	} else if b.Email == "" {
-		return fmt.Sprintf("Binding error! - email is required")
-	} else {
-		return fmt.Sprintf("Binding error! - user_name is required")
-	}
-}
-
-// ErrUpdateReqBinding :
-type ErrUpdateReqBinding struct {
-	UserName      string
-	Icon          string
-	FavoriteGames []input.FavoriteGameRecord
-}
-
-func (b ErrUpdateReqBinding) Error() string {
-	if b.UserName == "" && b.Icon == "" && b.FavoriteGames == nil {
-		return fmt.Sprintf("Binding error! - user_name, icon, favorite_games is required")
-	} else if b.UserName == "" && b.Icon == "" {
-		return fmt.Sprintf("Binding error! - user_name, icon is required")
-	} else if b.UserName == "" && b.FavoriteGames == nil {
-		return fmt.Sprintf("Binding error! - user_name, favorite_games is required")
-	} else if b.Icon == "" && b.FavoriteGames == nil {
-		return fmt.Sprintf("Binding error! - icon, favorite_games is required")
-	} else if b.UserName == "" {
-		return fmt.Sprintf("Binding error! - user_name is required")
-	} else if b.Icon == "" {
-		return fmt.Sprintf("Binding error! - icon is required")
-	} else {
-		return fmt.Sprintf("Binding error! - favorite_games is required")
-	}
 }
 
 // ErrCoockie :
@@ -93,6 +119,13 @@ func (e ErrIDAlreadyExists) Error() string {
 	return fmt.Sprintf("ID already exists! - provider: %s - ID: %s", e.Provider, e.ID)
 }
 
+// ErrRoomAlreadyExists :
+type ErrRoomAlreadyExists struct{}
+
+func (e ErrRoomAlreadyExists) Error() string {
+	return fmt.Sprintf("Room already exists!")
+}
+
 // ErrDataBase :
 type ErrDataBase struct {
 	Detail interface{}
@@ -100,6 +133,15 @@ type ErrDataBase struct {
 
 func (e ErrDataBase) Error() string {
 	return fmt.Sprintf("Database error! - detail: %s", e.Detail)
+}
+
+// ErrNotFound :
+type ErrNotFound struct {
+	Detail interface{}
+}
+
+func (n ErrNotFound) Error() string {
+	return fmt.Sprintf("Not found!")
 }
 
 // ErrRecordNotFound :

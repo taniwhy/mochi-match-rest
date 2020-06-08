@@ -163,15 +163,11 @@ func (uU userUsecase) Update(c *gin.Context) error {
 	if err := c.BindJSON(&b); err != nil {
 		return errors.ErrUserUpdateReqBinding{UserName: b.UserName, Icon: b.Icon, FavoriteGames: b.FavoriteGames}
 	}
-	userID := c.Params.ByName("id")
 	claims, err := auth.GetTokenClaims(c)
 	if err != nil {
 		return errors.ErrGetTokenClaims{Detail: err.Error()}
 	}
 	claimsID := claims["sub"].(string)
-	if userID != claimsID {
-		return errors.ErrParams{Need: claimsID, Got: userID}
-	}
 	if err := uU.userDetailRepository.Update(claimsID, b.UserName, b.Icon); err != nil {
 		return err
 	}
@@ -228,15 +224,11 @@ func (uU userUsecase) Update(c *gin.Context) error {
 }
 
 func (uU userUsecase) Delete(c *gin.Context) error {
-	userID := c.Params.ByName("id")
 	claims, err := auth.GetTokenClaims(c)
 	if err != nil {
 		return err
 	}
 	claimsID := claims["sub"].(string)
-	if userID != claimsID {
-		return errors.ErrParams{Need: claimsID, Got: userID}
-	}
 	if err := uU.userRepository.Delete(claimsID); err != nil {
 		return err
 	}

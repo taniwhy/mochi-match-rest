@@ -1,6 +1,9 @@
 package router
 
 import (
+	"io"
+	"os"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -16,7 +19,6 @@ import (
 
 // InitRouter :　ルーティング
 func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
-	dbConn.LogMode(true)
 	// DI
 	userDatastore := datastore.NewUserDatastore(dbConn)
 	userDetailDatastore := datastore.NewUserDetailDatastore(dbConn)
@@ -48,11 +50,11 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 	authHandler := handler.NewAuthHandler()
 
 	store := dao.NewRedisStore()
-	//f, err := os.Create("./config/log/access.log")
-	//if err != nil {
-	//	panic(err.Error())
-	//}
-	//gin.DefaultWriter = io.MultiWriter(f)
+	f, err := os.Create("./config/log/access.log")
+	if err != nil {
+		panic(err.Error())
+	}
+	gin.DefaultWriter = io.MultiWriter(f)
 
 	corsConf := cors.DefaultConfig()
 
@@ -81,8 +83,8 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 	{
 		users.GET("", userHandler.GetMe)
 		users.GET("/:id", userHandler.GetByID)
-		users.PUT("/:id", userHandler.Update)
-		users.DELETE("/:id", userHandler.Delete)
+		users.PUT("", userHandler.Update)
+		users.DELETE("", userHandler.Delete)
 	}
 	room := v1.Group("/rooms")
 	room.Use(auth.TokenAuth())

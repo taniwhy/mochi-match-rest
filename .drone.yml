@@ -1,0 +1,12 @@
+kind: pipeline
+name: default
+
+pipeline:
+  # ステップは上から順に実行されます（順序付きmap）。
+  hello:
+    # ステップ毎にイメージを指定
+    image: alpine:3.6
+    # Dockerコンテナ起動時のエントリポイントとしてコマンドが実行されます。
+    # 各コマンドは同じシェルで実行されます。
+    commands:
+      - echo 　"Hello World"

@@ -1,18 +1,34 @@
 version: "3"
+
 services:
-  drone:
-    image: drone/drone:1
+  app:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: "mochi-match-app"
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /var/lib/drone:/data
+      - mochimatch_postgres_dev_data:/var/lib/postgresql/data
     ports:
-      - "80:80"
-      - "443:443"
+      - "8080:8080"
+    volumes:
+      - .:/go/src/taniwhy/mochi-match-rest
+    command: go run main.go
+  db:
+    image: postgres:10.5
+    container_name: "mochi-match-postgres"
+    volumes:
+      - mochimatch_postgres_dev_data:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
     environment:
-      - DRONE_GITHUB_SERVER=https://github.com
-      - DRONE_GITHUB_CLIENT_ID=${DRONE_GITHUB_CLIENT_ID}
-      - DRONE_GITHUB_CLIENT_SECRET=${DRONE_GITHUB_CLIENT_SECRET}
-      - DRONE_RUNNER_CAPACITY=2
-      - DRONE_SERVER_HOST=${DRONE_SERVER_HOST}
-      - DRONE_SERVER_PROTO=http
-      - DRONE_USER_FILTER=${DRONE_USER_FILTER}
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+  redis:
+    image: "redis:4.0.6"
+    container_name: "mochi-match-redis"
+    ports:
+      - "6379:6379"
+volumes:
+  mochimatch_postgres_dev_data:
+    driver: local

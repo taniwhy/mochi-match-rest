@@ -2,13 +2,11 @@ kind: pipeline
 name: default
 
 steps:
-    - name: discord notification
-    image: appleboy/drone-discord
-    settings:
-      webhook_id:
-        from_secret: 719600438395142232
-      webhook_token:
-        from_secret: dIVe_GjWk7chVq9ZGoDzobc6ZeXeQpSJSaZPZ7VuquUxsUUN9YVTYwxX017H4LRzo6gk
-      message: "Testing from drone image"
-
-      https://discordapp.com/api/webhooks/719600438395142232/dIVe_GjWk7chVq9ZGoDzobc6ZeXeQpSJSaZPZ7VuquUxsUUN9YVTYwxX017H4LRzo6gk
+    - name: discord
+        image: appleboy/drone-discord
+        settings:
+        webhook_id:
+            from_secret: "719600438395142232"
+        webhook_token:
+            from_secret: "dIVe_GjWk7chVq9ZGoDzobc6ZeXeQpSJSaZPZ7VuquUxsUUN9YVTYwxX017H4LRzo6gk"
+        message: "Testing from drone image"

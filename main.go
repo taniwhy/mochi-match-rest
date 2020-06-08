@@ -10,7 +10,7 @@ import (
 	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/router"
 
 	// logging driver
-	_ "github.com/taniwhy/mochi-match-rest/logging"
+	"github.com/taniwhy/mochi-match-rest/logging"
 )
 
 func init() {
@@ -23,6 +23,9 @@ func main() {
 
 	redisConn := dao.NewRedisConn()
 	defer redisConn.Close()
+
+	dbConn.LogMode(true)
+	dbConn.SetLogger(&logging.GormLogger{})
 
 	routers := router.InitRouter(dbConn, redisConn)
 

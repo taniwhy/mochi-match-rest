@@ -19,6 +19,7 @@ require (
 	github.com/spf13/viper v1.7.0
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
 	golang.org/x/sync v0.0.0-20190423024810-112230192c58
+	gopkg.in/guregu/null.v4 v4.0.0
 )
 
 replace github.com/taniwhy/mochi-match-rest => ./

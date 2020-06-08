@@ -16,6 +16,8 @@ type RoomHandler interface {
 	Create(*gin.Context)
 	Update(*gin.Context)
 	Delete(*gin.Context)
+	Join(*gin.Context)
+	Leave(*gin.Context)
 }
 
 type roomHandler struct {
@@ -37,7 +39,12 @@ func NewRoomHandler(
 }
 
 func (rH roomHandler) GetList(c *gin.Context) {
-
+	r, err := rH.roomUsecase.GetList(c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
+	c.JSON(http.StatusOK, r)
 }
 
 func (rH roomHandler) GetByID(c *gin.Context) {
@@ -78,4 +85,19 @@ func (rH roomHandler) Update(c *gin.Context) {
 
 func (rH roomHandler) Delete(c *gin.Context) {
 
+}
+func (rH roomHandler) Join(c *gin.Context) {
+	if err := rH.roomUsecase.Join(c); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "join room"})
+}
+
+func (rH roomHandler) Leave(c *gin.Context) {
+	if err := rH.roomUsecase.Leave(c); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "leave room"})
 }

@@ -98,6 +98,7 @@ func (gA *googleOAuthHandler) Callback(c *gin.Context) {
 		c.SetCookie("pid", gU.ID, 0, "/", "", false, true)
 		// ユーザー登録ページにリダイレクト
 		c.Writer.WriteString(`<!DOCTYPE html><html><body>ユーザー登録ページです</body></html>`)
+		return
 	}
 	// ログインしリダイレクト
 	c.Writer.WriteString(`<!DOCTYPE html><html><body>ログイン完了</body></html>`)

@@ -3,6 +3,7 @@ package errors
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/taniwhy/mochi-match-rest/domain/models/input"
 )
@@ -53,6 +54,7 @@ type ErrRoomCreateReqBinding struct {
 	GameTitleID string
 	GameHardID  string
 	Capacity    int
+	Start       time.Time
 }
 
 func (b ErrRoomCreateReqBinding) Error() string {
@@ -68,6 +70,9 @@ func (b ErrRoomCreateReqBinding) Error() string {
 	}
 	if b.Capacity == 0 {
 		errMsg = append(errMsg, "capacity")
+	}
+	if b.Start.IsZero() == true {
+		errMsg = append(errMsg, "start")
 	}
 	errMsgs := strings.Join(errMsg, ", ")
 	return fmt.Sprintf("Binding error! - " + errMsgs + " is required")
@@ -124,6 +129,43 @@ type ErrRoomAlreadyExists struct{}
 
 func (e ErrRoomAlreadyExists) Error() string {
 	return fmt.Sprintf("Room already exists!")
+}
+
+// ErrRoomAlreadyLock :
+type ErrRoomAlreadyLock struct {
+	RoomID string
+}
+
+func (l ErrRoomAlreadyLock) Error() string {
+	return fmt.Sprintf("Room already lock! - room: %s", l.RoomID)
+}
+
+// ErrRoomCapacityOver :
+type ErrRoomCapacityOver struct {
+	RoomID string
+	Count  int
+}
+
+func (e ErrRoomCapacityOver) Error() string {
+	return fmt.Sprintf("Room capacity over! - room: %s - count: %v", e.RoomID, e.Count)
+}
+
+// ErrRoomAlreadyEntry :
+type ErrRoomAlreadyEntry struct {
+	RoomID string
+}
+
+func (e ErrRoomAlreadyEntry) Error() string {
+	return fmt.Sprintf("Room already entry! - room: %s", e.RoomID)
+}
+
+// ErrNotEntryRoom :
+type ErrNotEntryRoom struct {
+	RoomID string
+}
+
+func (e ErrNotEntryRoom) Error() string {
+	return fmt.Sprintf("Not entry room! - room: %s", e.RoomID)
 }
 
 // ErrDataBase :

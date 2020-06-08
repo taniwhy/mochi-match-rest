@@ -18,7 +18,6 @@ func NewRoomDatastore(db *gorm.DB) repository.RoomRepository {
 
 func (rD roomDatastore) FindList() ([]*models.Room, error) {
 	rooms := []*models.Room{}
-
 	err := rD.db.Find(&rooms).Error
 	if err != nil {
 		return nil, err
@@ -26,9 +25,27 @@ func (rD roomDatastore) FindList() ([]*models.Room, error) {
 	return rooms, nil
 }
 
-func (rD roomDatastore) FindByID(id string) ([]*models.Room, error) {
+func (rD roomDatastore) FindByLimitAndOffset(limit, offset int) ([]*models.Room, error) {
 	rooms := []*models.Room{}
-	err := rD.db.Where("user_id = ?", id).Find(&rooms).Error
+	err := rD.db.Order("created_at desc").Limit(limit).Offset(offset).Find(&rooms).Error
+	if err != nil {
+		return nil, err
+	}
+	return rooms, nil
+}
+
+func (rD roomDatastore) FindByID(id string) (*models.Room, error) {
+	room := &models.Room{}
+	err := rD.db.Where("room_id = ?", id).First(&room).Error
+	if err != nil {
+		return nil, err
+	}
+	return room, nil
+}
+
+func (rD roomDatastore) FindByUserID(uid string) ([]*models.Room, error) {
+	rooms := []*models.Room{}
+	err := rD.db.Where("user_id = ?", uid).Find(&rooms).Error
 	if err != nil {
 		return nil, err
 	}

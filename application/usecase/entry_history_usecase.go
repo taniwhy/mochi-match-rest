@@ -25,7 +25,7 @@ func NewEntryHistoryUsecase(eR repository.EntryHistoryRepository) EntryHistoryUs
 }
 
 func (eU entryHistoryUsecase) FindAllEntryHistory() ([]*models.EntryHistory, error) {
-	entryHistories, err := eU.entryHistoryRepository.FindAllEntryHistory()
+	entryHistories, err := eU.entryHistoryRepository.FindAll()
 	if err != nil {
 		return nil, err
 	}
@@ -33,7 +33,7 @@ func (eU entryHistoryUsecase) FindAllEntryHistory() ([]*models.EntryHistory, err
 }
 
 func (eU entryHistoryUsecase) InsertEntryHistory(entryHistory *models.EntryHistory) error {
-	err := eU.entryHistoryRepository.InsertEntryHistory(entryHistory)
+	err := eU.entryHistoryRepository.Insert(entryHistory)
 	if err != nil {
 		return err
 	}
@@ -41,7 +41,7 @@ func (eU entryHistoryUsecase) InsertEntryHistory(entryHistory *models.EntryHisto
 }
 
 func (eU entryHistoryUsecase) UpdateEntryHistory(entryHistory *models.EntryHistory) error {
-	err := eU.entryHistoryRepository.InsertEntryHistory(entryHistory)
+	err := eU.entryHistoryRepository.Update(entryHistory)
 	if err != nil {
 		return err
 	}
@@ -49,7 +49,7 @@ func (eU entryHistoryUsecase) UpdateEntryHistory(entryHistory *models.EntryHisto
 }
 
 func (eU entryHistoryUsecase) DeleteEntryHistory(entryHistory *models.EntryHistory) error {
-	err := eU.entryHistoryRepository.DeleteEntryHistory(entryHistory)
+	err := eU.entryHistoryRepository.Delete(entryHistory)
 	if err != nil {
 		return err
 	}

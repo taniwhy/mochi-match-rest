@@ -2,10 +2,10 @@ kind: pipeline
 name: default
 
 steps:
-    - name: discord notification
+    - name: discord
     image: appleboy/drone-discord
     settings:
-        webhook_id: 719600438395142232
-        webhook_token: dIVe_GjWk7chVq9ZGoDzobc6ZeXeQpSJSaZPZ7VuquUxsUUN9YVTYwxX017H4LRzo6gk
+        webhook_id: "719600438395142232"
+        webhook_token: "dIVe_GjWk7chVq9ZGoDzobc6ZeXeQpSJSaZPZ7VuquUxsUUN9YVTYwxX017H4LRzo6gk"
         tts: true
         message: "Testing from drone image"

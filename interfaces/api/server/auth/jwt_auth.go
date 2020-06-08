@@ -30,7 +30,7 @@ func GenerateAccessToken(userID string) string {
 	claims := token.Claims.(jwt.MapClaims)
 	claims["sub"] = userID
 	claims["iat"] = time.Now().Unix()
-	claims["exp"] = time.Now().Add(time.Minute * 15).Unix()
+	claims["exp"] = time.Now().Add(time.Minute * 90).Unix()
 	accessToken, err := token.SignedString(signBytes)
 	if err != nil {
 		panic(err)

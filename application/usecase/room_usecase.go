@@ -24,15 +24,20 @@ type RoomUseCase interface {
 }
 
 type roomUsecase struct {
-	roomRepository repository.RoomRepository
-	roomService    service.IRoomService
+	roomRepository         repository.RoomRepository
+	entryHistoryRepository repository.EntryHistoryRepository
+	roomService            service.IRoomService
 }
 
 // NewRoomUsecase :
-func NewRoomUsecase(rR repository.RoomRepository, rS service.IRoomService) RoomUseCase {
+func NewRoomUsecase(
+	rR repository.RoomRepository,
+	eHR repository.EntryHistoryRepository,
+	rS service.IRoomService) RoomUseCase {
 	return &roomUsecase{
-		roomRepository: rR,
-		roomService:    rS,
+		roomRepository:         rR,
+		entryHistoryRepository: eHR,
+		roomService:            rS,
 	}
 }
 
@@ -99,9 +104,58 @@ func (rU roomUsecase) Delete(c *gin.Context) error {
 }
 
 func (rU roomUsecase) Join(c *gin.Context) error {
+	rid := c.Params.ByName("id")
+	ok, err := rU.roomService.IsLock(rid)
+	if err != nil {
+		return err
+	}
+	if !ok {
+		return errors.ErrRoomAlreadyLock{RoomID: rid}
+	}
+	claims, err := auth.GetTokenClaims(c)
+	if err != nil {
+		return errors.ErrGetTokenClaims{Detail: err.Error()}
+	}
+	uid := claims["sub"].(string)
+	ok, err = rU.entryHistoryRepository.CheckEntry(rid, uid)
+	if err != nil {
+		return err
+	}
+	if !ok {
+		return errors.ErrRoomAlreadyEntry{RoomID: rid}
+	}
+	r, err := rU.roomRepository.FindByID(rid)
+	cap := r.Capacity
+	if r.UserID != uid {
+		cap--
+	}
+	cnt, err := rU.entryHistoryRepository.CountEntryUser(rid)
+	if cap < cnt {
+		return errors.ErrRoomCapacityOver{RoomID: rid, Count: cnt}
+	}
+	h, err := models.NewEntryHistory(uid, rid)
+	if err := rU.entryHistoryRepository.Insert(h); err != nil {
+		return err
+	}
 	return nil
 }
 
 func (rU roomUsecase) Leave(c *gin.Context) error {
+	rid := c.Params.ByName("id")
+	claims, err := auth.GetTokenClaims(c)
+	if err != nil {
+		return errors.ErrGetTokenClaims{Detail: err.Error()}
+	}
+	uid := claims["sub"].(string)
+	ok, err := rU.entryHistoryRepository.CheckEntry(rid, uid)
+	if err != nil {
+		return err
+	}
+	if ok {
+		return errors.ErrNotEntryRoom{RoomID: rid}
+	}
+	if err := rU.entryHistoryRepository.LeaveFlg(rid, uid); err != nil {
+		return err
+	}
 	return nil
 }

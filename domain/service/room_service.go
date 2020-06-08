@@ -7,6 +7,7 @@ import (
 // IRoomService : インターフェース
 type IRoomService interface {
 	CanInsert(id string) (bool, error)
+	IsLock(id string) (bool, error)
 }
 
 type roomService struct {
@@ -26,6 +27,17 @@ func (rS roomService) CanInsert(id string) (bool, error) {
 		return false, err
 	}
 	if r != nil {
+		return false, nil
+	}
+	return true, nil
+}
+
+func (rS roomService) IsLock(id string) (bool, error) {
+	r, err := rS.roomRepository.FindByID(id)
+	if err != nil {
+		return false, err
+	}
+	if r.IsLock == true {
 		return false, nil
 	}
 	return true, nil

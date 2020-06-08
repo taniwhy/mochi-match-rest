@@ -87,9 +87,17 @@ func (rH roomHandler) Delete(c *gin.Context) {
 
 }
 func (rH roomHandler) Join(c *gin.Context) {
-
+	if err := rH.roomUsecase.Join(c); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "join room"})
 }
 
 func (rH roomHandler) Leave(c *gin.Context) {
-
+	if err := rH.roomUsecase.Leave(c); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "leave room"})
 }

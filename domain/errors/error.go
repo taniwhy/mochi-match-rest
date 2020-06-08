@@ -131,6 +131,43 @@ func (e ErrRoomAlreadyExists) Error() string {
 	return fmt.Sprintf("Room already exists!")
 }
 
+// ErrRoomAlreadyLock :
+type ErrRoomAlreadyLock struct {
+	RoomID string
+}
+
+func (l ErrRoomAlreadyLock) Error() string {
+	return fmt.Sprintf("Room already lock! - room: %s", l.RoomID)
+}
+
+// ErrRoomCapacityOver :
+type ErrRoomCapacityOver struct {
+	RoomID string
+	Count  int
+}
+
+func (e ErrRoomCapacityOver) Error() string {
+	return fmt.Sprintf("Room capacity over! - room: %s - count: %v", e.RoomID, e.Count)
+}
+
+// ErrRoomAlreadyEntry :
+type ErrRoomAlreadyEntry struct {
+	RoomID string
+}
+
+func (e ErrRoomAlreadyEntry) Error() string {
+	return fmt.Sprintf("Room already entry! - room: %s", e.RoomID)
+}
+
+// ErrNotEntryRoom :
+type ErrNotEntryRoom struct {
+	RoomID string
+}
+
+func (e ErrNotEntryRoom) Error() string {
+	return fmt.Sprintf("Not entry room! - room: %s", e.RoomID)
+}
+
 // ErrDataBase :
 type ErrDataBase struct {
 	Detail interface{}

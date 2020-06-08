@@ -8,7 +8,8 @@ import (
 type RoomRepository interface {
 	FindList() ([]*models.Room, error)
 	FindByLimitAndOffset(limit, offset int) ([]*models.Room, error)
-	FindByID(id string) ([]*models.Room, error)
+	FindByID(id string) (*models.Room, error)
+	FindByUserID(id string) ([]*models.Room, error)
 	FindUnlockByID(id string) (*models.Room, error)
 	Insert(room *models.Room) error
 	Update(room *models.Room) error

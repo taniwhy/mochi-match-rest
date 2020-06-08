@@ -23,6 +23,7 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 	roomDatastore := datastore.NewRoomDatastore(dbConn)
 	roomBalacklistDatastore := datastore.NewRoomBlacklistDatastore(dbConn)
 	roomReservationDatastore := datastore.NewRoomReservationDatastore(dbConn)
+	entryHistoryDatastore := datastore.NewEntryHistoryDatastore(dbConn)
 	chatPostDatastore := datastore.NewChatPostDatastore(dbConn)
 	gameTitleDatastore := datastore.NewGameTitleDatastore(dbConn)
 	favorateGameDatastore := datastore.NewFavoriteGameDatastore(dbConn)
@@ -31,7 +32,7 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 	roomService := service.NewRoomService(roomDatastore)
 
 	userUsecase := usecase.NewUserUsecase(userDatastore, userDetailDatastore, userService, favorateGameDatastore)
-	roomUsecase := usecase.NewRoomUsecase(roomDatastore, roomService)
+	roomUsecase := usecase.NewRoomUsecase(roomDatastore, entryHistoryDatastore, roomService)
 	roomBlacklistUsecase := usecase.NewRoomBlacklistUsecase(roomBalacklistDatastore)
 	roomReservationUsecase := usecase.NewRoomReservationUsecase(roomReservationDatastore)
 	chatPostUsecase := usecase.NewChatPostUsecase(chatPostDatastore)

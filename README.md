@@ -4,10 +4,6 @@
 
 ## build
 
-go build .
-
-or
-
 make build
 
 ## Author

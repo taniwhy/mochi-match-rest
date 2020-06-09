@@ -17,7 +17,7 @@ require (
 	github.com/k-washi/gologger v0.0.0-20200119183124-3c165c038726 // indirect
 	github.com/labstack/gommon v0.3.0 // indirect
 	github.com/sirupsen/logrus v1.6.0
-	github.com/spf13/viper v1.7.0
+	github.com/spf13/viper v1.7.0 // indirect
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
 	golang.org/x/sync v0.0.0-20190423024810-112230192c58
 	gopkg.in/guregu/null.v4 v4.0.0

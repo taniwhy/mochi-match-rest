@@ -32,6 +32,7 @@ steps:
       AUTHORIZE_RSA:
         from_secret: AUTHORIZE_RSA
     commands:
+      - make db
       - make run
 
   - name: discord notification
@@ -44,3 +45,12 @@ steps:
 trigger:
   event:
     - push
+
+services:
+  - name: db
+  image: postgres:10.5
+  ports:
+    - 5432
+  environment:
+    POSTGRES_PASSWORD: postgres
+    POSTGRES_USER: postgres

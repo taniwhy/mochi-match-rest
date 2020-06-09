@@ -17,6 +17,9 @@ hot:
 	realize start
 test:
 	$(GOTEST) -v ./...
+db:
+	go get bitbucket.org/liamstask/goose/cmd/goose
+	goose -env environment_variable_config up
 clean:
 	$(GOCLEAN)
 	rm -f $(BINARY_NAME)

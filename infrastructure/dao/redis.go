@@ -19,8 +19,8 @@ func NewRedisConn() redis.Conn {
 
 // NewRedisStore : TODO
 func NewRedisStore() redisStore.Store {
-	size, network, addr, pass, key := config.GetRedisConf()
-	store, err := redisStore.NewStore(size, network, addr, pass, []byte(key))
+	size, network, addr, _, key := config.GetRedisConf()
+	store, err := redisStore.NewStore(size, network, addr, "", []byte(key))
 	if err != nil {
 		panic(err.Error())
 	}

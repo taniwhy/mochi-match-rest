@@ -1,0 +1,1 @@
+psql -U postgres -h localhost -f ./sql/create_table.sql

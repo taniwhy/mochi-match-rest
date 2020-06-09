@@ -1,7 +1,4 @@
 
--- +goose Up
--- SQL in section 'Up' is executed when this migration is applied
-
 CREATE TABLE users
 (
     user_id TEXT NOT NULL,
@@ -118,19 +115,3 @@ CREATE TABLE entry_histories
         ON UPDATE CASCADE
         ON DELETE SET NULL
 );
-
--- +goose Down
--- SQL section 'Down' is executed when this migration is rolled back
-DROP TABLE IF EXISTS entry_histories;
-DROP TABLE IF EXISTS chat_posts;
-DROP TABLE IF EXISTS favorite_games;
-DROP TABLE IF EXISTS rooms;
-DROP TABLE IF EXISTS user_details;
-DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS game_titles;
-DROP TABLE IF EXISTS game_hards;
-
-
-
-
-

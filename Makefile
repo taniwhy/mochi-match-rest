@@ -17,8 +17,9 @@ hot:
 	realize start
 test:
 	$(GOTEST) -v ./...
-db:
-	go get bitbucket.org/liamstask/goose/cmd/goose & cd db/ & cp $GOPATH/src/bitbucket.org/liamstask/goose/db-sample/dbconf.yml ./ & goose -env environment_variable_config up
+deploy:
+	$(GOBUILD) -o $(BINARY_NAME) -v ./main.go
+	./$(BINARY_NAME)
 clean:
 	$(GOCLEAN)
 	rm -f $(BINARY_NAME)

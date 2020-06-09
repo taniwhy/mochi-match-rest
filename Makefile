@@ -18,10 +18,7 @@ hot:
 test:
 	$(GOTEST) -v ./...
 db:
-	go get bitbucket.org/liamstask/goose/cmd/goose
-	cd db/
-	cp $GOPATH/src/bitbucket.org/liamstask/goose/db-sample/dbconf.yml ./
-	goose -env environment_variable_config up
+	go get bitbucket.org/liamstask/goose/cmd/goose & cd db/ & cp $GOPATH/src/bitbucket.org/liamstask/goose/db-sample/dbconf.yml ./ & goose -env environment_variable_config up
 clean:
 	$(GOCLEAN)
 	rm -f $(BINARY_NAME)

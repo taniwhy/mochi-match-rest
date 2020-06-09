@@ -32,7 +32,7 @@ steps:
       AUTHORIZE_RSA:
         from_secret: AUTHORIZE_RSA
     commands:
-      - make run
+      - make deploy
 
   - name: discord notification
     image: appleboy/drone-discord

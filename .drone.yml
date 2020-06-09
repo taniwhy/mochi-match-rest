@@ -32,7 +32,6 @@ steps:
       AUTHORIZE_RSA:
         from_secret: AUTHORIZE_RSA
     commands:
-      - make db
       - make run
 
   - name: discord notification

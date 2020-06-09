@@ -3,67 +3,27 @@ package config
 import (
 	"fmt"
 	"os"
-	"path/filepath"
+	"strconv"
 
-	"github.com/spf13/viper"
+	"github.com/joho/godotenv"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
 )
 
-type config struct {
-	Database struct {
-		Host   string
-		Port   string
-		User   string
-		Pass   string
-		DBName string
-	}
-	Redis struct {
-		Size    int
-		Network string
-		Addr    string
-		Pass    string
-		Key     string
-	}
-	GoogleOAuth struct {
-		RedirectURL  string
-		ClientID     string
-		ClientSecret string
-	}
-}
-
-// config : todo
-var (
-	Config config
-)
-
-// InitConf : todo
-func InitConf() {
-	viper.SetConfigName("config")
-	viper.SetConfigType("yml")
-	viper.AddConfigPath(filepath.Join("$GOPATH", "src", "github.com", "taniwhy", "mochi-match-rest", "config"))
-	// 環境変数から設定値を上書きできるように設定
-	viper.AutomaticEnv()
-
-	if err := viper.ReadInConfig(); err != nil {
-		fmt.Println("config file read error")
-		fmt.Println(err)
-		os.Exit(1)
-	}
-	if err := viper.Unmarshal(&Config); err != nil {
-		fmt.Println("config file Unmarshal error")
-		fmt.Println(err)
-		os.Exit(1)
+func init() {
+	err := godotenv.Load()
+	if err != nil {
+		panic(err)
 	}
 }
 
 // GetDatabaseConf :
 func GetDatabaseConf() (dsn string) {
-	host := Config.Database.Host
-	port := Config.Database.Port
-	user := Config.Database.User
-	pass := Config.Database.Pass
-	dbname := Config.Database.DBName
+	host := os.Getenv("DB_HOST")
+	port := os.Getenv("DB_PORT")
+	user := os.Getenv("DB_USER")
+	pass := os.Getenv("DB_PASS")
+	dbname := os.Getenv("DB_NAME")
 	dsn = fmt.Sprintf(
 		"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", host, port, user, pass, dbname,
 	)
@@ -72,20 +32,20 @@ func GetDatabaseConf() (dsn string) {
 
 // GetRedisConf :
 func GetRedisConf() (size int, network, addr, pass, key string) {
-	size = Config.Redis.Size
-	network = Config.Redis.Network
-	addr = Config.Redis.Addr
-	pass = Config.Redis.Pass
-	key = Config.Redis.Key
+	size, _ = strconv.Atoi(os.Getenv("REDIS_SIZE"))
+	network = os.Getenv("REDIS_NETWORK")
+	addr = os.Getenv("REDIS_ADDR")
+	pass = os.Getenv("REDIS_PASS")
+	key = os.Getenv("REDIS_KEY")
 	return
 }
 
 // ConfigureOAuthClient :
 func ConfigureOAuthClient() *oauth2.Config {
 	return &oauth2.Config{
-		ClientID:     Config.GoogleOAuth.ClientID,
-		ClientSecret: Config.GoogleOAuth.ClientSecret,
-		RedirectURL:  Config.GoogleOAuth.RedirectURL,
+		ClientID:     os.Getenv("GOOGLE_OAUTH_REDIRECT_URL"),
+		ClientSecret: os.Getenv("GOOGLE_OAUTH_CLIENT_ID"),
+		RedirectURL:  os.Getenv("GOOGLE_OAUTH_CLIENT_SECRET"),
 		Scopes:       []string{"email", "profile"},
 		Endpoint:     google.Endpoint,
 	}

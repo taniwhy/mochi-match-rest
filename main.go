@@ -5,17 +5,12 @@ import (
 	"time"
 
 	log "github.com/sirupsen/logrus"
-	"github.com/taniwhy/mochi-match-rest/config"
 	"github.com/taniwhy/mochi-match-rest/infrastructure/dao"
 	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/router"
 
 	// logging driver
 	"github.com/taniwhy/mochi-match-rest/logging"
 )
-
-func init() {
-	config.InitConf()
-}
 
 func main() {
 	dbConn := dao.NewDatabase()

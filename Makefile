@@ -18,9 +18,9 @@ hot:
 test:
 	$(GOTEST) -v ./...
 deploy:
-	go get bitbucket.org/liamstask/goose/cmd/goose
+	go get -u bitbucket.org/liamstask/goose/cmd/goose
 	cd db/
-	cp $(GOROOT)/src/bitbucket.org/liamstask/goose/db-sample/dbconf.yml ./
+	cp $(GOPATH)/src/bitbucket.org/liamstask/goose/db-sample/dbconf.yml ./
 	goose -env environment_variable_config up
 	$(GOBUILD) -o $(BINARY_NAME) -v ./main.go
 	./$(BINARY_NAME)

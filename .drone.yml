@@ -10,38 +10,6 @@ steps:
     tts: true
     message: "i'm a perfect human"
 
-  - name: build
-    image: golang:1.13
-    environment:
-      DB_HOST:
-        from_secret: DB_HOST
-      DB_PORT:
-        from_secret: DB_PORT
-      DB_USER:
-        from_secret: DB_USER
-      DB_PASS:
-        from_secret: DB_PASS
-      REDIS_SIZE:
-        from_secret: REDIS_SIZE
-      REDIS_NETWORK:
-        from_secret: REDIS_NETWORK
-      REDIS_ADDR:
-        from_secret: REDIS_ADDR
-      REDIS_PASS:
-        from_secret: REDIS_PASS
-      REDIS_KEY:
-        from_secret: REDIS_KEY
-      GOOGLE_OAUTH_REDIRECT_URL:
-        from_secret: GOOGLE_OAUTH_REDIRECT_URL
-      GOOGLE_OAUTH_CLIENT_ID:
-        from_secret: GOOGLE_OAUTH_CLIENT_ID
-      GOOGLE_OAUTH_CLIENT_SECRET:
-        from_secret: GOOGLE_OAUTH_CLIENT_SECRET
-      AUTHORIZE_RSA:
-        from_secret: AUTHORIZE_RSA
-    commands:
-      - make deploy
-
 trigger:
   event:
     - push

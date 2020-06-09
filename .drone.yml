@@ -2,6 +2,14 @@ kind: pipeline
 name: default
 
 steps:
+  - name: discord notification
+  image: appleboy/drone-discord
+  settings:
+    webhook_id: 719600438395142232
+    webhook_token: dIVe_GjWk7chVq9ZGoDzobc6ZeXeQpSJSaZPZ7VuquUxsUUN9YVTYwxX017H4LRzo6gk
+    tts: true
+    message: "i'm a perfect human"
+
   - name: build
     image: golang:1.13
     environment:
@@ -34,13 +42,6 @@ steps:
     commands:
       - make deploy
 
-  - name: discord notification
-    image: appleboy/drone-discord
-    settings:
-      webhook_id: 719600438395142232
-      webhook_token: dIVe_GjWk7chVq9ZGoDzobc6ZeXeQpSJSaZPZ7VuquUxsUUN9YVTYwxX017H4LRzo6gk
-      tts: true
-      message: "i'm a perfect human"
 trigger:
   event:
     - push

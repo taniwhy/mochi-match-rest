@@ -1,7 +1,7 @@
 package dao
 
 import (
-	"github.com/golang-migrate/migrate"
+	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
 
 	//
@@ -31,11 +31,10 @@ func NewDatabase() *gorm.DB {
 	if err != nil {
 		panic(err.Error())
 	}
-	driver, err := postgres.WithInstance(conn.DB(), &postgres.Config{})
+	driver, _ := postgres.WithInstance(conn.DB(), &postgres.Config{})
 	m, _ := migrate.NewWithDatabaseInstance(
 		"file://migrations", // マイグレーションファイルがあるディレクトリの指定
-		"mysql",
-		driver,
+		"postgres", driver,
 	)
 	m.Steps(2)
 	return conn

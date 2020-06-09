@@ -8,7 +8,7 @@ steps:
       webhook_id: 719600438395142232
       webhook_token: dIVe_GjWk7chVq9ZGoDzobc6ZeXeQpSJSaZPZ7VuquUxsUUN9YVTYwxX017H4LRzo6gk
       tts: true
-      message: "i'm a perfect human"
+      message: "テスト"
 
 trigger:
   event:

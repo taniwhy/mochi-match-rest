@@ -18,10 +18,7 @@ hot:
 test:
 	$(GOTEST) -v ./...
 deploy:
-	go get -u bitbucket.org/liamstask/goose/cmd/goose
-	cd db/
-	cp $(GOPATH)/src/bitbucket.org/liamstask/goose/db-sample/dbconf.yml ./
-	goose -env environment_variable_config up
+	bash ./db/allexcute.sh
 	$(GOBUILD) -o $(BINARY_NAME) -v ./main.go
 	./$(BINARY_NAME)
 clean:

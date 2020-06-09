@@ -2,6 +2,11 @@ kind: pipeline
 name: default
 
 steps:
+  - name: build
+    image: golang:1.13-nanoserver
+    commands:
+      - make build
+
   - name: discord notification
     image: appleboy/drone-discord
     settings:

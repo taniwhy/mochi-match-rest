@@ -2,7 +2,7 @@ kind: pipeline
 name: default
 
 steps:
-  - name: discord notification
+  - name: discord notification 1
     image: appleboy/drone-discord
     settings:
       webhook_id: 719600438395142232

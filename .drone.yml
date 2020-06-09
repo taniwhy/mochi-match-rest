@@ -2,14 +2,6 @@ kind: pipeline
 name: default
 
 steps:
-  - name: discord notification 1
-    image: appleboy/drone-discord
-    settings:
-      webhook_id: 719600438395142232
-      webhook_token: dIVe_GjWk7chVq9ZGoDzobc6ZeXeQpSJSaZPZ7VuquUxsUUN9YVTYwxX017H4LRzo6gk
-      tts: true
-      message: "starting build"
-
   - name: build
     image: golang:1.13
     environment:

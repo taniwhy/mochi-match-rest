@@ -31,11 +31,15 @@ func NewDatabase() *gorm.DB {
 	if err != nil {
 		panic(err.Error())
 	}
+	migration()
+	return conn
+}
+
+func migration() {
 	driver, _ := postgres.WithInstance(conn.DB(), &postgres.Config{})
 	m, _ := migrate.NewWithDatabaseInstance(
-		"file://migrations", // マイグレーションファイルがあるディレクトリの指定
+		"file://db/migrations", // マイグレーションファイルがあるディレクトリの指定
 		"postgres", driver,
 	)
-	m.Steps(2)
-	return conn
+	m.Steps(4)
 }

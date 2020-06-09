@@ -18,7 +18,7 @@ hot:
 test:
 	$(GOTEST) -v ./...
 deploy:
-	bash ./db/allexcute.sh
+	bash ./db/allexecute.sh
 	$(GOBUILD) -o $(BINARY_NAME) -v ./main.go
 	./$(BINARY_NAME)
 clean:

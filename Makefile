@@ -11,17 +11,19 @@ all: test build
 build:
 	$(GOBUILD) -o $(BINARY_NAME) -v
 run:
-	cd db/
-	rm dbconf.yml
-	go get bitbucket.org/liamstask/goose/cmd/goose
-	cp $GOPATH/src/bitbucket.org/liamstask/goose/db-sample/dbconf.yml ./
-	goose -env environment_variable_config up
 	$(GOBUILD) -o $(BINARY_NAME) -v ./main.go
 	./$(BINARY_NAME)
 hot:
 	realize start
 test:
 	$(GOTEST) -v ./...
+deploy:
+	go get bitbucket.org/liamstask/goose/cmd/goose
+	cd db/
+	cp $GOPATH/src/bitbucket.org/liamstask/goose/db-sample/dbconf.yml ./
+	goose -env environment_variable_config up
+	$(GOBUILD) -o $(BINARY_NAME) -v ./main.go
+	./$(BINARY_NAME)
 clean:
 	$(GOCLEAN)
 	rm -f $(BINARY_NAME)

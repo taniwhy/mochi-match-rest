@@ -48,9 +48,9 @@ trigger:
 
 services:
   - name: db
-  image: postgres:10.5
-  ports:
-    - 5432
-  environment:
-    POSTGRES_PASSWORD: postgres
-    POSTGRES_USER: postgres
+    image: postgres:10.5
+    ports:
+      - 5432
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres

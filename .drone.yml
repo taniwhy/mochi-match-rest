@@ -3,7 +3,7 @@ name: default
 
 steps:
   - name: build
-    image: golang:1.13-nanoserver
+    image: golang
     commands:
       - make build
 

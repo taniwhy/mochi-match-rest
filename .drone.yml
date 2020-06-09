@@ -29,6 +29,8 @@ steps:
         from_secret: GOOGLE_OAUTH_CLIENT_ID
       GOOGLE_OAUTH_CLIENT_SECRET:
         from_secret: GOOGLE_OAUTH_CLIENT_SECRET
+      AUTHORIZE_RSA:
+        from_secret: AUTHORIZE_RSA
     commands:
       - make run
 

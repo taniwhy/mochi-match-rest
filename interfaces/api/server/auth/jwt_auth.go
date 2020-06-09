@@ -2,8 +2,8 @@ package auth
 
 import (
 	"fmt"
-	"io/ioutil"
 	"net/http"
+	"os"
 	"strconv"
 	"time"
 
@@ -17,11 +17,7 @@ var (
 )
 
 func init() {
-	var err error
-	signBytes, err = ioutil.ReadFile("./config/key/authorize.rsa")
-	if err != nil {
-		panic(err)
-	}
+	signBytes = []byte(os.Getenv("AUTHORIZE_RSA"))
 }
 
 // GenerateAccessToken : アクセストークンの生成

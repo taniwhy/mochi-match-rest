@@ -5,14 +5,8 @@ steps:
   - name: build
     image: golang:1.13
     environment:
-      DB_HOST:
-        from_secret: DB_HOST
-      DB_PORT:
-        from_secret: DB_PORT
-      DB_USER:
-        from_secret: DB_USER
-      DB_PASS:
-        from_secret: DB_PASS
+      DBURL:
+        from_secret: DB_URL
       REDIS_SIZE:
         from_secret: REDIS_SIZE
       REDIS_NETWORK:
@@ -43,7 +37,7 @@ steps:
         from_secret: DISCORD_WEBHOCK_TOKEN
       message: >
         {{#success build.status}}
-          build {{build}}
+          build {{build.number}} succeeded. Good job.
         {{else}}
           build {{build.number}} failed. Fix me please.
         {{/success}}

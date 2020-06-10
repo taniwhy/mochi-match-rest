@@ -13,8 +13,6 @@ build:
 run:
 	$(GOBUILD) -o $(BINARY_NAME) -v ./main.go
 	./$(BINARY_NAME)
-hot:
-	realize start
 test:
 	$(GOTEST) -v ./...
 deploy:

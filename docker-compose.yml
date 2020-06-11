@@ -2,9 +2,7 @@ version: "3"
 
 services:
   mochi-app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: taniwhy/mochi-match-rest:latest
     container_name: "app"
     ports:
       - "8000:8000"
@@ -17,12 +15,12 @@ services:
     container_name: "mochi-match-postgres"
     volumes:
       - mochimatch_postgres_data:/var/lib/postgresql/data
-      - ./db/init:/docker-entrypoint-initdb.d
     ports:
       - "5432:5432"
     environment:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
+      POSTGRES_DB: mochi_match
   redis:
     image: "redis:4.0.6"
     container_name: "mochi-match-redis"

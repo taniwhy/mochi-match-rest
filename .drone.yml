@@ -10,9 +10,9 @@ steps:
   - name: publish
     image: plugins/docker:18
     settings:
-      auto_tag: true
       dockerfile: ./Dockerfile
       repo: taniwhy/mochi-match-rest
+      auto_tag: true
       username:
         from_secret: DOCKER_USERNAME
       password:

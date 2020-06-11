@@ -10,8 +10,8 @@ steps:
         from_secret: DISCORD_WEBHOCK_ID
       webhook_token:
         from_secret: DISCORD_WEBHOCK_TOKEN
-      avatar_url: >
-        https://i.pinimg.com/474x/cc/6e/7a/cc6e7a321ed0d5118e9774c905fdb99c.jpg
+      username: >
+        close me kun
       message: >
         {{#success build.status}}
           build {{build.number}} succeeded. Good job.

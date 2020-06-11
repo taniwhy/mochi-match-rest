@@ -22,32 +22,3 @@ clean:
 	$(GOCLEAN)
 	rm -f $(BINARY_NAME)
 	rm -f $(BINARY_UNIX)
-
-server {
-    listen       80 default_server;
-    server_name drone.mochi-match.work;
-
-    location / {
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-		proxy_set_header Connection "upgrade";
-		roxy_set_header Host $host;
-
-        proxy_pass http://drone_server;
-        }
-}
-
-
-server {
-    listen       80 default_server;
-    server_name api.mochi-match.work;
-
-    location / {
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-		proxy_set_header Connection "upgrade";
-		roxy_set_header Host $host;
-
-        proxy_pass http://app;
-        }
-}

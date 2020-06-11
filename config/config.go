@@ -32,9 +32,9 @@ func GetRedisConf() (size int, network, addr, pass, key string) {
 // ConfigureOAuthClient :
 func ConfigureOAuthClient() *oauth2.Config {
 	return &oauth2.Config{
-		ClientID:     os.Getenv("GOOGLE_OAUTH_REDIRECT_URL"),
-		ClientSecret: os.Getenv("GOOGLE_OAUTH_CLIENT_ID"),
-		RedirectURL:  os.Getenv("GOOGLE_OAUTH_CLIENT_SECRET"),
+		ClientID:     os.Getenv("GOOGLE_OAUTH_CLIENT_ID"),
+		ClientSecret: os.Getenv("GOOGLE_OAUTH_CLIENT_SECRET"),
+		RedirectURL:  os.Getenv("GOOGLE_OAUTH_REDIRECT_URL"),
 		Scopes:       []string{"email", "profile"},
 		Endpoint:     google.Endpoint,
 	}

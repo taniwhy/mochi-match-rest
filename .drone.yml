@@ -12,7 +12,7 @@ steps:
     settings:
       dockerfile: ./Dockerfile
       repo: taniwhy/mochi-match-rest
-      auto_tag: true
+      tags: latest
       username:
         from_secret: DOCKER_USERNAME
       password:

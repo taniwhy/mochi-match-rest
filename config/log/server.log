@@ -1,0 +1,54 @@
+[INFO]:2020-06-03 21:52:52 [user_handler.go:35]  - sub info msg1
+[INFO]:2020-06-03 21:52:53 [user_handler.go:35]  - sub info msg1
+[INFO]:2020-06-03 21:52:53 [user_handler.go:35]  - sub info msg1
+[INFO]:2020-06-03 21:52:54 [user_handler.go:35]  - sub info msg1
+[FATAL]:2020-06-03 22:03:18 [router.go:20]  - Serve failed
+[FATAL]:2020-06-04 00:12:42 [user_handler.go:88]  - Unexpected error
+[FATAL]:2020-06-04 00:13:14 [user_handler.go:88]  - Unexpected error
+[FATAL]:2020-06-04 00:13:41 [user_handler.go:88]  - Unexpected error
+[WARNING]:2020-06-04 00:14:45 [user_handler.go:88]  - Unexpected error
+[FATAL]:2020-06-04 00:19:41 [user_handler.go:88]  - Unexpected error
+[WARNING]:2020-06-04 00:19:56 [user_handler.go:88]  - Unexpected error
+[WARNING]:2020-06-04 00:20:03 [user_handler.go:88]  - Unexpected error
+[WARNING]:2020-06-04 23:46:08 [user_handler.go:105]  - Unexpected error
+[WARNING]:2020-06-05 01:06:28 [room_handler.go:65]  - Unexpected error
+[WARNING]:2020-06-05 01:07:38 [room_handler.go:65]  - Unexpected error
+[WARNING]:2020-06-05 01:08:59 [room_handler.go:65]  - Unexpected error
+[WARNING]:2020-06-05 01:09:19 [room_handler.go:65]  - Unexpected error
+[WARNING]:2020-06-05 01:09:19 [room_handler.go:65]  - Unexpected error
+[WARNING]:2020-06-05 01:10:05 [room_handler.go:65]  - Unexpected error
+[WARNING]:2020-06-05 02:03:15 [user_handler.go:149]  - Unexpected error
+[FATAL]:2020-06-05 09:47:29 [main.go:37]  - Serve failed
+[FATAL]:2020-06-05 09:47:41 [main.go:37]  - Serve failed
+[WARNING]:2020-06-08 12:26:11 [user_handler.go:108]  - Unexpected error
+[WARNING]:2020-06-08 12:27:21 [user_handler.go:108]  - Unexpected error
+[WARNING]:2020-06-08 12:27:22 [user_handler.go:108]  - Unexpected error
+[WARNING]:2020-06-08 13:36:25 [user_handler.go:149]  - Unexpected error
+[FATAL]:2020-06-08 21:10:43 [main.go:37]  - Serve failed
+[INFO]:2020-06-08 21:18:44 [logger.go:119]  - UPDATE "user_details" SET "icon" = $1, "update_at" = $2, "user_name" = $3  WHERE (user_id = $4) || module={gorm}, type={sql}, 
+[INFO]:2020-06-08 21:18:44 [logger.go:119]  - SELECT * FROM "favorite_games"  WHERE (user_id = $1) || module={gorm}, type={sql}, 
+[INFO]:2020-06-08 21:18:44 [logger.go:119]  - INSERT INTO "favorite_games" ("favorite_game_id","user_id","game_title","created_at") VALUES ($1,$2,$3,$4) RETURNING "favorite_games".* || type={sql}, module={gorm}, 
+[INFO]:2020-06-08 21:18:44 [logger.go:119]  - INSERT INTO "favorite_games" ("favorite_game_id","user_id","game_title","created_at") VALUES ($1,$2,$3,$4) RETURNING "favorite_games".* || module={gorm}, type={sql}, 
+[INFO]:2020-06-08 21:18:44 [logger.go:119]  - INSERT INTO "favorite_games" ("favorite_game_id","user_id","game_title","created_at") VALUES ($1,$2,$3,$4) RETURNING "favorite_games".* || module={gorm}, type={sql}, 
+[INFO]:2020-06-08 21:18:44 [logger.go:119]  - INSERT INTO "favorite_games" ("favorite_game_id","user_id","game_title","created_at") VALUES ($1,$2,$3,$4) RETURNING "favorite_games".* || type={sql}, module={gorm}, 
+[INFO]:2020-06-08 21:18:44 [logger.go:119]  - INSERT INTO "favorite_games" ("favorite_game_id","user_id","game_title","created_at") VALUES ($1,$2,$3,$4) RETURNING "favorite_games".* || type={sql}, module={gorm}, 
+[INFO]:2020-06-08 21:20:38 [logger.go:119]  - UPDATE "user_details" SET "icon" = $1, "update_at" = $2, "user_name" = $3  WHERE (user_id = $4) || type={sql}, module={gorm}, 
+[INFO]:2020-06-08 21:20:38 [logger.go:119]  - SELECT * FROM "favorite_games"  WHERE (user_id = $1) || module={gorm}, type={sql}, 
+[INFO]:2020-06-08 21:20:39 [logger.go:119]  - UPDATE "user_details" SET "icon" = $1, "update_at" = $2, "user_name" = $3  WHERE (user_id = $4) || module={gorm}, type={sql}, 
+[INFO]:2020-06-08 21:20:39 [logger.go:119]  - SELECT * FROM "favorite_games"  WHERE (user_id = $1) || type={sql}, module={gorm}, 
+[INFO]:2020-06-08 21:25:50 [logger.go:129]  - UPDATE "user_details" SET "icon" = $1, "update_at" = $2, "user_name" = $3  WHERE (user_id = $4) || duration={7.572715ms}, module={gorm}, type={sql}, rows_returned={1}, src={/Users/taniwhy/go/src/github.com/taniwhy/mochi-match-rest/infrastructure/persistence/datastore/user_detail_datastore.go:36}, values={[init 2020-06-08 21:25:50.569482 +0900 JST m=+1.371560356 taniwhy bf1b283e-6ba0-4e89-b262-6382bf0dc0dc]}, 
+[INFO]:2020-06-08 21:25:50 [logger.go:129]  - SELECT * FROM "favorite_games"  WHERE (user_id = $1) || duration={5.330629ms}, module={gorm}, type={sql}, rows_returned={5}, src={/Users/taniwhy/go/src/github.com/taniwhy/mochi-match-rest/infrastructure/persistence/datastore/favorate_game_datastore.go:21}, values={[bf1b283e-6ba0-4e89-b262-6382bf0dc0dc]}, 
+[INFO]:2020-06-08 21:25:50 [logger.go:129]  - UPDATE "user_details" SET "icon" = $1, "update_at" = $2, "user_name" = $3  WHERE (user_id = $4) || module={gorm}, type={sql}, rows_returned={1}, src={/Users/taniwhy/go/src/github.com/taniwhy/mochi-match-rest/infrastructure/persistence/datastore/user_detail_datastore.go:36}, values={[init 2020-06-08 21:25:50.847918 +0900 JST m=+1.649994022 taniwhy bf1b283e-6ba0-4e89-b262-6382bf0dc0dc]}, duration={4.929802ms}, 
+[INFO]:2020-06-08 21:25:50 [logger.go:129]  - SELECT * FROM "favorite_games"  WHERE (user_id = $1) || values={[bf1b283e-6ba0-4e89-b262-6382bf0dc0dc]}, duration={3.58547ms}, module={gorm}, type={sql}, rows_returned={5}, src={/Users/taniwhy/go/src/github.com/taniwhy/mochi-match-rest/infrastructure/persistence/datastore/favorate_game_datastore.go:21}, 
+[INFO]:2020-06-08 21:25:51 [logger.go:129]  - UPDATE "user_details" SET "icon" = $1, "update_at" = $2, "user_name" = $3  WHERE (user_id = $4) || values={[init 2020-06-08 21:25:51.32136 +0900 JST m=+2.123432446 taniwhy bf1b283e-6ba0-4e89-b262-6382bf0dc0dc]}, duration={3.365694ms}, module={gorm}, type={sql}, rows_returned={1}, src={/Users/taniwhy/go/src/github.com/taniwhy/mochi-match-rest/infrastructure/persistence/datastore/user_detail_datastore.go:36}, 
+[INFO]:2020-06-08 21:25:51 [logger.go:129]  - SELECT * FROM "favorite_games"  WHERE (user_id = $1) || values={[bf1b283e-6ba0-4e89-b262-6382bf0dc0dc]}, duration={2.645654ms}, module={gorm}, type={sql}, rows_returned={5}, src={/Users/taniwhy/go/src/github.com/taniwhy/mochi-match-rest/infrastructure/persistence/datastore/favorate_game_datastore.go:21}, 
+[INFO]:2020-06-09 10:23:15 [logger.go:129]  - SELECT * FROM "users"  WHERE (google_id = $1) LIMIT 1 || module={gorm}, type={sql}, rows_returned={1}, src={/Users/taniwhy/go/src/github.com/taniwhy/mochi-match-rest/infrastructure/persistence/datastore/user_datastore.go:35}, values={[valsue]}, duration={27.758132ms}, 
+[INFO]:2020-06-09 10:23:47 [logger.go:129]  - SELECT * FROM "users"  WHERE (google_id = $1) LIMIT 1 || module={gorm}, type={sql}, rows_returned={0}, src={/Users/taniwhy/go/src/github.com/taniwhy/mochi-match-rest/infrastructure/persistence/datastore/user_datastore.go:35}, values={[valsue]}, duration={5.917417ms}, 
+[INFO]:2020-06-09 10:23:47 [logger.go:129]  - INSERT INTO "users" ("user_id","google_id","facebook_id","twitter_id","email","is_admin","is_freeze","is_delete","created_at","update_at","delete_at") VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) RETURNING "users".* || values={[f8cedb60-6736-422c-a024-8238563c35ff {valsue true} { false} { false} user@exmaple.com false false false 2020-06-09 10:23:47.757189 +0900 JST m=+3.703747983 2020-06-09 10:23:47.757189 +0900 JST m=+3.703748177 {2020-06-09 10:23:47.757189 +0900 JST m=+3.703748302 false}]}, duration={5.123594ms}, module={gorm}, type={sql}, rows_returned={1}, src={/Users/taniwhy/go/src/github.com/taniwhy/mochi-match-rest/infrastructure/persistence/datastore/user_datastore.go:49}, 
+[INFO]:2020-06-09 10:23:47 [logger.go:129]  - INSERT INTO "user_details" ("user_detail_id","user_id","user_name","icon","update_at") VALUES ($1,$2,$3,$4,$5) RETURNING "user_details".* || duration={5.698989ms}, module={gorm}, type={sql}, rows_returned={1}, src={/Users/taniwhy/go/src/github.com/taniwhy/mochi-match-rest/infrastructure/persistence/datastore/user_detail_datastore.go:31}, values={[9eadcb9a-c7ed-4433-88ea-987f5e9213f7 f8cedb60-6736-422c-a024-8238563c35ff user  2020-06-09 10:23:47.763807 +0900 JST m=+3.710366265]}, 
+[INFO]:2020-06-09 10:26:12 [logger.go:129]  - SELECT * FROM "users"  WHERE (google_id = $1) LIMIT 1 || module={gorm}, type={sql}, rows_returned={1}, src={/Users/taniwhy/go/src/github.com/taniwhy/mochi-match-rest/infrastructure/persistence/datastore/user_datastore.go:35}, values={[valsue]}, duration={5.308822ms}, 
+[INFO]:2020-06-09 13:51:34 [logger.go:131]  - pq: relation "users" does not exist || module={gorm}, type={log}, 
+[INFO]:2020-06-09 13:51:34 [logger.go:129]  - SELECT * FROM "users"  WHERE (google_id = $1) LIMIT 1 || module={gorm}, type={sql}, rows_returned={0}, src={/Users/taniwhy/go/src/github.com/taniwhy/mochi-match-rest/infrastructure/persistence/datastore/user_datastore.go:35}, values={[valsue]}, duration={3.64136ms}, 
+[INFO]:2020-06-09 13:59:49 [logger.go:129]  - SELECT * FROM "users"  WHERE (google_id = $1) LIMIT 1 || module={gorm}, type={sql}, rows_returned={0}, src={/Users/taniwhy/go/src/github.com/taniwhy/mochi-match-rest/infrastructure/persistence/datastore/user_datastore.go:35}, values={[valsue]}, duration={15.781466ms}, 
+[INFO]:2020-06-09 13:59:49 [logger.go:129]  - INSERT INTO "users" ("user_id","google_id","facebook_id","twitter_id","email","is_admin","is_freeze","is_delete","created_at","update_at","delete_at") VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) RETURNING "users".* || type={sql}, rows_returned={1}, src={/Users/taniwhy/go/src/github.com/taniwhy/mochi-match-rest/infrastructure/persistence/datastore/user_datastore.go:49}, values={[a122f55b-92bb-46ce-b9b8-4c9126aceb88 {valsue true} { false} { false} user@exmaple.com false false false 2020-06-09 13:59:49.856417 +0900 JST m=+25.885776290 2020-06-09 13:59:49.856418 +0900 JST m=+25.885776510 {2020-06-09 13:59:49.856418 +0900 JST m=+25.885776625 false}]}, duration={3.811505ms}, module={gorm}, 
+[INFO]:2020-06-09 13:59:49 [logger.go:129]  - INSERT INTO "user_details" ("user_detail_id","user_id","user_name","icon","update_at") VALUES ($1,$2,$3,$4,$5) RETURNING "user_details".* || values={[80e9dd2e-c897-4734-ae1c-60db8b886720 a122f55b-92bb-46ce-b9b8-4c9126aceb88 user  2020-06-09 13:59:49.873199 +0900 JST m=+25.902557580]}, duration={4.937754ms}, module={gorm}, type={sql}, rows_returned={1}, src={/Users/taniwhy/go/src/github.com/taniwhy/mochi-match-rest/infrastructure/persistence/datastore/user_detail_datastore.go:31}, 

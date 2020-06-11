@@ -2,6 +2,25 @@ kind: pipeline
 name: default
 
 steps:
+  - name: build
+    image: golang:1.13
+    commands:
+      - make build
+
+  - name: deploy
+    image: appleboy/drone-ssh
+    settings:
+      host:
+        from_secret: SSH_HOST
+      username:
+        from_secret: SSH_USERNAME
+      password:
+        from_secret: SSH_PASSWORD
+      port: 22
+      script:
+        - echo hello
+        - echo world
+
   - name: discord notification
     image: appleboy/drone-discord
     settings:

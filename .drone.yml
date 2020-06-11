@@ -47,6 +47,7 @@ steps:
         {{else}}
           build {{build.number}} failed. Fix me please.
         {{/success}}
+
 trigger:
   event:
     - push

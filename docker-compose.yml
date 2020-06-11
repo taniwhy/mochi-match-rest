@@ -2,9 +2,7 @@ version: "3"
 
 services:
   mochi-app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: taniwhy/mochi-match-rest:latest
     container_name: "mochi-match-app"
     volumes:
       - .:/go/src/github.com/taniwhy/mochi-match-rest

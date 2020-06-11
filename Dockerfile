@@ -9,6 +9,9 @@ ENV GO111MODULE=on
 
 EXPOSE 8000
 
+ENV GOARCH=amd64
+ENV GOOS=linux
+
 RUN go get github.com/pilu/fresh
 
 CMD ["fresh"]

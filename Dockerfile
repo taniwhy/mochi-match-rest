@@ -4,4 +4,4 @@ WORKDIR /go/src/github.com/taniwhy/mochi-match-rest
 
 COPY . .
 
-EXPOSE 8080
+EXPOSE 8000

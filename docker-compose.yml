@@ -9,10 +9,13 @@ services:
     volumes:
       - mochimatch_postgres_dev_data:/var/lib/postgresql/data
     ports:
-      - "8080:8080"
+      - "8000:8000"
     volumes:
       - .:/go/src/taniwhy/mochi-match-rest
-    command: go run main.go
+    command: make run
+    depends_on:
+      - db
+      - redis
   db:
     image: postgres:10.5
     container_name: "mochi-match-postgres"
@@ -32,3 +35,8 @@ services:
 volumes:
   mochimatch_postgres_dev_data:
     driver: local
+
+networks:
+  default:
+    external:
+      name: shared

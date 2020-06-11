@@ -7,6 +7,21 @@ steps:
     commands:
       - make build
 
+  - name: publish
+    image: plugins/docker:18
+    settings:
+      auto_tag: true
+      dockerfile: ./Dockerfile
+      repo: taniwhy/mochi-match-rest
+      username:
+        from_secret: DOCKER_USERNAME
+      password:
+        from_secret: DOCKER_PASSWORD
+    when:
+      event:
+        - push
+        - tag
+
   - name: deploy
     image: appleboy/drone-ssh
     settings:
@@ -18,13 +33,12 @@ steps:
         from_secret: SSH_PASSWORD
       port: 22
       script:
-        - echo hello
-        - echo world
+        - cd /var/www/mochi-match
+        - sh deploy.sh
 
   - name: discord notification
     image: appleboy/drone-discord
     settings:
-      tts: true
       webhook_id:
         from_secret: DISCORD_WEBHOCK_ID
       webhook_token:

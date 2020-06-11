@@ -25,7 +25,7 @@ func main() {
 	routers := router.InitRouter(dbConn, redisConn)
 
 	server := &http.Server{
-		Addr:           ":8080",
+		Addr:           ":8000",
 		Handler:        routers,
 		ReadTimeout:    5 * time.Second,
 		WriteTimeout:   10 * time.Second,

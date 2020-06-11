@@ -9,7 +9,7 @@ require (
 	github.com/gin-contrib/sessions v0.0.3
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-chi/chi v4.1.2+incompatible // indirect
-	github.com/golang-migrate/migrate v3.5.4+incompatible
+	github.com/golang-migrate/migrate v3.5.4+incompatible // indirect
 	github.com/golang-migrate/migrate/v4 v4.11.0
 	github.com/golang/mock v1.4.3
 	github.com/gomodule/redigo v2.0.0+incompatible

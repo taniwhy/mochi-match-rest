@@ -16,12 +16,6 @@ steps:
         {{else}}
           failed close me
         {{/success}}
-      avatar_url: >
-        {{#success build.status}}
-          https://i.pinimg.com/474x/cc/6e/7a/cc6e7a321ed0d5118e9774c905fdb99c.jpg
-        {{else}}
-          https://i.pinimg.com/474x/cc/6e/7a/cc6e7a321ed0d5118e9774c905fdb99c.jpg
-        {{/success}}
       message: >
         {{#success build.status}}
           build {{build.number}} succeeded. Good job.

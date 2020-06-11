@@ -17,10 +17,6 @@ steps:
         from_secret: DOCKER_USERNAME
       password:
         from_secret: DOCKER_PASSWORD
-    when:
-      event:
-        - push
-        - tag
 
   - name: deploy
     image: appleboy/drone-ssh
@@ -33,7 +29,7 @@ steps:
         from_secret: SSH_PASSWORD
       port: 22
       script:
-        - cd /var/www/mochi-match
+        - cd /var/www/mochi-match-rest
         - sh deploy.sh
 
   - name: discord notification

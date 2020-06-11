@@ -2,15 +2,16 @@ version: "3"
 
 services:
   mochi-app:
-    image: taniwhy/mochi-match-rest:latest
-    container_name: "mochi-match-app"
-    volumes:
-      - .:/go/src/github.com/taniwhy/mochi-match-rest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: "app"
     ports:
       - "8000:8000"
+    command: ["go", "run", "main.go"]
     depends_on:
-      - "db"
-      - "redis"
+      - db
+      - redis
   db:
     image: postgres:10.5
     container_name: "mochi-match-postgres"

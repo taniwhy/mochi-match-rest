@@ -1,4 +1,4 @@
-FROM golang:1.13-nanoserver-1809
+FROM golang:1.13
 
 ENV DOCKERIZE_VERSION v0.6.1
 RUN apk add --no-cache openssl \

@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"os"
 	"strconv"
 
@@ -11,24 +10,14 @@ import (
 )
 
 func init() {
-	err := godotenv.Load()
+	err := godotenv.Load("./config/env/.env")
 	if err != nil {
 		panic(err)
 	}
 }
 
 // GetDatabaseConf :
-func GetDatabaseConf() (dsn string) {
-	host := os.Getenv("DB_HOST")
-	port := os.Getenv("DB_PORT")
-	user := os.Getenv("DB_USER")
-	pass := os.Getenv("DB_PASS")
-	dbname := os.Getenv("DB_NAME")
-	dsn = fmt.Sprintf(
-		"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", host, port, user, pass, dbname,
-	)
-	return
-}
+func GetDatabaseConf() (dsn string) { return os.Getenv("DB_URL") }
 
 // GetRedisConf :
 func GetRedisConf() (size int, network, addr, pass, key string) {
@@ -43,9 +32,9 @@ func GetRedisConf() (size int, network, addr, pass, key string) {
 // ConfigureOAuthClient :
 func ConfigureOAuthClient() *oauth2.Config {
 	return &oauth2.Config{
-		ClientID:     os.Getenv("GOOGLE_OAUTH_REDIRECT_URL"),
-		ClientSecret: os.Getenv("GOOGLE_OAUTH_CLIENT_ID"),
-		RedirectURL:  os.Getenv("GOOGLE_OAUTH_CLIENT_SECRET"),
+		ClientID:     os.Getenv("GOOGLE_OAUTH_CLIENT_ID"),
+		ClientSecret: os.Getenv("GOOGLE_OAUTH_CLIENT_SECRET"),
+		RedirectURL:  os.Getenv("GOOGLE_OAUTH_REDIRECT_URL"),
 		Scopes:       []string{"email", "profile"},
 		Endpoint:     google.Endpoint,
 	}

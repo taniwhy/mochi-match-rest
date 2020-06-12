@@ -4,48 +4,53 @@ name: default
 steps:
   - name: build
     image: golang:1.13
-    environment:
-      DB_HOST:
-        from_secret: DB_HOST
-      DB_PORT:
-        from_secret: DB_PORT
-      DB_USER:
-        from_secret: DB_USER
-      DB_PASS:
-        from_secret: DB_PASS
-      REDIS_SIZE:
-        from_secret: REDIS_SIZE
-      REDIS_NETWORK:
-        from_secret: REDIS_NETWORK
-      REDIS_ADDR:
-        from_secret: REDIS_ADDR
-      REDIS_PASS:
-        from_secret: REDIS_PASS
-      REDIS_KEY:
-        from_secret: REDIS_KEY
-      GOOGLE_OAUTH_REDIRECT_URL:
-        from_secret: GOOGLE_OAUTH_REDIRECT_URL
-      GOOGLE_OAUTH_CLIENT_ID:
-        from_secret: GOOGLE_OAUTH_CLIENT_ID
-      GOOGLE_OAUTH_CLIENT_SECRET:
-        from_secret: GOOGLE_OAUTH_CLIENT_SECRET
-      AUTHORIZE_RSA:
-        from_secret: AUTHORIZE_RSA
     commands:
       - make build
+
+  - name: publish
+    image: plugins/docker:18
+    settings:
+      dockerfile: ./Dockerfile
+      repo: taniwhy/mochi-match-rest
+      tags: latest
+      username:
+        from_secret: DOCKER_USERNAME
+      password:
+        from_secret: DOCKER_PASSWORD
+
+  - name: deploy
+    image: appleboy/drone-ssh
+    settings:
+      host:
+        from_secret: SSH_HOST
+      username:
+        from_secret: SSH_USERNAME
+      password:
+        from_secret: SSH_PASSWORD
+      port: 22
+      script:
+        - cd /var/www/mochi-match-rest
+        - sh deploy.sh
 
   - name: discord notification
     image: appleboy/drone-discord
     settings:
-      webhook_id: 719600438395142232
-      webhook_token: dIVe_GjWk7chVq9ZGoDzobc6ZeXeQpSJSaZPZ7VuquUxsUUN9YVTYwxX017H4LRzo6gk
-      tts: true
-      message: "おめでとう！ビルドが通ったよ！やったね！"
+      webhook_id:
+        from_secret: DISCORD_WEBHOCK_ID
+      webhook_token:
+        from_secret: DISCORD_WEBHOCK_TOKEN
+      username: >
+        close me
+      message: >
+        {{#success build.status}}
+          build {{build.number}} succeeded. Good job.
+        {{else}}
+          build {{build.number}} failed. Fix me please.
+        {{/success}}
 
 trigger:
   event:
     - push
-
 services:
   - name: db
     image: postgres:10.5
@@ -55,7 +60,6 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
       POSTGRES_DB: mochi_match
-
   - name: redis
     image: redis:4.0.6
     ports:

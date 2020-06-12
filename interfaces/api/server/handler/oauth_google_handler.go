@@ -103,13 +103,3 @@ func (gA *googleOAuthHandler) Callback(c *gin.Context) {
 	// ログインしリダイレクト
 	c.Writer.WriteString(`<!DOCTYPE html><html><body>ログイン完了</body></html>`)
 }
-
-
-docker run -d \
- --name nginx-auto-ssl \
- --restart on-failure \
- -p 80:80 \
- -p 443:443 \
- -e ALLOWED_DOMAINS=drone.mochi-match.work \
- -e SITES=‘drone.mochi-match.work=153.127.37.45:443’ \
- valian/docker-nginx-auto-ssl

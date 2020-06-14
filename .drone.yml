@@ -1,36 +1,26 @@
+---
 kind: pipeline
 name: default
 
+platform:
+  os: linux
+  arch: amd64
+
 steps:
-  - name: build
+  - name: vet
+    pull: always
     image: golang:1.13
     commands:
-      - make build
+      - go vet ./...
+    environment:
+      GO111MODULE: on
 
-  - name: publish
-    image: plugins/docker:18
-    settings:
-      dockerfile: ./Dockerfile
-      repo: taniwhy/mochi-match-rest
-      tags: latest
-      username:
-        from_secret: DOCKER_USERNAME
-      password:
-        from_secret: DOCKER_PASSWORD
-
-  - name: deploy
-    image: appleboy/drone-ssh
-    settings:
-      host:
-        from_secret: SSH_HOST
-      username:
-        from_secret: SSH_USERNAME
-      password:
-        from_secret: SSH_PASSWORD
-      port: 22
-      script:
-        - cd /var/www/mochi-match-rest
-        - sh deploy.sh
+  - name: test
+    image: golang:1.13
+    commands:
+      - make test
+    environment:
+      GO111MODULE: on
 
   - name: discord notification
     image: appleboy/drone-discord
@@ -47,20 +37,3 @@ steps:
         {{else}}
           build {{build.number}} failed. Fix me please.
         {{/success}}
-
-trigger:
-  event:
-    - push
-services:
-  - name: db
-    image: postgres:10.5
-    ports:
-      - 5432
-    environment:
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_DB: mochi_match
-  - name: redis
-    image: redis:4.0.6
-    ports:
-      - 6379

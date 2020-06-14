@@ -1,8 +1,6 @@
 package dao
 
 import (
-	"fmt"
-
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
 
@@ -30,7 +28,6 @@ func NewDatabase() *gorm.DB {
 		panic(err.Error())
 	}
 	conn, err = gorm.Open("postgres", dsn)
-	fmt.Println(dsn)
 	if err != nil {
 		panic(err.Error())
 	}

@@ -29,6 +29,8 @@ steps:
         from_secret: DISCORD_WEBHOCK_ID
       webhook_token:
         from_secret: DISCORD_WEBHOCK_TOKEN
+      when:
+        status: [success, failure]
       username: >
         close me
       message: >

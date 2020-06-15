@@ -1,3 +1,4 @@
+---
 kind: pipeline
 name: default
 
@@ -34,6 +35,8 @@ steps:
 
   - name: discord notification
     image: appleboy/drone-discord
+    when:
+      status: [success, failure]
     settings:
       webhook_id:
         from_secret: DISCORD_WEBHOCK_ID
@@ -51,6 +54,7 @@ steps:
 trigger:
   event:
     - push
+
 services:
   - name: db
     image: postgres:10.5

@@ -96,10 +96,12 @@ func (gA *googleOAuthHandler) Callback(c *gin.Context) {
 	}
 	if ok {
 		c.SetCookie("pid", gU.ID, 0, "/", "", false, true)
+		c.SetCookie("name", gU.Name, 0, "/", "localhost", false, true)
+		c.SetCookie("mail", gU.Email, 0, "/", "localhost", false, true)
 		// ユーザー登録ページにリダイレクト
-		c.Writer.WriteString(`<!DOCTYPE html><html><body>ユーザー登録ページです</body></html>`)
+		c.Redirect(http.StatusTemporaryRedirect, "http://localhost:4000/sign-up")
 		return
 	}
 	// ログインしリダイレクト
-	c.Writer.WriteString(`<!DOCTYPE html><html><body>ログイン完了</body></html>`)
+	c.Redirect(http.StatusTemporaryRedirect, "http://localhost:4000/profilesetting")
 }

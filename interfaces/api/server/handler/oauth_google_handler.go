@@ -96,7 +96,7 @@ func (gA *googleOAuthHandler) Callback(c *gin.Context) {
 	}
 	if ok {
 		c.SetCookie("pid", gU.ID, 0, "/", "", false, true)
-		c.SetCookie("name", gU.Name, 0, "/", "localhost", false, true)
+		c.SetCookie("name", gU.Name, 100, "/", "localhost", false, true)
 		c.SetCookie("mail", gU.Email, 0, "/", "localhost", false, true)
 		// ユーザー登録ページにリダイレクト
 		c.Redirect(http.StatusTemporaryRedirect, "http://localhost:4000/sign-up")

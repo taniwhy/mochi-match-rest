@@ -7,6 +7,21 @@ platform:
   arch: amd64
 
 steps:
+  - name: vet
+    pull: always
+    image: golang:1.13
+    commands:
+      - go vet ./...
+    environment:
+      GO111MODULE: on
+
+  - name: test
+    image: golang:1.13
+    commands:
+      - make test
+    environment:
+      GO111MODULE: on
+
   - name: discord notification
     image: appleboy/drone-discord
     when:
@@ -24,18 +39,3 @@ steps:
         {{else}}
           build {{build.number}} failed. Fix me please.
         {{/success}}
-
-  - name: vet
-    pull: always
-    image: golang:1.13
-    commands:
-      - go vet ./...
-    environment:
-      GO111MODULE: on
-
-  - name: test
-    image: golang:1.13
-    commands:
-      - make test
-    environment:
-      GO111MODULE: on

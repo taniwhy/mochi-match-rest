@@ -2,8 +2,8 @@ package cors
 
 import "github.com/gin-gonic/gin"
 
-// Writing :
-func Writing() gin.HandlerFunc {
+// Write :
+func Write() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Writer.Header().Set("Content-Type", "application/json")
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")

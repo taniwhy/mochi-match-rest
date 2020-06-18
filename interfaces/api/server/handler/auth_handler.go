@@ -4,7 +4,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/auth"
+
+	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/middleware/auth"
 )
 
 // AuthHandler : todo

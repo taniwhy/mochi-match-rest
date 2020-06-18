@@ -9,7 +9,7 @@ import (
 	"github.com/taniwhy/mochi-match-rest/domain/models/input"
 	"github.com/taniwhy/mochi-match-rest/domain/repository"
 	"github.com/taniwhy/mochi-match-rest/domain/service"
-	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/auth"
+	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/middleware/auth"
 )
 
 // RoomUseCase :

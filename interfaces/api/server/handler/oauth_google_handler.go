@@ -3,6 +3,7 @@ package handler
 import (
 	"net/http"
 
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 	"github.com/taniwhy/mochi-match-rest/application/usecase"
@@ -111,6 +112,13 @@ func (gA *googleOAuthHandler) Callback(c *gin.Context) {
 	}
 	accessToken := auth.GenerateAccessToken(u.UserID)
 	refleshToken, exp := auth.GenerateRefreshToken(u.UserID)
+
+	session := sessions.Default(c)
+	session.Set("access_token", accessToken)
+	session.Set("refresh_token", refleshToken)
+	session.Set("exp", exp)
+	session.Save()
+
 	c.JSON(http.StatusOK, gin.H{
 		"id":            u.UserID,
 		"access_token":  accessToken,

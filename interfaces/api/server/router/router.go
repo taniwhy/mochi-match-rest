@@ -4,7 +4,6 @@ import (
 	"io"
 	"os"
 
-	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/gomodule/redigo/redis"
@@ -13,8 +12,9 @@ import (
 	"github.com/taniwhy/mochi-match-rest/domain/service"
 	"github.com/taniwhy/mochi-match-rest/infrastructure/dao"
 	"github.com/taniwhy/mochi-match-rest/infrastructure/persistence/datastore"
-	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/auth"
 	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/handler"
+	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/middleware/auth"
+	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/middleware/cors"
 )
 
 // InitRouter :　ルーティング
@@ -57,15 +57,8 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 	}
 	gin.DefaultWriter = io.MultiWriter(f)
 
-	corsConf := cors.DefaultConfig()
-
-	corsConf.AllowAllOrigins = true
-	corsConf.AllowCredentials = true
-	corsConf.AddAllowHeaders("authorization")
-
 	r := gin.Default()
-	// add middleware
-	r.Use(cors.New(corsConf))
+	r.Use(cors.Write())
 	r.Use(sessions.Sessions("session", store))
 
 	v1 := r.Group("/v1")
@@ -87,7 +80,6 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 		users.DELETE("", userHandler.Delete)
 	}
 	room := v1.Group("/rooms")
-	room.Use(auth.TokenAuth())
 	{
 		room.GET("", roomHandler.GetList)
 		room.GET("/:id", roomHandler.GetByID)

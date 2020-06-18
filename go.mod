@@ -16,6 +16,7 @@ require (
 	github.com/joho/godotenv v1.3.0
 	github.com/lib/pq v1.7.0
 	github.com/sirupsen/logrus v1.6.0
+	github.com/taniwhy/css-study-game-WebAPI v0.0.0-20200117050318-f845b5ef3a45
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
 	golang.org/x/sync v0.0.0-20200317015054-43a5402ce75a
 	gopkg.in/guregu/null.v4 v4.0.0

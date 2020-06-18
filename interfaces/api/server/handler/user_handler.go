@@ -6,7 +6,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/taniwhy/mochi-match-rest/application/usecase"
 	"github.com/taniwhy/mochi-match-rest/domain/errors"
-	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/auth"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -15,7 +14,6 @@ import (
 type UserHandler interface {
 	GetMe(*gin.Context)
 	GetByID(*gin.Context)
-	Create(*gin.Context)
 	Update(*gin.Context)
 	Delete(*gin.Context)
 }
@@ -79,44 +77,6 @@ func (uH userHandler) GetByID(c *gin.Context) {
 		}
 	}
 	c.JSON(http.StatusOK, u)
-}
-
-func (uH userHandler) Create(c *gin.Context) {
-	uD, err := uH.userUsecase.Create(c)
-	if err != nil {
-		switch err := err.(type) {
-		case errors.ErrUserCreateReqBinding:
-			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
-			return
-		case errors.ErrCoockie:
-			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
-			return
-		case errors.ErrUnexpectedQueryProvider:
-			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
-			return
-		case errors.ErrIDAlreadyExists:
-			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
-			return
-		case errors.ErrDataBase:
-			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
-			return
-		case errors.ErrGenerateID:
-			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
-			return
-		default:
-			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
-			log.Warn("Unexpected error")
-			panic(err)
-		}
-	}
-	accessToken := auth.GenerateAccessToken(uD.UserID)
-	refleshToken, exp := auth.GenerateRefreshToken(uD.UserID)
-	c.JSON(http.StatusOK, gin.H{
-		"id":            uD.UserID,
-		"access_token":  accessToken,
-		"refresh_token": refleshToken,
-		"expires_in":    exp,
-	})
 }
 
 func (uH userHandler) Update(c *gin.Context) {

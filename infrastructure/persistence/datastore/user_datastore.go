@@ -29,7 +29,7 @@ func (uD userDatastore) FindByID(id string) (*models.User, error) {
 }
 
 func (uD userDatastore) FindByProviderID(provider, id string) (*models.User, error) {
-	u := models.User{}
+	u := &models.User{}
 	switch provider {
 	case "google":
 		err := uD.db.Where("google_id = ?", id).First(&u).Error
@@ -39,7 +39,7 @@ func (uD userDatastore) FindByProviderID(provider, id string) (*models.User, err
 		if err != nil {
 			return nil, errors.ErrDataBase{Detail: err}
 		}
-		return nil, errors.ErrIDAlreadyExists{Provider: provider, ID: id}
+		return u, nil
 	default:
 		return nil, errors.ErrUnexpectedQueryProvider{Provider: provider}
 	}

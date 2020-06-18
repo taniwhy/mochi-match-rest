@@ -2,10 +2,12 @@ package input
 
 import "gopkg.in/guregu/null.v4"
 
-// UserCreateReqBody :
-type UserCreateReqBody struct {
-	UserName string `json:"user_name" binding:"required"`
-	Email    string `json:"email" binding:"required"`
+// UserCreateBody :
+type UserCreateBody struct {
+	Provider   string
+	ProviderID string
+	UserName   string
+	Email      string
 }
 
 // FavoriteGameRecord :

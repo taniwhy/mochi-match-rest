@@ -39,13 +39,14 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 	roomReservationUsecase := usecase.NewRoomReservationUsecase(roomReservationDatastore)
 	chatPostUsecase := usecase.NewChatPostUsecase(chatPostDatastore)
 	gameTitleUsecase := usecase.NewGameTitleUsecase(gameTitleDatastore)
+	googleAuthUsecase := usecase.NewGoogleOAuthUsecase(userService)
 
 	userHandler := handler.NewUserHandler(userUsecase)
 	roomHandler := handler.NewRoomHandler(userUsecase, roomUsecase, roomReservationUsecase)
 	roomBlacklistHandler := handler.NewRoomBlacklistHandler(userUsecase, roomUsecase, roomBlacklistUsecase)
 	chatPostHandler := handler.NewChatPostHandler(chatPostUsecase, redisConn)
 	gameTitleHandler := handler.NewGameTitleHandler(gameTitleUsecase)
-	googleAuthHandler := handler.NewGoogleOAuthHandler(userUsecase, userService)
+	googleAuthHandler := handler.NewGoogleOAuthHandler(googleAuthUsecase, userUsecase, userService)
 
 	authHandler := handler.NewAuthHandler()
 
@@ -78,7 +79,6 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 		google.GET("/callback", googleAuthHandler.Callback)
 	}
 	users := v1.Group("/users")
-	users.POST("", userHandler.Create)
 	users.Use(auth.TokenAuth())
 	{
 		users.GET("", userHandler.GetMe)

@@ -19,7 +19,8 @@ import (
 type UserUseCase interface {
 	GetMe(c *gin.Context) (*output.UserResBody, error)
 	GetByID(c *gin.Context) (*output.UserResBody, error)
-	Create(c *gin.Context) (*models.UserDetail, error)
+	GetByProviderID(provider, pid string) (*models.User, error)
+	Create(c *gin.Context, b input.UserCreateBody) (*models.User, error)
 	Update(c *gin.Context) error
 	Delete(c *gin.Context) error
 }
@@ -116,45 +117,43 @@ func (uU userUsecase) GetByID(c *gin.Context) (*output.UserResBody, error) {
 	return b, nil
 }
 
-func (uU userUsecase) Create(c *gin.Context) (*models.UserDetail, error) {
-	b := input.UserCreateReqBody{}
-	if err := c.BindJSON(&b); err != nil {
-		return nil, errors.ErrUserCreateReqBinding{UserName: b.UserName, Email: b.Email}
-	}
-	pid, err := c.Cookie("pid")
+func (uU userUsecase) GetByProviderID(provider, pid string) (*models.User, error) {
+	u, err := uU.userRepository.FindByProviderID(provider, pid)
 	if err != nil {
-		return nil, errors.ErrCoockie{Key: "pid", Value: pid}
+		return nil, err
 	}
+	return u, nil
+}
+
+func (uU userUsecase) Create(c *gin.Context, b input.UserCreateBody) (*models.User, error) {
 	u, err := models.NewUser(b.Email)
 	if err != nil {
 		return nil, err
 	}
-	provider := c.Query("provider")
-	switch provider {
+	switch b.Provider {
 	case "google":
-		ok, err := uU.userService.IsExist(provider, pid)
+		ok, err := uU.userService.IsExist(b.Provider, b.ProviderID)
 		if err != nil {
 			return nil, err
 		}
 		if !ok {
 			return nil, errors.ErrIDAlreadyExists{}
 		}
-		u.GoogleID = sql.NullString{String: pid, Valid: true}
+		u.GoogleID = sql.NullString{String: b.ProviderID, Valid: true}
 	default:
-		return nil, errors.ErrUnexpectedQueryProvider{Provider: provider}
+		return nil, errors.ErrUnexpectedQueryProvider{Provider: b.Provider}
 	}
 	ud, err := models.NewUserDetail(u.UserID, b.UserName)
 	if err != nil {
 		return nil, err
 	}
-
 	if err := uU.userRepository.Insert(u); err != nil {
 		return nil, err
 	}
 	if err := uU.userDetailRepository.Insert(ud); err != nil {
 		return nil, err
 	}
-	return ud, nil
+	return u, nil
 }
 
 //todo 存在しないユーザーでも正常処理される

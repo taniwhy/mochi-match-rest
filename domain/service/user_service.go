@@ -32,6 +32,7 @@ func (uS userService) IsDelete(id string) (bool, error) {
 	return true, nil
 }
 
+// ユーザーが存在しなければ真を返却
 func (uS userService) IsExist(id, provider string) (bool, error) {
 	res, err := uS.userRepository.FindByProviderID(id, provider)
 	if err != nil {

@@ -78,6 +78,57 @@ func (b ErrRoomCreateReqBinding) Error() string {
 	return fmt.Sprintf("Binding error! - " + errMsgs + " is required")
 }
 
+// ErrSessionSave :
+type ErrSessionSave struct{}
+
+func (b ErrSessionSave) Error() string {
+	return fmt.Sprintf("Failed session save")
+}
+
+// ErrInvalidSessionState :
+type ErrInvalidSessionState struct {
+	State interface{}
+}
+
+func (b ErrInvalidSessionState) Error() string {
+	return fmt.Sprintf("Invalid session state: %s", b.State)
+}
+
+// ErrGoogleOAuthTokenExchange :
+type ErrGoogleOAuthTokenExchange struct{}
+
+func (b ErrGoogleOAuthTokenExchange) Error() string {
+	return fmt.Sprintf("Failed GoogleOAuth token exchange")
+}
+
+// ErrInvalidGoogleOAuthToken :
+type ErrInvalidGoogleOAuthToken struct{}
+
+func (b ErrInvalidGoogleOAuthToken) Error() string {
+	return fmt.Sprintf("Invalid GoogleOAuth token")
+}
+
+// ErrGoogleAPIRequest :
+type ErrGoogleAPIRequest struct{}
+
+func (b ErrGoogleAPIRequest) Error() string {
+	return fmt.Sprintf("Failed GoogleAPI request")
+}
+
+// ErrReadGoogleAPIResponse :
+type ErrReadGoogleAPIResponse struct{}
+
+func (b ErrReadGoogleAPIResponse) Error() string {
+	return fmt.Sprintf("Failed read GoogleAPI response")
+}
+
+// ErrUnmarshalJSON :
+type ErrUnmarshalJSON struct{}
+
+func (b ErrUnmarshalJSON) Error() string {
+	return fmt.Sprintf("Failed unmarshal json")
+}
+
 // ErrGenerateID :
 type ErrGenerateID struct{}
 

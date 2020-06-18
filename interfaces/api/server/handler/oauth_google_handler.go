@@ -1,18 +1,18 @@
 package handler
 
 import (
-	"encoding/json"
-	"fmt"
-	"io/ioutil"
 	"net/http"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
+	log "github.com/sirupsen/logrus"
 	"github.com/taniwhy/mochi-match-rest/application/usecase"
 	"github.com/taniwhy/mochi-match-rest/config"
+	"github.com/taniwhy/mochi-match-rest/domain/errors"
 	"github.com/taniwhy/mochi-match-rest/domain/models"
+	"github.com/taniwhy/mochi-match-rest/domain/models/input"
 	"github.com/taniwhy/mochi-match-rest/domain/service"
+	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/auth"
 	"golang.org/x/oauth2"
 )
 
@@ -25,81 +25,104 @@ type GoogleOAuthHandler interface {
 }
 
 type googleOAuthHandler struct {
-	oauthConf   *oauth2.Config
-	userUsecase usecase.UserUseCase
-	userService service.IUserService
+	oauthConf          *oauth2.Config
+	googleOAuthUsecase usecase.GoogleOAuthUsecase
+	userUsecase        usecase.UserUseCase
+	userService        service.IUserService
 }
 
 // NewGoogleOAuthHandler :
-func NewGoogleOAuthHandler(uU usecase.UserUseCase, uS service.IUserService) GoogleOAuthHandler {
+func NewGoogleOAuthHandler(
+	gU usecase.GoogleOAuthUsecase,
+	uU usecase.UserUseCase,
+	uS service.IUserService) GoogleOAuthHandler {
 	return &googleOAuthHandler{
-		oauthConf:   config.ConfigureOAuthClient(),
-		userUsecase: uU,
-		userService: uS,
+		oauthConf:          config.ConfigureOAuthClient(),
+		googleOAuthUsecase: gU,
+		userUsecase:        uU,
+		userService:        uS,
 	}
 }
 
 func (gA *googleOAuthHandler) Login(c *gin.Context) {
-	u, err := uuid.NewRandom()
+	url, err := gA.googleOAuthUsecase.Login(c)
 	if err != nil {
-		panic(err.Error())
+
 	}
-	sessionID := u.String()
-
-	session := sessions.Default(c)
-	session.Set("state", sessionID)
-	session.Save()
-
-	url := gA.oauthConf.AuthCodeURL(sessionID)
 	c.Redirect(http.StatusTemporaryRedirect, url)
 }
 
 func (gA *googleOAuthHandler) Callback(c *gin.Context) {
-	session := sessions.Default(c)
-	retrievedState := session.Get("state")
-	if retrievedState != c.Query("state") {
-		c.AbortWithError(http.StatusUnauthorized, fmt.Errorf("Invalid session state: %s", retrievedState))
-		return
-	}
-	tok, err := gA.oauthConf.Exchange(oauth2.NoContext, c.Query("code"))
+	var u *models.User
+	ok, gU, err := gA.googleOAuthUsecase.Callback(c)
 	if err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
-		return
-	}
-	if tok.Valid() == false {
-		c.AbortWithError(http.StatusBadRequest, err)
-		return
-	}
-	client := gA.oauthConf.Client(oauth2.NoContext, tok)
-	email, err := client.Get(oauthGoogleURLAPI)
-	if err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
-		return
-	}
-	defer email.Body.Close()
 
-	data, err := ioutil.ReadAll(email.Body)
-	if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, err)
-		return
 	}
-	gU := models.GoogleUser{}
-	err = json.Unmarshal(data, &gU)
-	if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, err)
-		return
-	}
-	// todo : errのpanic処理
-	ok, err := gA.userService.IsExist("google", gU.ID)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
-	}
+	// ない
 	if ok {
-		c.SetCookie("pid", gU.ID, 0, "/", "", false, true)
-		// ユーザー登録ページにリダイレクト
-		c.Writer.WriteString(`<!DOCTYPE html><html><body>ユーザー登録ページです</body></html>`)
-		return
+		b := input.UserCreateBody{
+			Provider:   "google",
+			ProviderID: gU.ID,
+			UserName:   gU.Name,
+			Email:      gU.Email,
+		}
+		u, err = gA.userUsecase.Create(c, b)
+		if err != nil {
+			switch err := err.(type) {
+			case errors.ErrUserCreateReqBinding:
+				c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+				return
+			case errors.ErrCoockie:
+				c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+				return
+			case errors.ErrUnexpectedQueryProvider:
+				c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+				return
+			case errors.ErrIDAlreadyExists:
+				c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+				return
+			case errors.ErrDataBase:
+				c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+				return
+			case errors.ErrGenerateID:
+				c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+				return
+			default:
+				c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+				log.Warn("Unexpected error")
+				panic(err)
+			}
+		}
+	} else {
+		u, err = gA.userUsecase.GetByProviderID("google", gU.ID)
+		if err != nil {
+			switch err := err.(type) {
+			case errors.ErrUnexpectedQueryProvider:
+				c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+				return
+			case errors.ErrDataBase:
+				c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+				return
+			default:
+				c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+				log.Warnf("Unexpected error: %s", err.Error())
+				panic(err)
+			}
+		}
 	}
-	// ログインしリダイレクト
-	c.Writer.WriteString(`<!DOCTYPE html><html><body>ログイン完了</body></html>`)
+	accessToken := auth.GenerateAccessToken(u.UserID)
+	refleshToken, exp := auth.GenerateRefreshToken(u.UserID)
+
+	session := sessions.Default(c)
+	session.Set("access_token", accessToken)
+	session.Set("refresh_token", refleshToken)
+	session.Set("exp", exp)
+	session.Save()
+
+	c.JSON(http.StatusOK, gin.H{
+		"id":            u.UserID,
+		"access_token":  accessToken,
+		"refresh_token": refleshToken,
+		"expires_in":    exp,
+	})
 }

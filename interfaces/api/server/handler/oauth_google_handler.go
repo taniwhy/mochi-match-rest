@@ -3,7 +3,6 @@ package handler
 import (
 	"net/http"
 
-	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 	"github.com/taniwhy/mochi-match-rest/application/usecase"
@@ -49,7 +48,7 @@ func (gA *googleOAuthHandler) Login(c *gin.Context) {
 	if err != nil {
 
 	}
-	c.Redirect(http.StatusTemporaryRedirect, url)
+	c.JSON(http.StatusOK, url)
 }
 
 func (gA *googleOAuthHandler) Callback(c *gin.Context) {
@@ -59,7 +58,6 @@ func (gA *googleOAuthHandler) Callback(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, err)
 		return
 	}
-	// ない
 	if ok {
 		b := input.UserCreateBody{
 			Provider:   "google",
@@ -111,19 +109,8 @@ func (gA *googleOAuthHandler) Callback(c *gin.Context) {
 			}
 		}
 	}
-	accessToken := auth.GenerateAccessToken(u.UserID)
 	refleshToken, exp := auth.GenerateRefreshToken(u.UserID)
-
-	session := sessions.Default(c)
-	session.Set("access_token", accessToken)
-	session.Set("refresh_token", refleshToken)
-	session.Set("exp", exp)
-	session.Save()
-
-	c.JSON(http.StatusOK, gin.H{
-		"id":            u.UserID,
-		"access_token":  accessToken,
-		"refresh_token": refleshToken,
-		"expires_in":    exp,
-	})
+	c.SetCookie("token", refleshToken, 0, "/", "localhost", false, true)
+	c.SetCookie("token_exp", exp, 0, "/", "localhost", false, true)
+	c.Redirect(http.StatusTemporaryRedirect, "http://localhost:5500/ok.html")
 }

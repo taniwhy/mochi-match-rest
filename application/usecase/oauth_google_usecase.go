@@ -44,11 +44,7 @@ func (gA *googleOAuthUsecase) Login(c *gin.Context) (string, error) {
 	sessionID := u.String()
 	session := sessions.Default(c)
 	session.Set("state", sessionID)
-	session.Set("name", "client")
-	fmt.Println(sessionID)
-	if err := session.Save(); err != nil {
-		return "", errors.ErrSessionSave{}
-	}
+	session.Save()
 
 	url := gA.oauthConf.AuthCodeURL(sessionID)
 	return url, nil
@@ -58,7 +54,6 @@ func (gA *googleOAuthUsecase) Callback(c *gin.Context) (bool, *models.GoogleUser
 	session := sessions.Default(c)
 	retrievedState := session.Get("state")
 	fmt.Println(retrievedState, c.Query("state"))
-	fmt.Println(session.Get("name"))
 	if retrievedState != c.Query("state") {
 		return false, nil, errors.ErrInvalidSessionState{State: retrievedState}
 	}

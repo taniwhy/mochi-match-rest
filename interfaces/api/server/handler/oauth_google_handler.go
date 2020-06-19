@@ -56,7 +56,8 @@ func (gA *googleOAuthHandler) Callback(c *gin.Context) {
 	var u *models.User
 	ok, gU, err := gA.googleOAuthUsecase.Callback(c)
 	if err != nil {
-
+		c.JSON(http.StatusBadRequest, err)
+		return
 	}
 	// ない
 	if ok {

@@ -33,24 +33,6 @@ steps:
         - cd /var/www/mochi-match
         - sh deploy.sh
 
-  - name: discord notification
-    image: appleboy/drone-discord
-    when:
-      status: [success, failure]
-    settings:
-      webhook_id:
-        from_secret: DISCORD_WEBHOCK_ID
-      webhook_token:
-        from_secret: DISCORD_WEBHOCK_TOKEN
-      username: >
-        close me
-      message: >
-        {{#success build.status}}
-          build {{build.number}} succeeded. Good job.
-        {{else}}
-          build {{build.number}} failed. Fix me please.
-        {{/success}}
-
 trigger:
   event:
     - push

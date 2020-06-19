@@ -2,8 +2,8 @@ package usecase
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
-	"net/http"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -15,7 +15,7 @@ import (
 	"golang.org/x/oauth2"
 )
 
-const oauthGoogleURLAPI = "https://www.googleapis.com/oauth2/v2/userinfo?access_token="
+const oauthGoogleURLAPI = "https://www.googleapis.com/oauth2/v3/userinfo?access_token="
 
 // GoogleOAuthUsecase :
 type GoogleOAuthUsecase interface {
@@ -44,18 +44,21 @@ func (gA *googleOAuthUsecase) Login(c *gin.Context) (string, error) {
 	sessionID := u.String()
 	session := sessions.Default(c)
 	session.Set("state", sessionID)
+	session.Set("name", "client")
+	fmt.Println(sessionID)
 	if err := session.Save(); err != nil {
 		return "", errors.ErrSessionSave{}
 	}
 
 	url := gA.oauthConf.AuthCodeURL(sessionID)
-	c.Redirect(http.StatusTemporaryRedirect, url)
 	return url, nil
 }
 
 func (gA *googleOAuthUsecase) Callback(c *gin.Context) (bool, *models.GoogleUser, error) {
 	session := sessions.Default(c)
 	retrievedState := session.Get("state")
+	fmt.Println(retrievedState, c.Query("state"))
+	fmt.Println(session.Get("name"))
 	if retrievedState != c.Query("state") {
 		return false, nil, errors.ErrInvalidSessionState{State: retrievedState}
 	}

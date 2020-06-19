@@ -80,7 +80,6 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 		users.DELETE("", userHandler.Delete)
 	}
 	room := v1.Group("/rooms")
-	room.Use(auth.TokenAuth())
 	{
 		room.GET("", roomHandler.GetList)
 		room.GET("/:id", roomHandler.GetByID)

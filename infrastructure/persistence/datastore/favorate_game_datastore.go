@@ -11,7 +11,7 @@ type favoriteGameDatastore struct {
 	db *gorm.DB
 }
 
-// NewFavoriteGameDatastore :
+// NewFavoriteGameDatastore : お気に入りゲームデータストアの生成
 func NewFavoriteGameDatastore(db *gorm.DB) repository.FavoriteGameRepository {
 	return &favoriteGameDatastore{db}
 }

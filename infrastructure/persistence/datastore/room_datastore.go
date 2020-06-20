@@ -11,7 +11,7 @@ type roomDatastore struct {
 	db *gorm.DB
 }
 
-// NewRoomDatastore : UserPersistenseを生成.
+// NewRoomDatastore : ルームデータストアの生成
 func NewRoomDatastore(db *gorm.DB) repository.RoomRepository {
 	return &roomDatastore{db}
 }

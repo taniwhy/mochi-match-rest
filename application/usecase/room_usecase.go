@@ -12,8 +12,8 @@ import (
 	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/middleware/auth"
 )
 
-// RoomUseCase :
-type RoomUseCase interface {
+// IRoomUseCase : インターフェース
+type IRoomUseCase interface {
 	GetList(*gin.Context) ([]*models.Room, error)
 	GetByID(*gin.Context) (*models.Room, error)
 	Create(*gin.Context) error
@@ -29,11 +29,11 @@ type roomUsecase struct {
 	roomService            service.IRoomService
 }
 
-// NewRoomUsecase :
+// NewRoomUsecase : Roomユースケースの生成
 func NewRoomUsecase(
 	rR repository.RoomRepository,
 	eHR repository.EntryHistoryRepository,
-	rS service.IRoomService) RoomUseCase {
+	rS service.IRoomService) IRoomUseCase {
 	return &roomUsecase{
 		roomRepository:         rR,
 		entryHistoryRepository: eHR,

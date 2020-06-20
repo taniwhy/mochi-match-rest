@@ -5,8 +5,8 @@ import (
 	"github.com/taniwhy/mochi-match-rest/domain/repository"
 )
 
-// EntryHistoryUsecase :
-type EntryHistoryUsecase interface {
+// IEntryHistoryUsecase : インターフェース
+type IEntryHistoryUsecase interface {
 	FindAllEntryHistory() ([]*models.EntryHistory, error)
 	InsertEntryHistory(entryHistory *models.EntryHistory) error
 	UpdateEntryHistory(entryHistory *models.EntryHistory) error
@@ -17,8 +17,8 @@ type entryHistoryUsecase struct {
 	entryHistoryRepository repository.EntryHistoryRepository
 }
 
-// NewEntryHistoryUsecase :
-func NewEntryHistoryUsecase(eR repository.EntryHistoryRepository) EntryHistoryUsecase {
+// NewEntryHistoryUsecase : EntryHistoryユースケースの生成
+func NewEntryHistoryUsecase(eR repository.EntryHistoryRepository) IEntryHistoryUsecase {
 	return &entryHistoryUsecase{
 		entryHistoryRepository: eR,
 	}

@@ -14,19 +14,19 @@ import (
 	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/middleware/auth"
 )
 
-// ChatPostHandler : インターフェース
-type ChatPostHandler interface {
+// IChatPostHandler : インターフェース
+type IChatPostHandler interface {
 	GetChatPostByRoomID(*gin.Context)
 	CreateChatPost(*gin.Context)
 }
 
 type chatPostHandler struct {
-	chatPostUsecase usecase.ChatPostUseCase
+	chatPostUsecase usecase.IChatPostUseCase
 	redis           redis.Conn
 }
 
-// NewChatPostHandler : ユーザーのHandler生成
-func NewChatPostHandler(cU usecase.ChatPostUseCase, rC redis.Conn) ChatPostHandler {
+// NewChatPostHandler : チャット投稿ハンドラの生成
+func NewChatPostHandler(cU usecase.IChatPostUseCase, rC redis.Conn) IChatPostHandler {
 	return &chatPostHandler{
 		chatPostUsecase: cU,
 		redis:           rC,

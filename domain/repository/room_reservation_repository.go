@@ -4,7 +4,7 @@ import (
 	"github.com/taniwhy/mochi-match-rest/domain/models"
 )
 
-// RoomReservationRepository : ユーザーのリポジトリ
+// RoomReservationRepository : ルーム予約のリポジトリ
 type RoomReservationRepository interface {
 	FindAllRoomReservation() ([]*models.RoomReservation, error)
 	FindRoomReservationByID(id int64) (*models.RoomReservation, error)

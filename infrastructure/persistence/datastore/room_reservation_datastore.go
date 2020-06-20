@@ -10,7 +10,7 @@ type roomReservationDatastore struct {
 	db *gorm.DB
 }
 
-// NewRoomReservationDatastore : UserPersistenseを生成.
+// NewRoomReservationDatastore : ルーム予約データストアの生成.
 func NewRoomReservationDatastore(db *gorm.DB) repository.RoomReservationRepository {
 	return &roomReservationDatastore{db}
 }

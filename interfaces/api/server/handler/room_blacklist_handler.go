@@ -5,24 +5,24 @@ import (
 	"github.com/taniwhy/mochi-match-rest/application/usecase"
 )
 
-// RoomBlacklistHandler : インターフェース
-type RoomBlacklistHandler interface {
+// IRoomBlacklistHandler : インターフェース
+type IRoomBlacklistHandler interface {
 	GetByID(*gin.Context)
 	Create(*gin.Context)
 	Delete(*gin.Context)
 }
 
 type roomBlacklistHandler struct {
-	userUsecase          usecase.UserUseCase
-	roomUsecase          usecase.RoomUseCase
-	roomBlacklistUsecase usecase.RoomBlacklistUseCase
+	userUsecase          usecase.IUserUseCase
+	roomUsecase          usecase.IRoomUseCase
+	roomBlacklistUsecase usecase.IRoomBlacklistUseCase
 }
 
-// NewRoomBlacklistHandler : ユーザーのHandler生成
+// NewRoomBlacklistHandler : ルームブラックリストハンドラの生成
 func NewRoomBlacklistHandler(
-	uU usecase.UserUseCase,
-	rU usecase.RoomUseCase,
-	rBU usecase.RoomBlacklistUseCase) RoomBlacklistHandler {
+	uU usecase.IUserUseCase,
+	rU usecase.IRoomUseCase,
+	rBU usecase.IRoomBlacklistUseCase) IRoomBlacklistHandler {
 	return &roomBlacklistHandler{
 		userUsecase:          uU,
 		roomUsecase:          rU,

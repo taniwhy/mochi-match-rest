@@ -1,13 +1,14 @@
 package dao
 
 import (
-	// postgres drive
-	redisStore "github.com/gin-contrib/sessions/redis"
 	"github.com/gomodule/redigo/redis"
 	"github.com/taniwhy/mochi-match-rest/config"
+
+	// Redisドライバ
+	redisDriver "github.com/gin-contrib/sessions/redis"
 )
 
-// NewRedisConn : TODO
+// NewRedisConn : Redisコネクションの確立
 func NewRedisConn() redis.Conn {
 	_, network, addr, _, _ := config.GetRedisConf()
 	conn, err := redis.Dial(network, addr)
@@ -17,10 +18,10 @@ func NewRedisConn() redis.Conn {
 	return conn
 }
 
-// NewRedisStore : TODO
-func NewRedisStore() redisStore.Store {
+// NewRedisStore : Redisストアの生成
+func NewRedisStore() redisDriver.Store {
 	size, network, addr, _, key := config.GetRedisConf()
-	store, err := redisStore.NewStore(size, network, addr, "", []byte(key))
+	store, err := redisDriver.NewStore(size, network, addr, "", []byte(key))
 	if err != nil {
 		panic(err.Error())
 	}

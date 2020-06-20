@@ -17,7 +17,7 @@ import (
 	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/middleware/cors"
 )
 
-// InitRouter :　ルーティング
+// InitRouter :　ルーティングセットアップ
 func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 	// DI
 	userDatastore := datastore.NewUserDatastore(dbConn)
@@ -50,7 +50,6 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 
 	authHandler := handler.NewAuthHandler()
 
-	store := dao.NewRedisStore()
 	f, err := os.Create("./config/log/access.log")
 	if err != nil {
 		panic(err.Error())
@@ -59,6 +58,7 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 
 	r := gin.Default()
 	r.Use(cors.Write())
+	store := dao.NewRedisStore()
 	r.Use(sessions.Sessions("session", store))
 
 	v1 := r.Group("/v1")
@@ -81,6 +81,7 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 		users.DELETE("", userHandler.Delete)
 	}
 	room := v1.Group("/rooms")
+	room.Use(auth.TokenAuth())
 	{
 		room.GET("", roomHandler.GetList)
 		room.GET("/:id", roomHandler.GetByID)

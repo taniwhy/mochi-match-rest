@@ -5,8 +5,8 @@ import (
 	"github.com/taniwhy/mochi-match-rest/domain/repository"
 )
 
-// ReportUsecase :
-type ReportUsecase interface {
+// IReportUsecase : インターフェース
+type IReportUsecase interface {
 	FindAllReport() ([]*models.Report, error)
 	InsertReport(report *models.Report) error
 	DeleteReport(report *models.Report) error
@@ -16,8 +16,8 @@ type reportUsecase struct {
 	reportRepository repository.ReportRepository
 }
 
-// NewReportUsecase :
-func NewReportUsecase(rR repository.ReportRepository) ReportUsecase {
+// NewReportUsecase : Reportユースケースの生成
+func NewReportUsecase(rR repository.ReportRepository) IReportUsecase {
 	return &reportUsecase{
 		reportRepository: rR,
 	}

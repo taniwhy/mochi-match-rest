@@ -17,26 +17,26 @@ import (
 
 const oauthGoogleURLAPI = "https://www.googleapis.com/oauth2/v2/userinfo?access_token="
 
-// GoogleOAuthHandler : todo
-type GoogleOAuthHandler interface {
+// IGoogleOAuthHandler : インターフェース
+type IGoogleOAuthHandler interface {
 	Login(c *gin.Context)
 	Callback(c *gin.Context)
 }
 
 type googleOAuthHandler struct {
 	oauthConf          *oauth2.Config
-	googleOAuthUsecase usecase.GoogleOAuthUsecase
-	userUsecase        usecase.UserUseCase
+	googleOAuthUsecase usecase.IGoogleOAuthUsecase
+	userUsecase        usecase.IUserUseCase
 	userService        service.IUserService
 }
 
-// NewGoogleOAuthHandler :
+// NewGoogleOAuthHandler : GoogleOAuth認証ハンドラの生成
 func NewGoogleOAuthHandler(
-	gU usecase.GoogleOAuthUsecase,
-	uU usecase.UserUseCase,
-	uS service.IUserService) GoogleOAuthHandler {
+	gU usecase.IGoogleOAuthUsecase,
+	uU usecase.IUserUseCase,
+	uS service.IUserService) IGoogleOAuthHandler {
 	return &googleOAuthHandler{
-		oauthConf:          config.ConfigureOAuthClient(),
+		oauthConf:          config.GetOAuthClientConf(),
 		googleOAuthUsecase: gU,
 		userUsecase:        uU,
 		userService:        uS,

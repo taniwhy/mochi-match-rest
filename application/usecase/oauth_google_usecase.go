@@ -17,8 +17,8 @@ import (
 
 const oauthGoogleURLAPI = "https://www.googleapis.com/oauth2/v3/userinfo?access_token="
 
-// GoogleOAuthUsecase :
-type GoogleOAuthUsecase interface {
+// IGoogleOAuthUsecase : インターフェース
+type IGoogleOAuthUsecase interface {
 	Login(c *gin.Context) (string, error)
 	Callback(c *gin.Context) (bool, *models.GoogleUser, error)
 }
@@ -28,10 +28,10 @@ type googleOAuthUsecase struct {
 	userService service.IUserService
 }
 
-// NewGoogleOAuthUsecase :
-func NewGoogleOAuthUsecase(uS service.IUserService) GoogleOAuthUsecase {
+// NewGoogleOAuthUsecase : GoogleOAuthユースケースの生成
+func NewGoogleOAuthUsecase(uS service.IUserService) IGoogleOAuthUsecase {
 	return &googleOAuthUsecase{
-		oauthConf:   config.ConfigureOAuthClient(),
+		oauthConf:   config.GetOAuthClientConf(),
 		userService: uS,
 	}
 }

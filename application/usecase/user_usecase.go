@@ -15,8 +15,8 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
-// UserUseCase :
-type UserUseCase interface {
+// IUserUseCase : インターフェース
+type IUserUseCase interface {
 	GetMe(c *gin.Context) (*output.UserResBody, error)
 	GetByID(c *gin.Context) (*output.UserResBody, error)
 	GetByProviderID(provider, pid string) (*models.User, error)
@@ -32,12 +32,12 @@ type userUsecase struct {
 	favoriteGameRepository repository.FavoriteGameRepository
 }
 
-// NewUserUsecase :
+// NewUserUsecase : Userユースケースの生成
 func NewUserUsecase(
 	uR repository.UserRepository,
 	uDR repository.UserDetailRepository,
 	uS service.IUserService,
-	fGR repository.FavoriteGameRepository) UserUseCase {
+	fGR repository.FavoriteGameRepository) IUserUseCase {
 	return &userUsecase{
 		userRepository:         uR,
 		userDetailRepository:   uDR,

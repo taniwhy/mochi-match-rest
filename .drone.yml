@@ -34,8 +34,10 @@ steps:
         - sh deploy.sh
   - name: discord notification
     image: appleboy/drone-discord
+    when:
+      status: [success, failure]
     settings:
-      username: app-mochi-matchを監視しているはじめ
+      username: close me
       avatar_url: https://cdn.discordapp.com/attachments/719600379725217903/720465090289336380/20200601_161405.jpg
       webhook_id:
         from_secret: DISCORD_WEBHOCK_ID
@@ -43,16 +45,16 @@ steps:
         from_secret: DISCORD_WEBHOCK_TOKEN
       message: >
         {{#success build.status}}
-          ✅  Build #{{build.number}} `{{repo.name}}/{{commit.branch}}` ビルドが成功！
-          📝 {{commit.author}} のコミットメッセージ
+          ✅  Build #{{build.number}} `{{repo.name}}/{{commit.branch}}` Success
+
           ``` {{commit.message}} ```
-          🌐 {{ build.link }}
+
           ✅ duration: {{duration build.started build.finished}}
         {{else}}
-          ❌  Build #{{build.number}} `{{repo.name}}/{{commit.branch}}` は？
-          📝 {{commit.author}} のコミットメッセージ
+          ❌  Build #{{build.number}} `{{repo.name}}/{{commit.branch}}` Failed
+
           ``` {{commit.message}} ```
-          🌐 {{ build.link }}
+
           ✅ duration: {{duration build.started build.finished}}
         {{/success}}
 

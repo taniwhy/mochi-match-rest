@@ -13,7 +13,7 @@ type userDetailDatastore struct {
 	db *gorm.DB
 }
 
-// NewUserDetailDatastore : UserPersistenseを生成.
+// NewUserDetailDatastore : ユーザー詳細データストアの生成
 func NewUserDetailDatastore(db *gorm.DB) repository.UserDetailRepository {
 	return &userDetailDatastore{db}
 }

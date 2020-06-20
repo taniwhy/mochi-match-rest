@@ -10,8 +10,8 @@ import (
 	"github.com/taniwhy/mochi-match-rest/domain/models"
 )
 
-// GameTitleHandler : インターフェース
-type GameTitleHandler interface {
+// IGameTitleHandler : インターフェース
+type IGameTitleHandler interface {
 	GetAllGameTitle(*gin.Context)
 	CreateGameTitle(*gin.Context)
 	UpdateGameTitle(*gin.Context)
@@ -19,11 +19,11 @@ type GameTitleHandler interface {
 }
 
 type gameTitleHandler struct {
-	gameTitleUsecase usecase.GameTitleUseCase
+	gameTitleUsecase usecase.IGameTitleUseCase
 }
 
-// NewGameTitleHandler : ユーザーのHandler生成
-func NewGameTitleHandler(gU usecase.GameTitleUseCase) GameTitleHandler {
+// NewGameTitleHandler : ゲームタイトルハンドラの生成
+func NewGameTitleHandler(gU usecase.IGameTitleUseCase) IGameTitleHandler {
 	return &gameTitleHandler{
 		gameTitleUsecase: gU,
 	}

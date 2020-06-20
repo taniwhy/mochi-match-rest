@@ -16,10 +16,10 @@ func init() {
 	}
 }
 
-// GetDatabaseConf :
+// GetDatabaseConf :　データベースの接続情報の取得
 func GetDatabaseConf() (dsn string) { return os.Getenv("DB_URL") }
 
-// GetRedisConf :
+// GetRedisConf : Reidsの接続情報の取得
 func GetRedisConf() (size int, network, addr, pass, key string) {
 	size, _ = strconv.Atoi(os.Getenv("REDIS_SIZE"))
 	network = os.Getenv("REDIS_NETWORK")
@@ -29,8 +29,8 @@ func GetRedisConf() (size int, network, addr, pass, key string) {
 	return
 }
 
-// ConfigureOAuthClient :
-func ConfigureOAuthClient() *oauth2.Config {
+// GetOAuthClientConf : GoogleAuth認証情報の取得
+func GetOAuthClientConf() *oauth2.Config {
 	return &oauth2.Config{
 		ClientID:     os.Getenv("GOOGLE_OAUTH_CLIENT_ID"),
 		ClientSecret: os.Getenv("GOOGLE_OAUTH_CLIENT_SECRET"),

@@ -15,7 +15,7 @@ type FavoriteGame struct {
 	CreatedAt      time.Time
 }
 
-// NewFavoriteGame :
+// NewFavoriteGame : favorate_gameテーブルのレコードモデル生成
 func NewFavoriteGame(uid, gt string) (*FavoriteGame, error) {
 	id, err := uuid.NewRandom()
 	if err != nil {

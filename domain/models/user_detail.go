@@ -16,7 +16,7 @@ type UserDetail struct {
 	UpdateAt     time.Time
 }
 
-// NewUserDetail :
+// NewUserDetail : user_detailテーブルのレコードモデル生成
 func NewUserDetail(uid, name string) (*UserDetail, error) {
 	udid, err := uuid.NewRandom()
 	if err != nil {

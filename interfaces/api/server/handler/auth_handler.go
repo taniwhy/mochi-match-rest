@@ -8,11 +8,12 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	"github.com/taniwhy/mochi-match-rest/domain/models/input"
 	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/middleware/auth"
 )
 
-// AuthHandler : todo
-type AuthHandler interface {
+// IAuthHandler : インターフェース
+type IAuthHandler interface {
 	GetToken(c *gin.Context)
 	Refresh(c *gin.Context)
 }
@@ -20,12 +21,8 @@ type AuthHandler interface {
 type authHandler struct {
 }
 
-type tokenReqBody struct {
-	RefreshToken string `json:"refresh_token"`
-}
-
-// NewAuthHandler :
-func NewAuthHandler() AuthHandler {
+// NewAuthHandler : 認証ハンドラの生成
+func NewAuthHandler() IAuthHandler {
 	return &authHandler{}
 }
 
@@ -64,7 +61,7 @@ func (aH *authHandler) GetToken(c *gin.Context) {
 }
 
 func (aH *authHandler) Refresh(c *gin.Context) {
-	tokenReq := tokenReqBody{}
+	tokenReq := input.TokenReqBody{}
 	c.Bind(&tokenReq)
 	accessToken, refreshToken, exp, err := auth.TokenRefresh(tokenReq.RefreshToken)
 	if err != nil {

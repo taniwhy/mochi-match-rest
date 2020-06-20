@@ -14,7 +14,6 @@ type logFormat struct {
 	TimestampFormat string
 }
 
-//init パッケージ読み込み時に実行される。
 func init() {
 	logrus.SetReportCaller(true)
 	formatter := logFormat{}
@@ -110,7 +109,7 @@ func SetLevelInfo() {
 	logrus.SetLevel(logrus.InfoLevel)
 }
 
-// GormLogger :
+// GormLogger : SQLロガー
 type GormLogger struct{}
 
 // Print :

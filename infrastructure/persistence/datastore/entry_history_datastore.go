@@ -14,7 +14,7 @@ type entryHistoryDatastore struct {
 	db *gorm.DB
 }
 
-// NewEntryHistoryDatastore :
+// NewEntryHistoryDatastore : 入室履歴データストアの生成
 func NewEntryHistoryDatastore(db *gorm.DB) repository.EntryHistoryRepository {
 	return &entryHistoryDatastore{db}
 }

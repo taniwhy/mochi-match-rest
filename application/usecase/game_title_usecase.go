@@ -5,8 +5,8 @@ import (
 	"github.com/taniwhy/mochi-match-rest/domain/repository"
 )
 
-// GameTitleUseCase :
-type GameTitleUseCase interface {
+// IGameTitleUseCase : インターフェース
+type IGameTitleUseCase interface {
 	FindAllGameTitle() ([]*models.GameTitle, error)
 	InsertGameTitle(gameTitle *models.GameTitle) error
 	UpdateGameTitle(gameTitle *models.GameTitle) error
@@ -17,8 +17,8 @@ type gameTitleUsecase struct {
 	gameTitleRepository repository.GameTitleRepository
 }
 
-// NewGameTitleUsecase :
-func NewGameTitleUsecase(gR repository.GameTitleRepository) GameTitleUseCase {
+// NewGameTitleUsecase : GameTitleユースケースの生成
+func NewGameTitleUsecase(gR repository.GameTitleRepository) IGameTitleUseCase {
 	return &gameTitleUsecase{
 		gameTitleRepository: gR,
 	}

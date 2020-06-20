@@ -4,7 +4,7 @@ import (
 	"github.com/taniwhy/mochi-match-rest/domain/models"
 )
 
-// GameTitleRepository : ユーザーのリポジトリ
+// GameTitleRepository : ゲームタイトルのリポジトリ
 type GameTitleRepository interface {
 	FindAllGameTitle() ([]*models.GameTitle, error)
 	InsertGameTitle(gameTitle *models.GameTitle) error

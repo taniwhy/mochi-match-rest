@@ -7,8 +7,8 @@ import (
 	"github.com/taniwhy/mochi-match-rest/domain/repository"
 )
 
-// ChatPostUseCase :
-type ChatPostUseCase interface {
+// IChatPostUseCase : インターフェース
+type IChatPostUseCase interface {
 	FindAllChatPost() ([]*models.ChatPost, error)
 	FindChatPostByRoomID(id string) ([]*models.ChatPost, error)
 	FindChatPostByRoomIDAndLimit(id, limit string) ([]*models.ChatPost, error)
@@ -22,8 +22,8 @@ type chatPostUsecase struct {
 	chatPostRepository repository.ChatPostRepository
 }
 
-// NewChatPostUsecase :
-func NewChatPostUsecase(rR repository.ChatPostRepository) ChatPostUseCase {
+// NewChatPostUsecase : ChatPostユースケースの生成
+func NewChatPostUsecase(rR repository.ChatPostRepository) IChatPostUseCase {
 	return &chatPostUsecase{
 		chatPostRepository: rR,
 	}

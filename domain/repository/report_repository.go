@@ -4,7 +4,7 @@ import (
 	"github.com/taniwhy/mochi-match-rest/domain/models"
 )
 
-// ReportRepository :
+// ReportRepository : レポートのリポジトリ
 type ReportRepository interface {
 	FindAllReport() ([]*models.Report, error)
 	InsertReport(report *models.Report) error

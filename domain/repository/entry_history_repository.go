@@ -4,7 +4,7 @@ import (
 	"github.com/taniwhy/mochi-match-rest/domain/models"
 )
 
-// EntryHistoryRepository :
+// EntryHistoryRepository : 入室履歴のリポジトリ
 type EntryHistoryRepository interface {
 	FindAll() ([]*models.EntryHistory, error)
 	Insert(*models.EntryHistory) error

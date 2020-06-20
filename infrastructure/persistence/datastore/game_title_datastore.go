@@ -10,7 +10,7 @@ type gameTitleDatastore struct {
 	db *gorm.DB
 }
 
-// NewGameTitleDatastore : .
+// NewGameTitleDatastore : ゲームタイトルデータストアの生成
 func NewGameTitleDatastore(db *gorm.DB) repository.GameTitleRepository {
 	return &gameTitleDatastore{db}
 }

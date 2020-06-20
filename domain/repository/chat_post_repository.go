@@ -4,7 +4,7 @@ import (
 	"github.com/taniwhy/mochi-match-rest/domain/models"
 )
 
-// ChatPostRepository : ユーザーのリポジトリ
+// ChatPostRepository : チャット投稿のリポジトリ
 type ChatPostRepository interface {
 	FindAllChatPost() ([]*models.ChatPost, error)
 	FindChatPostByRoomID(id string) ([]*models.ChatPost, error)

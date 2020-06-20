@@ -4,7 +4,7 @@ import (
 	"github.com/taniwhy/mochi-match-rest/domain/models"
 )
 
-// RoomRepository : ユーザーのリポジトリ
+// RoomRepository : ルームのリポジトリ
 type RoomRepository interface {
 	FindList() ([]*models.Room, error)
 	FindByLimitAndOffset(limit, offset int) ([]*models.Room, error)

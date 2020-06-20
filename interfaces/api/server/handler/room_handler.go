@@ -9,8 +9,8 @@ import (
 	"github.com/taniwhy/mochi-match-rest/domain/errors"
 )
 
-// RoomHandler : インターフェース
-type RoomHandler interface {
+// IRoomHandler : インターフェース
+type IRoomHandler interface {
 	GetList(*gin.Context)
 	GetByID(*gin.Context)
 	Create(*gin.Context)
@@ -21,16 +21,16 @@ type RoomHandler interface {
 }
 
 type roomHandler struct {
-	userUsecase            usecase.UserUseCase
-	roomUsecase            usecase.RoomUseCase
-	roomReservationUseCase usecase.RoomReservationUseCase
+	userUsecase            usecase.IUserUseCase
+	roomUsecase            usecase.IRoomUseCase
+	roomReservationUseCase usecase.IRoomReservationUseCase
 }
 
-// NewRoomHandler : ユーザーのHandler生成
+// NewRoomHandler : ルームハンドラの生成
 func NewRoomHandler(
-	uU usecase.UserUseCase,
-	rU usecase.RoomUseCase,
-	rRU usecase.RoomReservationUseCase) RoomHandler {
+	uU usecase.IUserUseCase,
+	rU usecase.IRoomUseCase,
+	rRU usecase.IRoomReservationUseCase) IRoomHandler {
 	return &roomHandler{
 		userUsecase:            uU,
 		roomUsecase:            rU,

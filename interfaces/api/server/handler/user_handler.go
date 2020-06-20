@@ -10,8 +10,8 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-// UserHandler : インターフェース
-type UserHandler interface {
+// IUserHandler : インターフェース
+type IUserHandler interface {
 	GetMe(*gin.Context)
 	GetByID(*gin.Context)
 	Update(*gin.Context)
@@ -19,11 +19,11 @@ type UserHandler interface {
 }
 
 type userHandler struct {
-	userUsecase usecase.UserUseCase
+	userUsecase usecase.IUserUseCase
 }
 
-// NewUserHandler : UserHandler生成
-func NewUserHandler(uU usecase.UserUseCase) UserHandler {
+// NewUserHandler : ユーザーハンドラの生成
+func NewUserHandler(uU usecase.IUserUseCase) IUserHandler {
 	return &userHandler{
 		userUsecase: uU,
 	}

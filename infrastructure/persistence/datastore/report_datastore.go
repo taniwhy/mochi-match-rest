@@ -10,7 +10,7 @@ type reportDatastore struct {
 	db *gorm.DB
 }
 
-// NewReportDatastore : .
+// NewReportDatastore : レポートデータストアの生成
 func NewReportDatastore(db *gorm.DB) repository.ReportRepository {
 	return &reportDatastore{db}
 }

@@ -74,14 +74,7 @@ func (aH *authHandler) GetToken(c *gin.Context) {
 func (aH *authHandler) Refresh(c *gin.Context) {
 	tokenReq := input.TokenReqBody{}
 	c.Bind(&tokenReq)
-	claims, err := auth.GetTokenClaimsFromToken(tokenReq.RefreshToken)
-	claimsID := claims["sub"].(string)
-	isAdmin, err := aH.userService.IsAdmin(claimsID)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, err.Error())
-		return
-	}
-	accessToken, refreshToken, exp, err := auth.TokenRefresh(tokenReq.RefreshToken, isAdmin)
+	accessToken, refreshToken, exp, err := auth.TokenRefresh(tokenReq.RefreshToken, true)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": err})
 		return

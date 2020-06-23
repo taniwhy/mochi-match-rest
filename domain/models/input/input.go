@@ -22,7 +22,7 @@ type UserUpdateReqBody struct {
 	FavoriteGames []FavoriteGameRecord `json:"favorite_games" binding:"required"`
 }
 
-// RoomCreateReqBody :ルーム作成リクエストボディ
+// RoomCreateReqBody : ルーム作成リクエストボディ
 type RoomCreateReqBody struct {
 	RoomText    string    `json:"room_text" binding:"required"`
 	GameTitleID string    `json:"game_title_id" binding:"required"`
@@ -34,4 +34,14 @@ type RoomCreateReqBody struct {
 // TokenReqBody : トークンのリクエストボディ
 type TokenReqBody struct {
 	RefreshToken string `json:"refresh_token"`
+}
+
+// GameListCreateReqBody : ゲームリスト作成リクエストボディ
+type GameListCreateReqBody struct {
+	GameTitle string `json:"game_title" binding:"required"`
+}
+
+// GameListUpdateReqBody : ゲームリスト更新リクエストボディ
+type GameListUpdateReqBody struct {
+	GameTitle string `json:"game_title" binding:"required"`
 }

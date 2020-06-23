@@ -40,13 +40,13 @@ CREATE TABLE chat_posts
     PRIMARY KEY(chat_post_id)
 );
 
-CREATE TABLE game_titles
+CREATE TABLE game_lists
 (
-    game_title_id TEXT NOT NULL,
+    game_list_id TEXT NOT NULL,
     game_title TEXT NOT NULL,
     created_at TIMESTAMP NOT NULL,
     update_at TIMESTAMP NOT NULL,
-    PRIMARY KEY(game_title_id),
+    PRIMARY KEY(game_list_id),
     UNIQUE(game_title)
 );
 
@@ -70,7 +70,7 @@ CREATE TABLE favorite_games
     FOREIGN KEY(user_id)REFERENCES users(user_id)
         ON UPDATE CASCADE
         ON DELETE SET NULL,
-    FOREIGN KEY(game_title)REFERENCES game_titles(game_title)
+    FOREIGN KEY(game_title)REFERENCES game_lists(game_title)
         ON UPDATE CASCADE
         ON DELETE SET NULL
 );
@@ -91,7 +91,7 @@ CREATE TABLE rooms
     FOREIGN KEY(user_id)REFERENCES users(user_id)
         ON UPDATE CASCADE
         ON DELETE SET NULL,
-    FOREIGN KEY(game_title_id)REFERENCES game_titles(game_title_id)
+    FOREIGN KEY(game_list_id)REFERENCES game_lists(game_list_id)
         ON UPDATE CASCADE
         ON DELETE SET NULL,
     FOREIGN KEY(game_hard_id)REFERENCES game_hards(game_hard_id)

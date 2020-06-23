@@ -27,7 +27,7 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 	roomReservationDatastore := datastore.NewRoomReservationDatastore(dbConn)
 	entryHistoryDatastore := datastore.NewEntryHistoryDatastore(dbConn)
 	chatPostDatastore := datastore.NewChatPostDatastore(dbConn)
-	gameTitleDatastore := datastore.NewGameTitleDatastore(dbConn)
+	gameListDatastore := datastore.NewGameListDatastore(dbConn)
 	favorateGameDatastore := datastore.NewFavoriteGameDatastore(dbConn)
 
 	userService := service.NewUserService(userDatastore)
@@ -38,14 +38,14 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 	roomBlacklistUsecase := usecase.NewRoomBlacklistUsecase(roomBalacklistDatastore)
 	roomReservationUsecase := usecase.NewRoomReservationUsecase(roomReservationDatastore)
 	chatPostUsecase := usecase.NewChatPostUsecase(chatPostDatastore)
-	gameTitleUsecase := usecase.NewGameTitleUsecase(gameTitleDatastore)
+	gameListUsecase := usecase.NewGameListUsecase(gameListDatastore)
 	googleAuthUsecase := usecase.NewGoogleOAuthUsecase(userService)
 
 	userHandler := handler.NewUserHandler(userUsecase)
 	roomHandler := handler.NewRoomHandler(userUsecase, roomUsecase, roomReservationUsecase)
 	roomBlacklistHandler := handler.NewRoomBlacklistHandler(userUsecase, roomUsecase, roomBlacklistUsecase)
 	chatPostHandler := handler.NewChatPostHandler(chatPostUsecase, redisConn)
-	gameTitleHandler := handler.NewGameTitleHandler(gameTitleUsecase)
+	gameListHandler := handler.NewGameListHandler(gameListUsecase)
 	googleAuthHandler := handler.NewGoogleOAuthHandler(googleAuthUsecase, userUsecase, userService)
 
 	authHandler := handler.NewAuthHandler()
@@ -98,11 +98,15 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 		room.DELETE("/:id/blacklist", roomBlacklistHandler.Delete)
 	}
 	gamelist := v1.Group("/gamelist")
+	gamelist.Use(auth.TokenAuth())
 	{
-		gamelist.GET("", gameTitleHandler.GetAllGameTitle)
-		gamelist.POST("", gameTitleHandler.CreateGameTitle)
-		gamelist.PUT("/:id", gameTitleHandler.UpdateGameTitle)
-		gamelist.DELETE("/:id", gameTitleHandler.DeleteGameTitle)
+		gamelist.GET("", gameListHandler.GetAll)
+	}
+	gamelist.Use(auth.AdminAuth())
+	{
+		gamelist.POST("", gameListHandler.Create)
+		gamelist.PUT("/:id", gameListHandler.Update)
+		gamelist.DELETE("/:id", gameListHandler.Delete)
 	}
 	return r
 }

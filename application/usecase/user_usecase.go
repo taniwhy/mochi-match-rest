@@ -13,6 +13,8 @@ import (
 	"github.com/taniwhy/mochi-match-rest/domain/service"
 	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/middleware/auth"
 	"golang.org/x/sync/errgroup"
+
+	log "github.com/sirupsen/logrus"
 )
 
 // IUserUseCase : インターフェース
@@ -49,6 +51,7 @@ func NewUserUsecase(
 func (uU userUsecase) GetMe(c *gin.Context) (*output.UserResBody, error) {
 	claims, err := auth.GetTokenClaimsFromRequest(c)
 	if err != nil {
+		log.Warn("error")
 		return nil, errors.ErrGetTokenClaims{Detail: err.Error()}
 	}
 	claimsID := claims["sub"].(string)

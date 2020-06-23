@@ -78,6 +78,34 @@ func (b ErrRoomCreateReqBinding) Error() string {
 	return fmt.Sprintf("Binding error! - " + errMsgs + " is required")
 }
 
+// ErrGameListCreateReqBinding : ゲームリスト作成リクエストボディのバインディングエラー
+type ErrGameListCreateReqBinding struct {
+	GameTitle string
+}
+
+func (b ErrGameListCreateReqBinding) Error() string {
+	var errMsg []string
+	if b.GameTitle == "" {
+		errMsg = append(errMsg, "game_title")
+	}
+	errMsgs := strings.Join(errMsg, ", ")
+	return fmt.Sprintf("Binding error! - " + errMsgs + " is required")
+}
+
+// ErrGameListUpdateReqBinding : ゲームリスト更新リクエストボディのバインディングエラー
+type ErrGameListUpdateReqBinding struct {
+	GameTitle string
+}
+
+func (b ErrGameListUpdateReqBinding) Error() string {
+	var errMsg []string
+	if b.GameTitle == "" {
+		errMsg = append(errMsg, "game_title")
+	}
+	errMsgs := strings.Join(errMsg, ", ")
+	return fmt.Sprintf("Binding error! - " + errMsgs + " is required")
+}
+
 // ErrSessionSave : セッションのセーブエラー
 type ErrSessionSave struct{}
 

@@ -1,6 +1,8 @@
 package service
 
 import (
+	"fmt"
+
 	"github.com/taniwhy/mochi-match-rest/domain/repository"
 )
 
@@ -27,10 +29,10 @@ func (uS userService) IsAdmin(id string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	// todo
 	if res == nil {
 		return false, nil
 	}
+	fmt.Println("んあああああ", res.IsAdmin)
 	return res.IsAdmin, nil
 }
 

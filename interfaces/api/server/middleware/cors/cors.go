@@ -17,7 +17,7 @@ func Write() gin.HandlerFunc {
 		case "staging":
 			c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:4000")
 		case "production":
-			c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:5500")
+			c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:4000")
 		default:
 			log.Fatal("error: 環境変数を定義していません")
 			c.Status(http.StatusInternalServerError)

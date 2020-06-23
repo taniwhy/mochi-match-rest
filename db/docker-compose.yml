@@ -1,22 +1,27 @@
-version: "3"
+version: '3'
 
 services:
   db:
     image: postgres:10.5
-    container_name: "mochi-match-postgres-dev"
+    container_name: 'mochi-match-postgres-dev'
     volumes:
       - mochimatch_postgres_dev:/var/lib/postgresql/data
       - ./init:/docker-entrypoint-initdb.d
     ports:
-      - "5432:5432"
+      - '5432:5432'
     environment:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
   redis:
-    image: "redis:4.0.6"
-    container_name: "mochi-match-redis-dev"
+    image: 'redis:4.0.6'
+    container_name: 'mochi-match-redis-dev'
     ports:
-      - "6379:6379"
+      - '6379:6379'
 volumes:
   mochimatch_postgres_dev:
     driver: local
+
+networks:
+  default:
+    external:
+      name: shared

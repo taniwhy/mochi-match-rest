@@ -13,7 +13,6 @@ require (
 	github.com/joho/godotenv v1.3.0
 	github.com/labstack/gommon v0.3.0 // indirect
 	github.com/lib/pq v1.7.0 // indirect
-	github.com/mattn/go-sqlite3 v2.0.3+incompatible // indirect
 	github.com/rubenv/sql-migrate v0.0.0-20200616145509-8d140a17f351 // indirect
 	github.com/sirupsen/logrus v1.6.0
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d

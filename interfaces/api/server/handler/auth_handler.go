@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-
 	"github.com/taniwhy/mochi-match-rest/domain/models/input"
+	"github.com/taniwhy/mochi-match-rest/domain/service"
 	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/middleware/auth"
 )
 
@@ -19,6 +19,7 @@ type IAuthHandler interface {
 }
 
 type authHandler struct {
+	userService service.IUserService
 }
 
 // NewAuthHandler : 認証ハンドラの生成
@@ -27,18 +28,16 @@ func NewAuthHandler() IAuthHandler {
 }
 
 func (aH *authHandler) GetToken(c *gin.Context) {
-	expStr, err := c.Cookie("session")
 	token, err := c.Cookie("token")
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
-	expStr, err = c.Cookie("token_exp")
+	expStr, err := c.Cookie("token_exp")
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
-	fmt.Println(expStr)
 	expAt, err := strconv.ParseInt(expStr, 10, 64)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err.Error())
@@ -48,7 +47,19 @@ func (aH *authHandler) GetToken(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
-	accessToken, refreshToken, exp, err := auth.TokenRefresh(token)
+	claims, err := auth.GetTokenClaimsFromToken(token)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+	claimsID := claims["sub"].(string)
+	fmt.Println("id", claimsID)
+	isAdmin, err := aH.userService.IsAdmin(claimsID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
+	accessToken, refreshToken, exp, err := auth.TokenRefresh(token, isAdmin)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err.Error())
 		return
@@ -63,7 +74,14 @@ func (aH *authHandler) GetToken(c *gin.Context) {
 func (aH *authHandler) Refresh(c *gin.Context) {
 	tokenReq := input.TokenReqBody{}
 	c.Bind(&tokenReq)
-	accessToken, refreshToken, exp, err := auth.TokenRefresh(tokenReq.RefreshToken)
+	claims, err := auth.GetTokenClaimsFromToken(tokenReq.RefreshToken)
+	claimsID := claims["sub"].(string)
+	isAdmin, err := aH.userService.IsAdmin(claimsID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
+	accessToken, refreshToken, exp, err := auth.TokenRefresh(tokenReq.RefreshToken, isAdmin)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": err})
 		return

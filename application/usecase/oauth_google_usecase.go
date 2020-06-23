@@ -68,17 +68,15 @@ func (gA *googleOAuthUsecase) Callback(c *gin.Context) (bool, *models.GoogleUser
 	}
 
 	client := gA.oauthConf.Client(oauth2.NoContext, tok)
-	email, err := client.Get(oauthGoogleURLAPI)
+	response, err := client.Get(oauthGoogleURLAPI)
 	if err != nil {
 		return false, nil, errors.ErrGoogleAPIRequest{}
 	}
-	defer email.Body.Close()
-
-	data, err := ioutil.ReadAll(email.Body)
+	defer response.Body.Close()
+	data, err := ioutil.ReadAll(response.Body)
 	if err != nil {
 		return false, nil, errors.ErrReadGoogleAPIResponse{}
 	}
-
 	gU := models.GoogleUser{}
 	err = json.Unmarshal(data, &gU)
 	if err != nil {

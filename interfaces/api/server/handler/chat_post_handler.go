@@ -2,7 +2,6 @@ package handler
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -11,7 +10,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/taniwhy/mochi-match-rest/application/usecase"
 	"github.com/taniwhy/mochi-match-rest/domain/models"
-	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/middleware/auth"
 )
 
 // IChatPostHandler : インターフェース
@@ -66,8 +64,6 @@ func (cH chatPostHandler) CreateChatPost(c *gin.Context) {
 	roomID := c.Params.ByName("id")
 	// todo : テスト用に仮データを記述
 	// idをトークンから取得できるように
-	token := auth.GenerateAccessToken("a")
-	fmt.Println(token)
 	m := &models.ChatPost{
 		ChatPostID: id.String(),
 		RoomID:     roomID,

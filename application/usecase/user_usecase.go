@@ -47,7 +47,7 @@ func NewUserUsecase(
 }
 
 func (uU userUsecase) GetMe(c *gin.Context) (*output.UserResBody, error) {
-	claims, err := auth.GetTokenClaims(c)
+	claims, err := auth.GetTokenClaimsFromRequest(c)
 	if err != nil {
 		return nil, errors.ErrGetTokenClaims{Detail: err.Error()}
 	}
@@ -162,7 +162,7 @@ func (uU userUsecase) Update(c *gin.Context) error {
 	if err := c.BindJSON(&b); err != nil {
 		return errors.ErrUserUpdateReqBinding{UserName: b.UserName, Icon: b.Icon, FavoriteGames: b.FavoriteGames}
 	}
-	claims, err := auth.GetTokenClaims(c)
+	claims, err := auth.GetTokenClaimsFromRequest(c)
 	if err != nil {
 		return errors.ErrGetTokenClaims{Detail: err.Error()}
 	}
@@ -223,7 +223,7 @@ func (uU userUsecase) Update(c *gin.Context) error {
 }
 
 func (uU userUsecase) Delete(c *gin.Context) error {
-	claims, err := auth.GetTokenClaims(c)
+	claims, err := auth.GetTokenClaimsFromRequest(c)
 	if err != nil {
 		return err
 	}

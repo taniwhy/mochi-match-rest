@@ -2,7 +2,7 @@ package models
 
 // GoogleUser :
 type GoogleUser struct {
-	ID            string `json:"id"`
+	ID            string `json:"sub"`
 	Email         string `json:"email"`
 	VerifiedEmail bool   `json:"verified_email"`
 	Name          string `json:"name"`

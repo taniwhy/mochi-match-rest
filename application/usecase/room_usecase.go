@@ -71,7 +71,7 @@ func (rU roomUsecase) Create(c *gin.Context) error {
 			Start:       b.Start.Time,
 		}
 	}
-	claims, err := auth.GetTokenClaims(c)
+	claims, err := auth.GetTokenClaimsFromRequest(c)
 	if err != nil {
 		return errors.ErrGetTokenClaims{Detail: err.Error()}
 	}
@@ -112,7 +112,7 @@ func (rU roomUsecase) Join(c *gin.Context) error {
 	if !ok {
 		return errors.ErrRoomAlreadyLock{RoomID: rid}
 	}
-	claims, err := auth.GetTokenClaims(c)
+	claims, err := auth.GetTokenClaimsFromRequest(c)
 	if err != nil {
 		return errors.ErrGetTokenClaims{Detail: err.Error()}
 	}
@@ -142,7 +142,7 @@ func (rU roomUsecase) Join(c *gin.Context) error {
 
 func (rU roomUsecase) Leave(c *gin.Context) error {
 	rid := c.Params.ByName("id")
-	claims, err := auth.GetTokenClaims(c)
+	claims, err := auth.GetTokenClaimsFromRequest(c)
 	if err != nil {
 		return errors.ErrGetTokenClaims{Detail: err.Error()}
 	}

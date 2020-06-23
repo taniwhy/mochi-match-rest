@@ -15,4 +15,6 @@ WORKDIR /go/src/github.com/taniwhy/mochi-match-rest
 
 ADD . /go/src/github.com/taniwhy/mochi-match-rest
 
+RUN sql-migrate up
+
 EXPOSE 8000

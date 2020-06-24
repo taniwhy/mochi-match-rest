@@ -64,11 +64,11 @@ func (rU roomUsecase) Create(c *gin.Context) error {
 	b := input.RoomCreateReqBody{}
 	if err := c.BindJSON(&b); err != nil {
 		return errors.ErrRoomCreateReqBinding{
-			RoomText:    b.RoomText,
-			GameTitleID: b.GameTitleID,
-			GameHardID:  b.GameHardID,
-			Capacity:    b.Capacity,
-			Start:       b.Start.Time,
+			RoomText:   b.RoomText,
+			GameListID: b.GameListID,
+			GameHardID: b.GameHardID,
+			Capacity:   b.Capacity,
+			Start:      b.Start.Time,
 		}
 	}
 	claims, err := auth.GetTokenClaimsFromRequest(c)
@@ -85,7 +85,7 @@ func (rU roomUsecase) Create(c *gin.Context) error {
 		return errors.ErrRoomAlreadyExists{}
 	}
 
-	r, err := models.NewRoom(claimsID, b.RoomText, b.GameTitleID, b.GameHardID, b.Capacity, b.Start.Time)
+	r, err := models.NewRoom(claimsID, b.RoomText, b.GameListID, b.GameHardID, b.Capacity, b.Start.Time)
 	if err != nil {
 		return err
 	}

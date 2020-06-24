@@ -50,11 +50,11 @@ func (b ErrUserUpdateReqBinding) Error() string {
 
 // ErrRoomCreateReqBinding : ルーム作成リクエストボディのバインディングエラー
 type ErrRoomCreateReqBinding struct {
-	RoomText    string
-	GameTitleID string
-	GameHardID  string
-	Capacity    int
-	Start       time.Time
+	RoomText   string
+	GameListID string
+	GameHardID string
+	Capacity   int
+	Start      time.Time
 }
 
 func (b ErrRoomCreateReqBinding) Error() string {
@@ -62,7 +62,7 @@ func (b ErrRoomCreateReqBinding) Error() string {
 	if b.RoomText == "" {
 		errMsg = append(errMsg, "room_text")
 	}
-	if b.GameTitleID == "" {
+	if b.GameListID == "" {
 		errMsg = append(errMsg, "game_title_id")
 	}
 	if b.GameHardID == "" {

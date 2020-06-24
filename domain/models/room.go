@@ -10,16 +10,16 @@ import (
 
 // Room : roomテーブルモデル
 type Room struct {
-	RoomID     string
-	UserID     string
-	RoomText   string
-	GameListID string
-	GameHardID string
-	Capacity   int
-	Start      null.Time
-	IsLock     bool
-	CreatedAt  time.Time
-	UpdateAt   time.Time
+	RoomID     string    `json:"id" binding:"required"`
+	UserID     string    `json:"user_id" binding:"required"`
+	RoomText   string    `json:"room_text" binding:"required"`
+	GameListID string    `json:"game_list_id" binding:"required"`
+	GameHardID string    `json:"game_hard_id" binding:"required"`
+	Capacity   int       `json:"capacity" binding:"required"`
+	Start      null.Time `json:"start_at" binding:"required"`
+	IsLock     bool      `json:"is_lock" binding:"required"`
+	CreatedAt  time.Time `json:"created_at" binding:"required"`
+	UpdateAt   time.Time `json:"update_at" binding:"required"`
 }
 
 // NewRoom : roomテーブルのレコードモデル生成

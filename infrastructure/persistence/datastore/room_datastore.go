@@ -4,6 +4,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/taniwhy/mochi-match-rest/domain/errors"
 	"github.com/taniwhy/mochi-match-rest/domain/models"
+	"github.com/taniwhy/mochi-match-rest/domain/models/output"
 	"github.com/taniwhy/mochi-match-rest/domain/repository"
 )
 
@@ -16,18 +17,60 @@ func NewRoomDatastore(db *gorm.DB) repository.RoomRepository {
 	return &roomDatastore{db}
 }
 
-func (rD roomDatastore) FindList() ([]*models.Room, error) {
-	rooms := []*models.Room{}
-	err := rD.db.Find(&rooms).Error
+func (rD roomDatastore) FindList() ([]*output.RoomResBody, error) {
+	rooms := []*output.RoomResBody{}
+	err := rD.db.
+		Table("rooms").
+		Select(`rooms.room_id,
+			rooms.user_id,
+			user_details.icon,
+			game_hards.hard_name,
+			game_lists.game_title,
+			rooms.capacity,
+			rooms.room_text,
+			user_details.user_name,
+			rooms.created_at,
+			rooms.start`).
+		Joins("LEFT JOIN user_details ON rooms.user_id = user_details.user_id").
+		Joins("LEFT JOIN game_hards ON rooms.game_hard_id = game_hards.game_hard_id").
+		Joins("LEFT JOIN game_lists ON rooms.game_list_id = game_lists.game_list_id").
+		Order("created_at desc").
+		Scan(&rooms).Error
 	if err != nil {
 		return nil, err
 	}
 	return rooms, nil
 }
 
-func (rD roomDatastore) FindByLimitAndOffset(limit, offset int) ([]*models.Room, error) {
-	rooms := []*models.Room{}
-	err := rD.db.Order("created_at desc").Limit(limit).Offset(offset).Find(&rooms).Error
+func (rD roomDatastore) FindByLimitAndOffset(limit, offset int) ([]*output.RoomResBody, error) {
+	rooms := []*output.RoomResBody{}
+
+	err := rD.db.
+		Table("rooms").
+		Select(`rooms.room_id,
+				rooms.user_id,
+				user_details.icon,
+				game_hards.hard_name,
+				game_lists.game_title,
+				rooms.capacity,
+				rooms.room_text,
+				user_details.user_name,
+				(
+					SELECT
+						COUNT(entry_histories.entry_history_id)
+					FROM entry_histories
+					WHERE rooms.room_id = entry_histories.room_id
+				) As count,
+				rooms.created_at,
+				rooms.start`,
+		).
+		Joins("LEFT JOIN user_details ON rooms.user_id = user_details.user_id").
+		Joins("LEFT JOIN game_hards ON rooms.game_hard_id = game_hards.game_hard_id").
+		Joins("LEFT JOIN game_lists ON rooms.game_list_id = game_lists.game_list_id").
+		Limit(limit).
+		Offset(offset).
+		Order("created_at desc").
+		Scan(&rooms).Error
 	if err != nil {
 		return nil, err
 	}

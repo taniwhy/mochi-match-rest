@@ -7,6 +7,7 @@ import (
 	"github.com/taniwhy/mochi-match-rest/domain/errors"
 	"github.com/taniwhy/mochi-match-rest/domain/models"
 	"github.com/taniwhy/mochi-match-rest/domain/models/input"
+	"github.com/taniwhy/mochi-match-rest/domain/models/output"
 	"github.com/taniwhy/mochi-match-rest/domain/repository"
 	"github.com/taniwhy/mochi-match-rest/domain/service"
 	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/middleware/auth"
@@ -14,7 +15,7 @@ import (
 
 // IRoomUseCase : インターフェース
 type IRoomUseCase interface {
-	GetList(*gin.Context) ([]*models.Room, error)
+	GetList(*gin.Context) ([]*output.RoomResBody, error)
 	GetByID(*gin.Context) (*models.Room, error)
 	Create(*gin.Context) error
 	Update(*gin.Context) error
@@ -41,7 +42,7 @@ func NewRoomUsecase(
 	}
 }
 
-func (rU roomUsecase) GetList(c *gin.Context) ([]*models.Room, error) {
+func (rU roomUsecase) GetList(c *gin.Context) ([]*output.RoomResBody, error) {
 	pageStr := c.Query("page")
 	page, err := strconv.Atoi(pageStr)
 	if err != nil {

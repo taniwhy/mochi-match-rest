@@ -63,7 +63,7 @@ func (b ErrRoomCreateReqBinding) Error() string {
 		errMsg = append(errMsg, "room_text")
 	}
 	if b.GameListID == "" {
-		errMsg = append(errMsg, "game_title_id")
+		errMsg = append(errMsg, "game_list_id")
 	}
 	if b.GameHardID == "" {
 		errMsg = append(errMsg, "game_hard_id")

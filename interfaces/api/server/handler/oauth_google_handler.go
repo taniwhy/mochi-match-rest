@@ -3,41 +3,41 @@ package handler
 import (
 	"net/http"
 
-	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
-	log "github.com/sirupsen/logrus"
 	"github.com/taniwhy/mochi-match-rest/application/usecase"
 	"github.com/taniwhy/mochi-match-rest/config"
 	"github.com/taniwhy/mochi-match-rest/domain/errors"
 	"github.com/taniwhy/mochi-match-rest/domain/models"
 	"github.com/taniwhy/mochi-match-rest/domain/models/input"
 	"github.com/taniwhy/mochi-match-rest/domain/service"
-	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/auth"
+	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/middleware/auth"
 	"golang.org/x/oauth2"
+
+	log "github.com/sirupsen/logrus"
 )
 
 const oauthGoogleURLAPI = "https://www.googleapis.com/oauth2/v2/userinfo?access_token="
 
-// GoogleOAuthHandler : todo
-type GoogleOAuthHandler interface {
+// IGoogleOAuthHandler : インターフェース
+type IGoogleOAuthHandler interface {
 	Login(c *gin.Context)
 	Callback(c *gin.Context)
 }
 
 type googleOAuthHandler struct {
 	oauthConf          *oauth2.Config
-	googleOAuthUsecase usecase.GoogleOAuthUsecase
-	userUsecase        usecase.UserUseCase
+	googleOAuthUsecase usecase.IGoogleOAuthUsecase
+	userUsecase        usecase.IUserUseCase
 	userService        service.IUserService
 }
 
-// NewGoogleOAuthHandler :
+// NewGoogleOAuthHandler : GoogleOAuth認証ハンドラの生成
 func NewGoogleOAuthHandler(
-	gU usecase.GoogleOAuthUsecase,
-	uU usecase.UserUseCase,
-	uS service.IUserService) GoogleOAuthHandler {
+	gU usecase.IGoogleOAuthUsecase,
+	uU usecase.IUserUseCase,
+	uS service.IUserService) IGoogleOAuthHandler {
 	return &googleOAuthHandler{
-		oauthConf:          config.ConfigureOAuthClient(),
+		oauthConf:          config.GetOAuthClientConf(),
 		googleOAuthUsecase: gU,
 		userUsecase:        uU,
 		userService:        uS,
@@ -49,16 +49,16 @@ func (gA *googleOAuthHandler) Login(c *gin.Context) {
 	if err != nil {
 
 	}
-	c.Redirect(http.StatusTemporaryRedirect, url)
+	c.JSON(http.StatusOK, url)
 }
 
 func (gA *googleOAuthHandler) Callback(c *gin.Context) {
 	var u *models.User
 	ok, gU, err := gA.googleOAuthUsecase.Callback(c)
 	if err != nil {
-
+		c.JSON(http.StatusBadRequest, err)
+		return
 	}
-	// ない
 	if ok {
 		b := input.UserCreateBody{
 			Provider:   "google",
@@ -110,19 +110,8 @@ func (gA *googleOAuthHandler) Callback(c *gin.Context) {
 			}
 		}
 	}
-	accessToken := auth.GenerateAccessToken(u.UserID)
 	refleshToken, exp := auth.GenerateRefreshToken(u.UserID)
-
-	session := sessions.Default(c)
-	session.Set("access_token", accessToken)
-	session.Set("refresh_token", refleshToken)
-	session.Set("exp", exp)
-	session.Save()
-
-	c.JSON(http.StatusOK, gin.H{
-		"id":            u.UserID,
-		"access_token":  accessToken,
-		"refresh_token": refleshToken,
-		"expires_in":    exp,
-	})
+	c.SetCookie("token", refleshToken, 0, "/", "", false, true)
+	c.SetCookie("token_exp", exp, 0, "/", "", false, true)
+	c.Redirect(http.StatusTemporaryRedirect, "http://localhost:4000/login-done")
 }

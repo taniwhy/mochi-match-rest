@@ -14,7 +14,7 @@ type roomService struct {
 	roomRepository repository.RoomRepository
 }
 
-// NewRoomService : UserServiceの生成
+// NewRoomService : RoomServiceの生成
 func NewRoomService(rR repository.RoomRepository) IRoomService {
 	return &roomService{
 		roomRepository: rR,

@@ -3,18 +3,10 @@ package dao
 import (
 	"fmt"
 
-	"github.com/golang-migrate/migrate/v4"
-	"github.com/golang-migrate/migrate/v4/database/postgres"
-
-	//
-	_ "github.com/lib/pq"
-
 	"github.com/jinzhu/gorm"
 	"github.com/taniwhy/mochi-match-rest/config"
 
-	//
-	_ "github.com/golang-migrate/migrate/v4/source/file"
-	// postgres driver
+	// Postgres ドライバ
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
@@ -34,15 +26,5 @@ func NewDatabase() *gorm.DB {
 	if err != nil {
 		panic(err.Error())
 	}
-	migration()
 	return conn
-}
-
-func migration() {
-	driver, _ := postgres.WithInstance(conn.DB(), &postgres.Config{})
-	m, _ := migrate.NewWithDatabaseInstance(
-		"file://db/migrations", // マイグレーションファイルがあるディレクトリの指定
-		"postgres", driver,
-	)
-	m.Steps(4)
 }

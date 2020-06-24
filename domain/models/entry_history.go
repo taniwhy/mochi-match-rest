@@ -18,7 +18,7 @@ type EntryHistory struct {
 	LeavedAt       sql.NullTime
 }
 
-// NewEntryHistory :
+// NewEntryHistory : entry_historyテーブルのレコードモデル生成
 func NewEntryHistory(uid, rid string) (*EntryHistory, error) {
 	id, err := uuid.NewRandom()
 	if err != nil {

@@ -17,7 +17,7 @@ import (
 	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/middleware/cors"
 )
 
-// InitRouter :　ルーティング
+// InitRouter :　ルーティングセットアップ
 func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 	// DI
 	userDatastore := datastore.NewUserDatastore(dbConn)
@@ -27,7 +27,8 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 	roomReservationDatastore := datastore.NewRoomReservationDatastore(dbConn)
 	entryHistoryDatastore := datastore.NewEntryHistoryDatastore(dbConn)
 	chatPostDatastore := datastore.NewChatPostDatastore(dbConn)
-	gameTitleDatastore := datastore.NewGameTitleDatastore(dbConn)
+	gameListDatastore := datastore.NewGameListDatastore(dbConn)
+	gameHardDatastore := datastore.NewGameHardDatastore(dbConn)
 	favorateGameDatastore := datastore.NewFavoriteGameDatastore(dbConn)
 
 	userService := service.NewUserService(userDatastore)
@@ -38,19 +39,20 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 	roomBlacklistUsecase := usecase.NewRoomBlacklistUsecase(roomBalacklistDatastore)
 	roomReservationUsecase := usecase.NewRoomReservationUsecase(roomReservationDatastore)
 	chatPostUsecase := usecase.NewChatPostUsecase(chatPostDatastore)
-	gameTitleUsecase := usecase.NewGameTitleUsecase(gameTitleDatastore)
+	gameListUsecase := usecase.NewGameListUsecase(gameListDatastore)
+	gameHardUsecase := usecase.NewGameHardUsecase(gameHardDatastore)
 	googleAuthUsecase := usecase.NewGoogleOAuthUsecase(userService)
 
 	userHandler := handler.NewUserHandler(userUsecase)
 	roomHandler := handler.NewRoomHandler(userUsecase, roomUsecase, roomReservationUsecase)
 	roomBlacklistHandler := handler.NewRoomBlacklistHandler(userUsecase, roomUsecase, roomBlacklistUsecase)
 	chatPostHandler := handler.NewChatPostHandler(chatPostUsecase, redisConn)
-	gameTitleHandler := handler.NewGameTitleHandler(gameTitleUsecase)
+	gameListHandler := handler.NewGameListHandler(gameListUsecase)
+	gameHardHandler := handler.NewGameHardHandler(gameHardUsecase)
 	googleAuthHandler := handler.NewGoogleOAuthHandler(googleAuthUsecase, userUsecase, userService)
 
 	authHandler := handler.NewAuthHandler()
 
-	store := dao.NewRedisStore()
 	f, err := os.Create("./config/log/access.log")
 	if err != nil {
 		panic(err.Error())
@@ -59,11 +61,13 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 
 	r := gin.Default()
 	r.Use(cors.Write())
+	store := dao.NewRedisStore()
 	r.Use(sessions.Sessions("session", store))
 
 	v1 := r.Group("/v1")
 	authHandle := v1.Group("/auth")
 	{
+		authHandle.GET("/get", authHandler.GetToken)
 		authHandle.POST("/refresh", authHandler.Refresh)
 	}
 	google := authHandle.Group("/google")
@@ -80,6 +84,7 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 		users.DELETE("", userHandler.Delete)
 	}
 	room := v1.Group("/rooms")
+	room.Use(auth.TokenAuth())
 	{
 		room.GET("", roomHandler.GetList)
 		room.GET("/:id", roomHandler.GetByID)
@@ -96,11 +101,26 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 		room.DELETE("/:id/blacklist", roomBlacklistHandler.Delete)
 	}
 	gamelist := v1.Group("/gamelist")
+	gamelist.Use(auth.TokenAuth())
 	{
-		gamelist.GET("", gameTitleHandler.GetAllGameTitle)
-		gamelist.POST("", gameTitleHandler.CreateGameTitle)
-		gamelist.PUT("/:id", gameTitleHandler.UpdateGameTitle)
-		gamelist.DELETE("/:id", gameTitleHandler.DeleteGameTitle)
+		gamelist.GET("", gameListHandler.GetAll)
+	}
+	gamelist.Use(auth.AdminAuth())
+	{
+		gamelist.POST("", gameListHandler.Create)
+		gamelist.PUT("/:id", gameListHandler.Update)
+		gamelist.DELETE("/:id", gameListHandler.Delete)
+	}
+	gamehard := v1.Group("/gamehard")
+	gamehard.Use(auth.TokenAuth())
+	{
+		gamehard.GET("", gameHardHandler.GetAll)
+	}
+	gamehard.Use(auth.AdminAuth())
+	{
+		gamehard.POST("", gameHardHandler.Create)
+		gamehard.PUT("/:id", gameHardHandler.Update)
+		gamehard.DELETE("/:id", gameHardHandler.Delete)
 	}
 	return r
 }

@@ -23,7 +23,7 @@ type User struct {
 	DeleteAt   sql.NullTime
 }
 
-// NewUser :
+// NewUser : usersテーブルのレコードモデル生成
 func NewUser(email string) (*User, error) {
 	id, err := uuid.NewRandom()
 	if err != nil {

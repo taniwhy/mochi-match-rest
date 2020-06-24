@@ -5,8 +5,8 @@ import (
 	"github.com/taniwhy/mochi-match-rest/domain/repository"
 )
 
-// RoomBlacklistUseCase :
-type RoomBlacklistUseCase interface {
+// IRoomBlacklistUseCase : インターフェース
+type IRoomBlacklistUseCase interface {
 	FindAllBlacklist() ([]*models.RoomBlacklist, error)
 	FindBlacklistByID(id int64) (*models.RoomBlacklist, error)
 	InsertBlacklist(roomReservation *models.RoomBlacklist) error
@@ -17,8 +17,8 @@ type roomBlacklistUsecase struct {
 	roomBlacklistRepository repository.RoomBlacklistRepository
 }
 
-// NewRoomBlacklistUsecase :
-func NewRoomBlacklistUsecase(rR repository.RoomBlacklistRepository) RoomBlacklistUseCase {
+// NewRoomBlacklistUsecase : RoomBlacklistユースケースの生成
+func NewRoomBlacklistUsecase(rR repository.RoomBlacklistRepository) IRoomBlacklistUseCase {
 	return &roomBlacklistUsecase{
 		roomBlacklistRepository: rR,
 	}

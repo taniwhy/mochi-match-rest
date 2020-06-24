@@ -1,33 +1,11 @@
-version: "3"
+version: '3'
 services:
   mochi-app:
-    image: taniwhy/mochi-match-rest:latest
-    container_name: "app"
+    build: .
+    container_name: 'app'
     ports:
-      - "8000:8000"
-    command: ["go", "run", "main.go"]
-    depends_on:
-      - db
-      - redis
-  db:
-    image: postgres:10.5
-    container_name: "mochi-match-postgres"
-    volumes:
-      - mochimatch_postgres_data:/var/lib/postgresql/data
-      - ./db/init:/docker-entrypoint-initdb.d
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_USER: postgres
-  redis:
-    image: "redis:4.0.6"
-    container_name: "mochi-match-redis"
-    ports:
-      - "6379:6379"
-volumes:
-  mochimatch_postgres_data:
-    driver: local
+      - '8000:8000'
+    command: ['go', 'run', 'main.go']
 
 networks:
   default:

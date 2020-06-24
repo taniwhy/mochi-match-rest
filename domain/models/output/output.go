@@ -2,13 +2,13 @@ package output
 
 import "time"
 
-// FavoriteGamesRes :
+// FavoriteGamesRes : お気に入りゲームレスポンス
 type FavoriteGamesRes struct {
 	GameTitle string    `json:"game_title" binding:"required"`
 	CreatedAt time.Time `json:"created_at" binding:"required"`
 }
 
-// UserResBody :
+// UserResBody : ユーザーレスポンス
 type UserResBody struct {
 	UserID        string             `json:"id" binding:"required"`
 	UserName      string             `json:"user_name" binding:"required"`
@@ -17,7 +17,7 @@ type UserResBody struct {
 	FavoriteGames []FavoriteGamesRes `json:"favorite_games" binding:"required"`
 }
 
-// RoomResBody :
+// RoomResBody : ルームレスポンス
 type RoomResBody struct {
 	RoomID        string             `json:"id" binding:"required"`
 	OwnerID       string             `json:"user_name" binding:"required"`

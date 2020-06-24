@@ -9,11 +9,11 @@ import (
 	"github.com/taniwhy/mochi-match-rest/domain/models/input"
 	"github.com/taniwhy/mochi-match-rest/domain/repository"
 	"github.com/taniwhy/mochi-match-rest/domain/service"
-	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/auth"
+	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/middleware/auth"
 )
 
-// RoomUseCase :
-type RoomUseCase interface {
+// IRoomUseCase : インターフェース
+type IRoomUseCase interface {
 	GetList(*gin.Context) ([]*models.Room, error)
 	GetByID(*gin.Context) (*models.Room, error)
 	Create(*gin.Context) error
@@ -29,11 +29,11 @@ type roomUsecase struct {
 	roomService            service.IRoomService
 }
 
-// NewRoomUsecase :
+// NewRoomUsecase : Roomユースケースの生成
 func NewRoomUsecase(
 	rR repository.RoomRepository,
 	eHR repository.EntryHistoryRepository,
-	rS service.IRoomService) RoomUseCase {
+	rS service.IRoomService) IRoomUseCase {
 	return &roomUsecase{
 		roomRepository:         rR,
 		entryHistoryRepository: eHR,
@@ -71,7 +71,7 @@ func (rU roomUsecase) Create(c *gin.Context) error {
 			Start:       b.Start.Time,
 		}
 	}
-	claims, err := auth.GetTokenClaims(c)
+	claims, err := auth.GetTokenClaimsFromRequest(c)
 	if err != nil {
 		return errors.ErrGetTokenClaims{Detail: err.Error()}
 	}
@@ -112,7 +112,7 @@ func (rU roomUsecase) Join(c *gin.Context) error {
 	if !ok {
 		return errors.ErrRoomAlreadyLock{RoomID: rid}
 	}
-	claims, err := auth.GetTokenClaims(c)
+	claims, err := auth.GetTokenClaimsFromRequest(c)
 	if err != nil {
 		return errors.ErrGetTokenClaims{Detail: err.Error()}
 	}
@@ -142,7 +142,7 @@ func (rU roomUsecase) Join(c *gin.Context) error {
 
 func (rU roomUsecase) Leave(c *gin.Context) error {
 	rid := c.Params.ByName("id")
-	claims, err := auth.GetTokenClaims(c)
+	claims, err := auth.GetTokenClaimsFromRequest(c)
 	if err != nil {
 		return errors.ErrGetTokenClaims{Detail: err.Error()}
 	}

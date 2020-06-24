@@ -11,12 +11,14 @@ import (
 	"github.com/taniwhy/mochi-match-rest/domain/models/output"
 	"github.com/taniwhy/mochi-match-rest/domain/repository"
 	"github.com/taniwhy/mochi-match-rest/domain/service"
-	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/auth"
+	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/middleware/auth"
 	"golang.org/x/sync/errgroup"
+
+	log "github.com/sirupsen/logrus"
 )
 
-// UserUseCase :
-type UserUseCase interface {
+// IUserUseCase : インターフェース
+type IUserUseCase interface {
 	GetMe(c *gin.Context) (*output.UserResBody, error)
 	GetByID(c *gin.Context) (*output.UserResBody, error)
 	GetByProviderID(provider, pid string) (*models.User, error)
@@ -32,12 +34,12 @@ type userUsecase struct {
 	favoriteGameRepository repository.FavoriteGameRepository
 }
 
-// NewUserUsecase :
+// NewUserUsecase : Userユースケースの生成
 func NewUserUsecase(
 	uR repository.UserRepository,
 	uDR repository.UserDetailRepository,
 	uS service.IUserService,
-	fGR repository.FavoriteGameRepository) UserUseCase {
+	fGR repository.FavoriteGameRepository) IUserUseCase {
 	return &userUsecase{
 		userRepository:         uR,
 		userDetailRepository:   uDR,
@@ -47,8 +49,9 @@ func NewUserUsecase(
 }
 
 func (uU userUsecase) GetMe(c *gin.Context) (*output.UserResBody, error) {
-	claims, err := auth.GetTokenClaims(c)
+	claims, err := auth.GetTokenClaimsFromRequest(c)
 	if err != nil {
+		log.Warn("error")
 		return nil, errors.ErrGetTokenClaims{Detail: err.Error()}
 	}
 	claimsID := claims["sub"].(string)
@@ -162,7 +165,7 @@ func (uU userUsecase) Update(c *gin.Context) error {
 	if err := c.BindJSON(&b); err != nil {
 		return errors.ErrUserUpdateReqBinding{UserName: b.UserName, Icon: b.Icon, FavoriteGames: b.FavoriteGames}
 	}
-	claims, err := auth.GetTokenClaims(c)
+	claims, err := auth.GetTokenClaimsFromRequest(c)
 	if err != nil {
 		return errors.ErrGetTokenClaims{Detail: err.Error()}
 	}
@@ -223,7 +226,7 @@ func (uU userUsecase) Update(c *gin.Context) error {
 }
 
 func (uU userUsecase) Delete(c *gin.Context) error {
-	claims, err := auth.GetTokenClaims(c)
+	claims, err := auth.GetTokenClaimsFromRequest(c)
 	if err != nil {
 		return err
 	}

@@ -22,7 +22,7 @@ type Room struct {
 	UpdateAt    time.Time
 }
 
-// NewRoom :
+// NewRoom : roomテーブルのレコードモデル生成
 func NewRoom(uid, text, gtid, ghid string, cap int, s time.Time) (*Room, error) {
 	id, err := uuid.NewRandom()
 	if err != nil {

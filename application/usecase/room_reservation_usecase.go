@@ -5,8 +5,8 @@ import (
 	"github.com/taniwhy/mochi-match-rest/domain/repository"
 )
 
-// RoomReservationUseCase :
-type RoomReservationUseCase interface {
+// IRoomReservationUseCase : インターフェース
+type IRoomReservationUseCase interface {
 	FindAllRoomReservation() ([]*models.RoomReservation, error)
 	FindRoomReservationByID(id int64) (*models.RoomReservation, error)
 	InsertRoomReservation(roomReservation *models.RoomReservation) error
@@ -18,8 +18,8 @@ type roomReservationUsecase struct {
 	roomReservationRepository repository.RoomReservationRepository
 }
 
-// NewRoomReservationUsecase :
-func NewRoomReservationUsecase(rR repository.RoomReservationRepository) RoomReservationUseCase {
+// NewRoomReservationUsecase : RoomReservationユースケースの生成
+func NewRoomReservationUsecase(rR repository.RoomReservationRepository) IRoomReservationUseCase {
 	return &roomReservationUsecase{
 		roomReservationRepository: rR,
 	}

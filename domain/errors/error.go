@@ -8,7 +8,7 @@ import (
 	"github.com/taniwhy/mochi-match-rest/domain/models/input"
 )
 
-// ErrUserCreateReqBinding :
+// ErrUserCreateReqBinding : ユーザー作成リクエストボディのバインディングエラー
 type ErrUserCreateReqBinding struct {
 	UserName string
 	Email    string
@@ -26,7 +26,7 @@ func (b ErrUserCreateReqBinding) Error() string {
 	return fmt.Sprintf("Binding error! - " + errMsgs + " is required")
 }
 
-// ErrUserUpdateReqBinding :
+// ErrUserUpdateReqBinding : ユーザー更新リクエストボディのバインディングエラー
 type ErrUserUpdateReqBinding struct {
 	UserName      string
 	Icon          string
@@ -48,7 +48,7 @@ func (b ErrUserUpdateReqBinding) Error() string {
 	return fmt.Sprintf("Binding error! - " + errMsgs + " is required")
 }
 
-// ErrRoomCreateReqBinding :
+// ErrRoomCreateReqBinding : ルーム作成リクエストボディのバインディングエラー
 type ErrRoomCreateReqBinding struct {
 	RoomText    string
 	GameTitleID string
@@ -78,14 +78,70 @@ func (b ErrRoomCreateReqBinding) Error() string {
 	return fmt.Sprintf("Binding error! - " + errMsgs + " is required")
 }
 
-// ErrSessionSave :
+// ErrGameListCreateReqBinding : ゲームリスト作成リクエストボディのバインディングエラー
+type ErrGameListCreateReqBinding struct {
+	GameTitle string
+}
+
+func (b ErrGameListCreateReqBinding) Error() string {
+	var errMsg []string
+	if b.GameTitle == "" {
+		errMsg = append(errMsg, "game_title")
+	}
+	errMsgs := strings.Join(errMsg, ", ")
+	return fmt.Sprintf("Binding error! - " + errMsgs + " is required")
+}
+
+// ErrGameListUpdateReqBinding : ゲームリスト更新リクエストボディのバインディングエラー
+type ErrGameListUpdateReqBinding struct {
+	GameTitle string
+}
+
+func (b ErrGameListUpdateReqBinding) Error() string {
+	var errMsg []string
+	if b.GameTitle == "" {
+		errMsg = append(errMsg, "game_title")
+	}
+	errMsgs := strings.Join(errMsg, ", ")
+	return fmt.Sprintf("Binding error! - " + errMsgs + " is required")
+}
+
+// ErrGameHardCreateReqBinding : ゲームハード作成リクエストボディのバインディングエラー
+type ErrGameHardCreateReqBinding struct {
+	HardName string
+}
+
+func (b ErrGameHardCreateReqBinding) Error() string {
+	var errMsg []string
+	if b.HardName == "" {
+		errMsg = append(errMsg, "hard_name")
+	}
+	errMsgs := strings.Join(errMsg, ", ")
+	return fmt.Sprintf("Binding error! - " + errMsgs + " is required")
+}
+
+// ErrGameHardUpdateReqBinding : ゲームハード更新リクエストボディのバインディングエラー
+type ErrGameHardUpdateReqBinding struct {
+	HardName string
+}
+
+func (b ErrGameHardUpdateReqBinding) Error() string {
+	var errMsg []string
+	if b.HardName == "" {
+		errMsg = append(errMsg, "hard_name")
+	}
+	errMsgs := strings.Join(errMsg, ", ")
+	return fmt.Sprintf("Binding error! - " + errMsgs + " is required")
+}
+
+// ErrSessionSave : セッションのセーブエラー
 type ErrSessionSave struct{}
 
 func (b ErrSessionSave) Error() string {
 	return fmt.Sprintf("Failed session save")
 }
 
-// ErrInvalidSessionState :
+// ErrInvalidSessionState : 無効のセッションステートエラー
 type ErrInvalidSessionState struct {
 	State interface{}
 }
@@ -94,49 +150,49 @@ func (b ErrInvalidSessionState) Error() string {
 	return fmt.Sprintf("Invalid session state: %s", b.State)
 }
 
-// ErrGoogleOAuthTokenExchange :
+// ErrGoogleOAuthTokenExchange : GoogleOAuthトークンの変換エラー
 type ErrGoogleOAuthTokenExchange struct{}
 
 func (b ErrGoogleOAuthTokenExchange) Error() string {
 	return fmt.Sprintf("Failed GoogleOAuth token exchange")
 }
 
-// ErrInvalidGoogleOAuthToken :
+// ErrInvalidGoogleOAuthToken : 無効のGoogleOAuthトークンエラー
 type ErrInvalidGoogleOAuthToken struct{}
 
 func (b ErrInvalidGoogleOAuthToken) Error() string {
 	return fmt.Sprintf("Invalid GoogleOAuth token")
 }
 
-// ErrGoogleAPIRequest :
+// ErrGoogleAPIRequest : GoogleAPIのリクエストエラー
 type ErrGoogleAPIRequest struct{}
 
 func (b ErrGoogleAPIRequest) Error() string {
 	return fmt.Sprintf("Failed GoogleAPI request")
 }
 
-// ErrReadGoogleAPIResponse :
+// ErrReadGoogleAPIResponse : GoogleAPIのレスポンス読み込みエラー
 type ErrReadGoogleAPIResponse struct{}
 
 func (b ErrReadGoogleAPIResponse) Error() string {
 	return fmt.Sprintf("Failed read GoogleAPI response")
 }
 
-// ErrUnmarshalJSON :
+// ErrUnmarshalJSON : ErrUnmarshalJSONエラー
 type ErrUnmarshalJSON struct{}
 
 func (b ErrUnmarshalJSON) Error() string {
 	return fmt.Sprintf("Failed unmarshal json")
 }
 
-// ErrGenerateID :
+// ErrGenerateID : IDの生成エラー
 type ErrGenerateID struct{}
 
 func (b ErrGenerateID) Error() string {
 	return fmt.Sprintf("Failed generate ID")
 }
 
-// ErrCoockie :
+// ErrCoockie : クッキーエラー
 type ErrCoockie struct {
 	Key   string
 	Value string
@@ -146,7 +202,7 @@ func (c ErrCoockie) Error() string {
 	return fmt.Sprintf("Coockie error! - target: %v - got: %v", c.Key, c.Value)
 }
 
-// ErrParams :
+// ErrParams : HTTPリクエストパラメータエラー
 type ErrParams struct {
 	Need string
 	Got  string
@@ -156,7 +212,7 @@ func (c ErrParams) Error() string {
 	return fmt.Sprintf("Params error! - need: %v - got: %v", c.Need, c.Got)
 }
 
-// ErrGetTokenClaims :
+// ErrGetTokenClaims : トークンClaimsの取得エラー
 type ErrGetTokenClaims struct {
 	Detail interface{}
 }
@@ -165,7 +221,7 @@ func (c ErrGetTokenClaims) Error() string {
 	return fmt.Sprintf("Failed token claims! - details: %v", c.Detail)
 }
 
-// ErrIDAlreadyExists :
+// ErrIDAlreadyExists : IDの重複エラー
 type ErrIDAlreadyExists struct {
 	Provider string
 	ID       string
@@ -175,14 +231,14 @@ func (e ErrIDAlreadyExists) Error() string {
 	return fmt.Sprintf("ID already exists! - provider: %s - ID: %s", e.Provider, e.ID)
 }
 
-// ErrRoomAlreadyExists :
+// ErrRoomAlreadyExists : ルームの重複エラー
 type ErrRoomAlreadyExists struct{}
 
 func (e ErrRoomAlreadyExists) Error() string {
 	return fmt.Sprintf("Room already exists!")
 }
 
-// ErrRoomAlreadyLock :
+// ErrRoomAlreadyLock : ロック済みルームへの入室リクエストエラー
 type ErrRoomAlreadyLock struct {
 	RoomID string
 }
@@ -191,7 +247,7 @@ func (l ErrRoomAlreadyLock) Error() string {
 	return fmt.Sprintf("Room already lock! - room: %s", l.RoomID)
 }
 
-// ErrRoomCapacityOver :
+// ErrRoomCapacityOver : ルームの許容人数オーバーエラー
 type ErrRoomCapacityOver struct {
 	RoomID string
 	Count  int
@@ -201,7 +257,7 @@ func (e ErrRoomCapacityOver) Error() string {
 	return fmt.Sprintf("Room capacity over! - room: %s - count: %v", e.RoomID, e.Count)
 }
 
-// ErrRoomAlreadyEntry :
+// ErrRoomAlreadyEntry : 既入室ユーザーの入室リクエストエラー
 type ErrRoomAlreadyEntry struct {
 	RoomID string
 }
@@ -210,7 +266,7 @@ func (e ErrRoomAlreadyEntry) Error() string {
 	return fmt.Sprintf("Room already entry! - room: %s", e.RoomID)
 }
 
-// ErrNotEntryRoom :
+// ErrNotEntryRoom : 未入室ユーザーの退室リクエストエラー
 type ErrNotEntryRoom struct {
 	RoomID string
 }
@@ -219,7 +275,7 @@ func (e ErrNotEntryRoom) Error() string {
 	return fmt.Sprintf("Not entry room! - room: %s", e.RoomID)
 }
 
-// ErrDataBase :
+// ErrDataBase : データベースエラー
 type ErrDataBase struct {
 	Detail interface{}
 }
@@ -228,7 +284,7 @@ func (e ErrDataBase) Error() string {
 	return fmt.Sprintf("Database error! - detail: %s", e.Detail)
 }
 
-// ErrNotFound :
+// ErrNotFound : Not faoundエラー
 type ErrNotFound struct {
 	Detail interface{}
 }
@@ -237,7 +293,7 @@ func (n ErrNotFound) Error() string {
 	return fmt.Sprintf("Not found!")
 }
 
-// ErrRecordNotFound :
+// ErrRecordNotFound : レコードNotFaundエラー
 type ErrRecordNotFound struct {
 	Detail interface{}
 }
@@ -246,7 +302,7 @@ func (e ErrRecordNotFound) Error() string {
 	return fmt.Sprintf("Record not found! - detail: %s", e.Detail)
 }
 
-// ErrUnexpectedQueryProvider :
+// ErrUnexpectedQueryProvider : 予想されていないプロバイダのクエリーエラー
 type ErrUnexpectedQueryProvider struct {
 	Provider string
 }

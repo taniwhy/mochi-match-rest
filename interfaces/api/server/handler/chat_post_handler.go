@@ -2,7 +2,6 @@ package handler
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -11,22 +10,21 @@ import (
 	"github.com/google/uuid"
 	"github.com/taniwhy/mochi-match-rest/application/usecase"
 	"github.com/taniwhy/mochi-match-rest/domain/models"
-	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/auth"
 )
 
-// ChatPostHandler : インターフェース
-type ChatPostHandler interface {
+// IChatPostHandler : インターフェース
+type IChatPostHandler interface {
 	GetChatPostByRoomID(*gin.Context)
 	CreateChatPost(*gin.Context)
 }
 
 type chatPostHandler struct {
-	chatPostUsecase usecase.ChatPostUseCase
+	chatPostUsecase usecase.IChatPostUseCase
 	redis           redis.Conn
 }
 
-// NewChatPostHandler : ユーザーのHandler生成
-func NewChatPostHandler(cU usecase.ChatPostUseCase, rC redis.Conn) ChatPostHandler {
+// NewChatPostHandler : チャット投稿ハンドラの生成
+func NewChatPostHandler(cU usecase.IChatPostUseCase, rC redis.Conn) IChatPostHandler {
 	return &chatPostHandler{
 		chatPostUsecase: cU,
 		redis:           rC,
@@ -66,8 +64,6 @@ func (cH chatPostHandler) CreateChatPost(c *gin.Context) {
 	roomID := c.Params.ByName("id")
 	// todo : テスト用に仮データを記述
 	// idをトークンから取得できるように
-	token := auth.GenerateAccessToken("a")
-	fmt.Println(token)
 	m := &models.ChatPost{
 		ChatPostID: id.String(),
 		RoomID:     roomID,

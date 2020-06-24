@@ -10,7 +10,7 @@ type roomBlacklistDatastore struct {
 	db *gorm.DB
 }
 
-// NewRoomBlacklistDatastore : UserPersistenseを生成.
+// NewRoomBlacklistDatastore : ルームブラックリストデータストアの生成
 func NewRoomBlacklistDatastore(db *gorm.DB) repository.RoomBlacklistRepository {
 	return &roomBlacklistDatastore{db}
 }

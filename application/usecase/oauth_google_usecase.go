@@ -2,8 +2,8 @@ package usecase
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
-	"net/http"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -15,10 +15,10 @@ import (
 	"golang.org/x/oauth2"
 )
 
-const oauthGoogleURLAPI = "https://www.googleapis.com/oauth2/v2/userinfo?access_token="
+const oauthGoogleURLAPI = "https://www.googleapis.com/oauth2/v3/userinfo?access_token="
 
-// GoogleOAuthUsecase :
-type GoogleOAuthUsecase interface {
+// IGoogleOAuthUsecase : インターフェース
+type IGoogleOAuthUsecase interface {
 	Login(c *gin.Context) (string, error)
 	Callback(c *gin.Context) (bool, *models.GoogleUser, error)
 }
@@ -28,10 +28,10 @@ type googleOAuthUsecase struct {
 	userService service.IUserService
 }
 
-// NewGoogleOAuthUsecase :
-func NewGoogleOAuthUsecase(uS service.IUserService) GoogleOAuthUsecase {
+// NewGoogleOAuthUsecase : GoogleOAuthユースケースの生成
+func NewGoogleOAuthUsecase(uS service.IUserService) IGoogleOAuthUsecase {
 	return &googleOAuthUsecase{
-		oauthConf:   config.ConfigureOAuthClient(),
+		oauthConf:   config.GetOAuthClientConf(),
 		userService: uS,
 	}
 }
@@ -44,18 +44,16 @@ func (gA *googleOAuthUsecase) Login(c *gin.Context) (string, error) {
 	sessionID := u.String()
 	session := sessions.Default(c)
 	session.Set("state", sessionID)
-	if err := session.Save(); err != nil {
-		return "", errors.ErrSessionSave{}
-	}
+	session.Save()
 
 	url := gA.oauthConf.AuthCodeURL(sessionID)
-	c.Redirect(http.StatusTemporaryRedirect, url)
 	return url, nil
 }
 
 func (gA *googleOAuthUsecase) Callback(c *gin.Context) (bool, *models.GoogleUser, error) {
 	session := sessions.Default(c)
 	retrievedState := session.Get("state")
+	fmt.Println(retrievedState, c.Query("state"))
 	if retrievedState != c.Query("state") {
 		return false, nil, errors.ErrInvalidSessionState{State: retrievedState}
 	}
@@ -70,17 +68,15 @@ func (gA *googleOAuthUsecase) Callback(c *gin.Context) (bool, *models.GoogleUser
 	}
 
 	client := gA.oauthConf.Client(oauth2.NoContext, tok)
-	email, err := client.Get(oauthGoogleURLAPI)
+	response, err := client.Get(oauthGoogleURLAPI)
 	if err != nil {
 		return false, nil, errors.ErrGoogleAPIRequest{}
 	}
-	defer email.Body.Close()
-
-	data, err := ioutil.ReadAll(email.Body)
+	defer response.Body.Close()
+	data, err := ioutil.ReadAll(response.Body)
 	if err != nil {
 		return false, nil, errors.ErrReadGoogleAPIResponse{}
 	}
-
 	gU := models.GoogleUser{}
 	err = json.Unmarshal(data, &gU)
 	if err != nil {

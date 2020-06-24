@@ -10,7 +10,7 @@ type chatPostDatastore struct {
 	db *gorm.DB
 }
 
-// NewChatPostDatastore : UserPersistenseを生成.
+// NewChatPostDatastore : チャット投稿データストアの生成
 func NewChatPostDatastore(db *gorm.DB) repository.ChatPostRepository {
 	return &chatPostDatastore{db}
 }

@@ -45,3 +45,13 @@ type GameListCreateReqBody struct {
 type GameListUpdateReqBody struct {
 	GameTitle string `json:"game_title" binding:"required"`
 }
+
+// GameHardCreateReqBody : ゲームハード作成リクエストボディ
+type GameHardCreateReqBody struct {
+	HardName string `json:"hard_name" binding:"required"`
+}
+
+// GameHardUpdateReqBody : ゲームハード更新リクエストボディ
+type GameHardUpdateReqBody struct {
+	HardName string `json:"hard_name" binding:"required"`
+}

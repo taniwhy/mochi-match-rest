@@ -106,6 +106,34 @@ func (b ErrGameListUpdateReqBinding) Error() string {
 	return fmt.Sprintf("Binding error! - " + errMsgs + " is required")
 }
 
+// ErrGameHardCreateReqBinding : ゲームハード作成リクエストボディのバインディングエラー
+type ErrGameHardCreateReqBinding struct {
+	HardName string
+}
+
+func (b ErrGameHardCreateReqBinding) Error() string {
+	var errMsg []string
+	if b.HardName == "" {
+		errMsg = append(errMsg, "hard_name")
+	}
+	errMsgs := strings.Join(errMsg, ", ")
+	return fmt.Sprintf("Binding error! - " + errMsgs + " is required")
+}
+
+// ErrGameHardUpdateReqBinding : ゲームハード更新リクエストボディのバインディングエラー
+type ErrGameHardUpdateReqBinding struct {
+	HardName string
+}
+
+func (b ErrGameHardUpdateReqBinding) Error() string {
+	var errMsg []string
+	if b.HardName == "" {
+		errMsg = append(errMsg, "hard_name")
+	}
+	errMsgs := strings.Join(errMsg, ", ")
+	return fmt.Sprintf("Binding error! - " + errMsgs + " is required")
+}
+
 // ErrSessionSave : セッションのセーブエラー
 type ErrSessionSave struct{}
 

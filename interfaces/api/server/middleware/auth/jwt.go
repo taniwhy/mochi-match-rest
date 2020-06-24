@@ -16,7 +16,7 @@ func GenerateAccessToken(userID string, isAdmin bool) string {
 	claims := token.Claims.(jwt.MapClaims)
 	claims["sub"] = userID
 	claims["iat"] = time.Now().Unix()
-	claims["exp"] = time.Now().Add(time.Minute * 90).Unix()
+	claims["exp"] = time.Now().Add(time.Minute * 15).Unix()
 	claims["is_admin"] = isAdmin
 	accessToken, err := token.SignedString(signBytes)
 	if err != nil {

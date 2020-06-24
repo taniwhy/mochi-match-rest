@@ -28,6 +28,7 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 	entryHistoryDatastore := datastore.NewEntryHistoryDatastore(dbConn)
 	chatPostDatastore := datastore.NewChatPostDatastore(dbConn)
 	gameListDatastore := datastore.NewGameListDatastore(dbConn)
+	gameHardDatastore := datastore.NewGameHardDatastore(dbConn)
 	favorateGameDatastore := datastore.NewFavoriteGameDatastore(dbConn)
 
 	userService := service.NewUserService(userDatastore)
@@ -39,6 +40,7 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 	roomReservationUsecase := usecase.NewRoomReservationUsecase(roomReservationDatastore)
 	chatPostUsecase := usecase.NewChatPostUsecase(chatPostDatastore)
 	gameListUsecase := usecase.NewGameListUsecase(gameListDatastore)
+	gameHardUsecase := usecase.NewGameHardUsecase(gameHardDatastore)
 	googleAuthUsecase := usecase.NewGoogleOAuthUsecase(userService)
 
 	userHandler := handler.NewUserHandler(userUsecase)
@@ -46,6 +48,7 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 	roomBlacklistHandler := handler.NewRoomBlacklistHandler(userUsecase, roomUsecase, roomBlacklistUsecase)
 	chatPostHandler := handler.NewChatPostHandler(chatPostUsecase, redisConn)
 	gameListHandler := handler.NewGameListHandler(gameListUsecase)
+	gameHardHandler := handler.NewGameHardHandler(gameHardUsecase)
 	googleAuthHandler := handler.NewGoogleOAuthHandler(googleAuthUsecase, userUsecase, userService)
 
 	authHandler := handler.NewAuthHandler()
@@ -107,6 +110,17 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 		gamelist.POST("", gameListHandler.Create)
 		gamelist.PUT("/:id", gameListHandler.Update)
 		gamelist.DELETE("/:id", gameListHandler.Delete)
+	}
+	gamehard := v1.Group("/gamehard")
+	gamehard.Use(auth.TokenAuth())
+	{
+		gamehard.GET("", gameHardHandler.GetAll)
+	}
+	gamehard.Use(auth.AdminAuth())
+	{
+		gamehard.POST("", gameHardHandler.Create)
+		gamehard.PUT("/:id", gameHardHandler.Update)
+		gamehard.DELETE("/:id", gameHardHandler.Delete)
 	}
 	return r
 }

@@ -90,15 +90,25 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 		room.GET("/:id", roomHandler.GetByID)
 		room.POST("", roomHandler.Create)
 		room.PUT("/:id", roomHandler.Update)
+		room.DELETE("/:id", roomHandler.Delete)
 		room.POST("/:id/join", roomHandler.Join)
 		room.DELETE("/:id/leave", roomHandler.Leave)
-		room.GET("/:id/messages", chatPostHandler.GetChatPostByRoomID)
-		room.POST("/:id/messages", chatPostHandler.CreateChatPost)
-		room.GET("/:id/report")
-		room.POST("/:id/report")
-		room.GET("/:id/blacklist", roomBlacklistHandler.GetByID)
-		room.POST("/:id/blacklist", roomBlacklistHandler.Create)
-		room.DELETE("/:id/blacklist", roomBlacklistHandler.Delete)
+	}
+	messages := room.Group("/:id/messages")
+	{
+		messages.GET("", chatPostHandler.GetChatPostByRoomID)
+		messages.POST("", chatPostHandler.CreateChatPost)
+	}
+	report := room.Group("/:id/report")
+	{
+		report.GET("")
+		report.POST("")
+	}
+	blacklist := room.Group("/:id/blacklist")
+	{
+		blacklist.GET("", roomBlacklistHandler.GetByID)
+		blacklist.POST("", roomBlacklistHandler.Create)
+		blacklist.DELETE("", roomBlacklistHandler.Delete)
 	}
 	gamelist := v1.Group("/gamelist")
 	gamelist.Use(auth.TokenAuth())

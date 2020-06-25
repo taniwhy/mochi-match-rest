@@ -126,3 +126,18 @@ func (rD roomDatastore) Delete(room *models.Room) error {
 	}
 	return rD.db.Delete(room).Error
 }
+
+// todo ロック時間は保存する？
+func (rD roomDatastore) LockFlg(uid, rid string) error {
+	h := &models.Room{}
+	err := rD.db.Model(&h).
+		Where("room_id = ? AND user_id = ? AND is_lock = ?", rid, uid, false).
+		Updates(models.Room{IsLock: true}).Error
+	if gorm.IsRecordNotFoundError(err) {
+		return errors.ErrRecordNotFound{Detail: err.Error()}
+	}
+	if err != nil {
+		return errors.ErrDataBase{Detail: err}
+	}
+	return nil
+}

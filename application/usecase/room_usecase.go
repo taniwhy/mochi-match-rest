@@ -76,21 +76,23 @@ func (rU roomUsecase) Create(c *gin.Context) error {
 	if err != nil {
 		return errors.ErrGetTokenClaims{Detail: err.Error()}
 	}
-	claimsID := claims["sub"].(string)
-
-	ok, err := rU.roomService.CanInsert(claimsID)
+	userID := claims["sub"].(string)
+	ok, err := rU.roomService.CanInsert(userID)
 	if err != nil {
 		return err
 	}
 	if !ok {
 		return errors.ErrRoomAlreadyExists{}
 	}
-
-	r, err := models.NewRoom(claimsID, b.RoomText, b.GameListID, b.GameHardID, b.Capacity, b.Start.Time)
+	r, err := models.NewRoom(userID, b.RoomText, b.GameListID, b.GameHardID, b.Capacity, b.Start.Time)
 	if err != nil {
 		return err
 	}
 	if err := rU.roomRepository.Insert(r); err != nil {
+		return err
+	}
+	h, err := models.NewEntryHistory(userID, r.RoomID)
+	if err := rU.entryHistoryRepository.Insert(h); err != nil {
 		return err
 	}
 	return nil
@@ -101,6 +103,22 @@ func (rU roomUsecase) Update(c *gin.Context) error {
 }
 
 func (rU roomUsecase) Delete(c *gin.Context) error {
+	rid := c.Params.ByName("id")
+	claims, err := auth.GetTokenClaimsFromRequest(c)
+	if err != nil {
+		return errors.ErrGetTokenClaims{Detail: err.Error()}
+	}
+	uid := claims["sub"].(string)
+	ok, err := rU.roomService.IsOwner(uid, rid)
+	if err != nil {
+		return err
+	}
+	if !ok {
+		return errors.ErrNotRoomOwner{RoomID: rid}
+	}
+	if err := rU.roomRepository.LockFlg(uid, rid); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -127,9 +145,6 @@ func (rU roomUsecase) Join(c *gin.Context) error {
 	}
 	r, err := rU.roomRepository.FindByID(rid)
 	cap := r.Capacity
-	if r.UserID != uid {
-		cap--
-	}
 	cnt, err := rU.entryHistoryRepository.CountEntryUser(rid)
 	if cap < cnt {
 		return errors.ErrRoomCapacityOver{RoomID: rid, Count: cnt}

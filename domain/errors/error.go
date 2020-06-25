@@ -266,6 +266,15 @@ func (e ErrRoomAlreadyEntry) Error() string {
 	return fmt.Sprintf("Room already entry! - room: %s", e.RoomID)
 }
 
+// ErrNotRoomOwner : ルームの非所有者エラー
+type ErrNotRoomOwner struct {
+	RoomID string
+}
+
+func (e ErrNotRoomOwner) Error() string {
+	return fmt.Sprintf("Not room owner! - room: %s", e.RoomID)
+}
+
 // ErrNotEntryRoom : 未入室ユーザーの退室リクエストエラー
 type ErrNotEntryRoom struct {
 	RoomID string

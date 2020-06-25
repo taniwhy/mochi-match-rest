@@ -67,6 +67,7 @@ func (rD roomDatastore) FindByLimitAndOffset(limit, offset int) ([]*output.RoomR
 		Joins("LEFT JOIN user_details ON rooms.user_id = user_details.user_id").
 		Joins("LEFT JOIN game_hards ON rooms.game_hard_id = game_hards.game_hard_id").
 		Joins("LEFT JOIN game_lists ON rooms.game_list_id = game_lists.game_list_id").
+		Where("rooms.is_lock = ?", false).
 		Limit(limit).
 		Offset(offset).
 		Order("created_at desc").

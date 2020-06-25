@@ -12,11 +12,14 @@ services:
     environment:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
+      TZ: Asia/Tokyo
   redis:
     image: 'redis:4.0.6'
     container_name: 'mochi-match-redis-dev'
     ports:
       - '6379:6379'
+    environment:
+      TZ: Asia/Tokyo
 volumes:
   mochimatch_postgres_dev:
     driver: local

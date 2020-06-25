@@ -101,7 +101,6 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 	report := room.Group("/:id/report")
 	messages.Use(auth.TokenAuth())
 	{
-		report.GET("")
 		report.POST("")
 	}
 	blacklist := room.Group("/:id/blacklist")

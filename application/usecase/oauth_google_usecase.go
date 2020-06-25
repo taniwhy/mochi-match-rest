@@ -41,8 +41,12 @@ func (gA *googleOAuthUsecase) Login(c *gin.Context) (string, error) {
 	if err != nil {
 		return "", errors.ErrGenerateID{}
 	}
-	sessionID := u.String()
 	session := sessions.Default(c)
+
+	option := sessions.Options{Path: "/", Domain: "", MaxAge: 300, Secure: false, HttpOnly: true}
+	session.Options(option)
+
+	sessionID := u.String()
 	session.Set("state", sessionID)
 	session.Save()
 

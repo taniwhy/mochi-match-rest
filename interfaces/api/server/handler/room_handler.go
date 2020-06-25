@@ -22,20 +22,17 @@ type IRoomHandler interface {
 }
 
 type roomHandler struct {
-	userUsecase            usecase.IUserUseCase
-	roomUsecase            usecase.IRoomUseCase
-	roomReservationUseCase usecase.IRoomReservationUseCase
+	userUsecase usecase.IUserUseCase
+	roomUsecase usecase.IRoomUseCase
 }
 
 // NewRoomHandler : ルームハンドラの生成
 func NewRoomHandler(
 	uU usecase.IUserUseCase,
-	rU usecase.IRoomUseCase,
-	rRU usecase.IRoomReservationUseCase) IRoomHandler {
+	rU usecase.IRoomUseCase) IRoomHandler {
 	return &roomHandler{
-		userUsecase:            uU,
-		roomUsecase:            rU,
-		roomReservationUseCase: rRU,
+		userUsecase: uU,
+		roomUsecase: rU,
 	}
 }
 

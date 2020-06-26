@@ -55,3 +55,9 @@ type GameHardCreateReqBody struct {
 type GameHardUpdateReqBody struct {
 	HardName string `json:"hard_name" binding:"required"`
 }
+
+// ReportReqBody :
+type ReportReqBody struct {
+	VaiolatorID      string `json:"vaiolator_id" binding:"required"`
+	VaiolationDetail string `json:"detail" binding:"required"`
+}

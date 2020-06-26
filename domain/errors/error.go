@@ -134,6 +134,24 @@ func (b ErrGameHardUpdateReqBinding) Error() string {
 	return fmt.Sprintf("Binding error! - " + errMsgs + " is required")
 }
 
+// ErrReportReqBinding : レポートリクエストボディのバインディングエラー
+type ErrReportReqBinding struct {
+	VaiolatorID      string
+	VaiolationDetail string
+}
+
+func (b ErrReportReqBinding) Error() string {
+	var errMsg []string
+	if b.VaiolatorID == "" {
+		errMsg = append(errMsg, "vaiolator_id")
+	}
+	if b.VaiolationDetail == "" {
+		errMsg = append(errMsg, "detail")
+	}
+	errMsgs := strings.Join(errMsg, ", ")
+	return fmt.Sprintf("Binding error! - " + errMsgs + " is required")
+}
+
 // ErrSessionSave : セッションのセーブエラー
 type ErrSessionSave struct{}
 

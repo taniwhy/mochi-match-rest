@@ -1,15 +1,17 @@
 package usecase
 
 import (
+	"github.com/gin-gonic/gin"
+	"github.com/taniwhy/mochi-match-rest/domain/errors"
 	"github.com/taniwhy/mochi-match-rest/domain/models"
+	"github.com/taniwhy/mochi-match-rest/domain/models/input"
 	"github.com/taniwhy/mochi-match-rest/domain/repository"
+	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/middleware/auth"
 )
 
 // IReportUsecase : インターフェース
 type IReportUsecase interface {
-	FindAllReport() ([]*models.Report, error)
-	InsertReport(report *models.Report) error
-	DeleteReport(report *models.Report) error
+	Insert(*gin.Context) error
 }
 
 type reportUsecase struct {
@@ -23,25 +25,25 @@ func NewReportUsecase(rR repository.ReportRepository) IReportUsecase {
 	}
 }
 
-func (rU reportUsecase) FindAllReport() ([]*models.Report, error) {
-	chatposts, err := rU.reportRepository.FindAllReport()
-	if err != nil {
-		return nil, err
+func (rU reportUsecase) Insert(c *gin.Context) error {
+	b := input.ReportReqBody{}
+	if err := c.BindJSON(&b); err != nil {
+		return errors.ErrReportReqBinding{
+			VaiolatorID:      b.VaiolatorID,
+			VaiolationDetail: b.VaiolationDetail,
+		}
 	}
-	return chatposts, nil
-}
-
-func (rU reportUsecase) InsertReport(report *models.Report) error {
-	err := rU.reportRepository.InsertReport(report)
+	claims, err := auth.GetTokenClaimsFromRequest(c)
+	if err != nil {
+		return errors.ErrGetTokenClaims{Detail: err.Error()}
+	}
+	cID := claims["sub"].(string)
+	rID := c.Params.ByName("id")
+	r, err := models.NewReport(cID, b.VaiolatorID, rID, b.VaiolationDetail)
 	if err != nil {
 		return err
 	}
-	return nil
-}
-
-func (rU reportUsecase) DeleteReport(report *models.Report) error {
-	err := rU.reportRepository.DeleteReport(report)
-	if err != nil {
+	if err := rU.reportRepository.InsertReport(r); err != nil {
 		return err
 	}
 	return nil

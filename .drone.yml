@@ -47,11 +47,13 @@ steps:
         {{#success build.status}}
           ✅  Build #{{build.number}} `{{repo.name}}/{{commit.branch}}` Success
           ``` {{commit.message}} ```
-          ✅ duration: {{duration build.started build.finished}}
+          🌐 {{ build.link }}
+          duration: {{duration build.started build.finished}}
         {{else}}
           ❌  Build #{{build.number}} `{{repo.name}}/{{commit.branch}}` Failed
           ``` {{commit.message}} ```
-          ✅ duration: {{duration build.started build.finished}}
+          🌐 {{ build.link }}
+          duration: {{duration build.started build.finished}}
         {{/success}}
 
 trigger:

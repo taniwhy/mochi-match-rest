@@ -57,6 +57,7 @@ steps:
 trigger:
   event:
     - push
+
 services:
   - name: db
     image: postgres:10.5

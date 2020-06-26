@@ -50,11 +50,11 @@ func (b ErrUserUpdateReqBinding) Error() string {
 
 // ErrRoomCreateReqBinding : ルーム作成リクエストボディのバインディングエラー
 type ErrRoomCreateReqBinding struct {
-	RoomText    string
-	GameTitleID string
-	GameHardID  string
-	Capacity    int
-	Start       time.Time
+	RoomText   string
+	GameListID string
+	GameHardID string
+	Capacity   int
+	Start      time.Time
 }
 
 func (b ErrRoomCreateReqBinding) Error() string {
@@ -62,8 +62,8 @@ func (b ErrRoomCreateReqBinding) Error() string {
 	if b.RoomText == "" {
 		errMsg = append(errMsg, "room_text")
 	}
-	if b.GameTitleID == "" {
-		errMsg = append(errMsg, "game_title_id")
+	if b.GameListID == "" {
+		errMsg = append(errMsg, "game_list_id")
 	}
 	if b.GameHardID == "" {
 		errMsg = append(errMsg, "game_hard_id")
@@ -129,6 +129,38 @@ func (b ErrGameHardUpdateReqBinding) Error() string {
 	var errMsg []string
 	if b.HardName == "" {
 		errMsg = append(errMsg, "hard_name")
+	}
+	errMsgs := strings.Join(errMsg, ", ")
+	return fmt.Sprintf("Binding error! - " + errMsgs + " is required")
+}
+
+// ErrReportReqBinding : レポートリクエストボディのバインディングエラー
+type ErrReportReqBinding struct {
+	VaiolatorID      string
+	VaiolationDetail string
+}
+
+func (b ErrReportReqBinding) Error() string {
+	var errMsg []string
+	if b.VaiolatorID == "" {
+		errMsg = append(errMsg, "vaiolator_id")
+	}
+	if b.VaiolationDetail == "" {
+		errMsg = append(errMsg, "detail")
+	}
+	errMsgs := strings.Join(errMsg, ", ")
+	return fmt.Sprintf("Binding error! - " + errMsgs + " is required")
+}
+
+// ErrChatPostCreateReqBinding : チャットメッセージ作成リクエストボディのバインディングエラー
+type ErrChatPostCreateReqBinding struct {
+	Message string
+}
+
+func (b ErrChatPostCreateReqBinding) Error() string {
+	var errMsg []string
+	if b.Message == "" {
+		errMsg = append(errMsg, "message")
 	}
 	errMsgs := strings.Join(errMsg, ", ")
 	return fmt.Sprintf("Binding error! - " + errMsgs + " is required")
@@ -264,6 +296,15 @@ type ErrRoomAlreadyEntry struct {
 
 func (e ErrRoomAlreadyEntry) Error() string {
 	return fmt.Sprintf("Room already entry! - room: %s", e.RoomID)
+}
+
+// ErrNotRoomOwner : ルームの非所有者エラー
+type ErrNotRoomOwner struct {
+	RoomID string
+}
+
+func (e ErrNotRoomOwner) Error() string {
+	return fmt.Sprintf("Not room owner! - room: %s", e.RoomID)
 }
 
 // ErrNotEntryRoom : 未入室ユーザーの退室リクエストエラー

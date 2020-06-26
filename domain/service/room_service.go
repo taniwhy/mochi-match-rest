@@ -8,6 +8,7 @@ import (
 type IRoomService interface {
 	CanInsert(id string) (bool, error)
 	IsLock(id string) (bool, error)
+	IsOwner(uid, rid string) (bool, error)
 }
 
 type roomService struct {
@@ -41,4 +42,15 @@ func (rS roomService) IsLock(id string) (bool, error) {
 		return false, nil
 	}
 	return true, nil
+}
+
+func (rS roomService) IsOwner(uid, rid string) (bool, error) {
+	r, err := rS.roomRepository.FindByID(rid)
+	if err != nil {
+		return false, err
+	}
+	if r.UserID == uid {
+		return true, nil
+	}
+	return false, nil
 }

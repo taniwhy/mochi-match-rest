@@ -24,11 +24,11 @@ type UserUpdateReqBody struct {
 
 // RoomCreateReqBody : ルーム作成リクエストボディ
 type RoomCreateReqBody struct {
-	RoomText    string    `json:"room_text" binding:"required"`
-	GameTitleID string    `json:"game_title_id" binding:"required"`
-	GameHardID  string    `json:"game_hard_id" binding:"required"`
-	Capacity    int       `json:"capacity" binding:"required"`
-	Start       null.Time `json:"start" binding:"required"`
+	RoomText   string    `json:"room_text" binding:"required"`
+	GameListID string    `json:"game_list_id" binding:"required"`
+	GameHardID string    `json:"game_hard_id" binding:"required"`
+	Capacity   int       `json:"capacity" binding:"required"`
+	Start      null.Time `json:"start" binding:"required"`
 }
 
 // TokenReqBody : トークンのリクエストボディ
@@ -54,4 +54,15 @@ type GameHardCreateReqBody struct {
 // GameHardUpdateReqBody : ゲームハード更新リクエストボディ
 type GameHardUpdateReqBody struct {
 	HardName string `json:"hard_name" binding:"required"`
+}
+
+// ReportReqBody :
+type ReportReqBody struct {
+	VaiolatorID      string `json:"vaiolator_id" binding:"required"`
+	VaiolationDetail string `json:"detail" binding:"required"`
+}
+
+// ChatPostCreateReqBody : チャットメッセージの作成リクエストボディ
+type ChatPostCreateReqBody struct {
+	Message string `json:"message" binding:"required"`
 }

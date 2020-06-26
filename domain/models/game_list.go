@@ -9,10 +9,10 @@ import (
 
 // GameList : game_titleテーブルモデル
 type GameList struct {
-	GameListID string
-	GameTitle  string `json:"game_title" binding:"required"`
-	CreatedAt  time.Time
-	UpdateAt   time.Time
+	GameListID string    `json:"id" binding:"required"`
+	GameTitle  string    `json:"game_title" binding:"required"`
+	CreatedAt  time.Time `json:"created_at" binding:"required"`
+	UpdateAt   time.Time `json:"update_at" binding:"required"`
 }
 
 // NewGameList : game_listsテーブルのレコードモデル生成

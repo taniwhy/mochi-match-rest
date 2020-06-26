@@ -2,6 +2,7 @@ package datastore
 
 import (
 	"github.com/jinzhu/gorm"
+	"github.com/taniwhy/mochi-match-rest/domain/errors"
 	"github.com/taniwhy/mochi-match-rest/domain/models"
 	"github.com/taniwhy/mochi-match-rest/domain/repository"
 )
@@ -15,33 +16,28 @@ func NewRoomBlacklistDatastore(db *gorm.DB) repository.RoomBlacklistRepository {
 	return &roomBlacklistDatastore{db}
 }
 
-func (rD roomBlacklistDatastore) FindAllBlacklist() ([]*models.RoomBlacklist, error) {
-	blacklist := []*models.RoomBlacklist{}
-
-	err := rD.db.Find(&blacklist).Error
+func (rD roomBlacklistDatastore) FindByRoomID(rid string) ([]*models.RoomBlacklist, error) {
+	rB := []*models.RoomBlacklist{}
+	err := rD.db.Where("room_id = ?", rid).Find(&rB).Error
 	if err != nil {
-		return nil, err
+		return nil, errors.ErrDataBase{Detail: err.Error()}
 	}
-	return blacklist, nil
+	return rB, nil
 }
 
-func (rD roomBlacklistDatastore) FindBlacklistByID(id int64) (*models.RoomBlacklist, error) {
-	blacklist := models.RoomBlacklist{ID: id}
-	err := rD.db.Take(&blacklist).Error
+func (rD roomBlacklistDatastore) Insert(rB *models.RoomBlacklist) error {
+	err := rD.db.Create(rB).Error
 	if err != nil {
-		return nil, err
+		return errors.ErrDataBase{Detail: err.Error()}
 	}
-	return &blacklist, nil
+	return nil
 }
 
-func (rD roomBlacklistDatastore) InsertBlacklist(blacklist *models.RoomBlacklist) error {
-	return rD.db.Create(blacklist).Error
-}
-
-func (rD roomBlacklistDatastore) DeleteBlacklist(blacklist *models.RoomBlacklist) error {
-	err := rD.db.Take(&blacklist).Error
+func (rD roomBlacklistDatastore) Delete(rid string) error {
+	rB := models.RoomBlacklist{}
+	err := rD.db.Where("room_id = ?", rid).Delete(rB).Error
 	if err != nil {
-		return err
+		return errors.ErrDataBase{Detail: err.Error()}
 	}
-	return rD.db.Delete(blacklist).Error
+	return nil
 }

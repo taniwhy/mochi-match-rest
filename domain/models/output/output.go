@@ -1,6 +1,10 @@
 package output
 
-import "time"
+import (
+	"time"
+
+	"gopkg.in/guregu/null.v4"
+)
 
 // FavoriteGamesRes : お気に入りゲームレスポンス
 type FavoriteGamesRes struct {
@@ -19,9 +23,15 @@ type UserResBody struct {
 
 // RoomResBody : ルームレスポンス
 type RoomResBody struct {
-	RoomID        string             `json:"id" binding:"required"`
-	OwnerID       string             `json:"user_name" binding:"required"`
-	Icon          string             `json:"icon" binding:"required"`
-	Name          time.Time          `json:"created_at" binding:"required"`
-	FavoriteGames []FavoriteGamesRes `json:"favorite_games" binding:"required"`
+	RoomID    string    `json:"room_id" binding:"required"`
+	UserID    string    `json:"owner_id" binding:"required"`
+	Icon      string    `json:"icon" binding:"required"`
+	HardName  string    `json:"hard" binding:"required"`
+	GameTitle string    `json:"title" binding:"required"`
+	Capacity  int       `json:"capacity" binding:"required"`
+	RoomText  string    `json:"text" binding:"required"`
+	UserName  string    `json:"name" binding:"required"`
+	Count     int       `json:"count" binding:"required"`
+	CreatedAt time.Time `json:"created" binding:"required"`
+	Start     null.Time `json:"start" binding:"required"`
 }

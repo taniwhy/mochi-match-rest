@@ -1,43 +1,53 @@
 package handler
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/taniwhy/mochi-match-rest/application/usecase"
 )
 
 // IRoomBlacklistHandler : インターフェース
 type IRoomBlacklistHandler interface {
-	GetByID(*gin.Context)
+	GetByRoomID(*gin.Context)
 	Create(*gin.Context)
 	Delete(*gin.Context)
 }
 
 type roomBlacklistHandler struct {
-	userUsecase          usecase.IUserUseCase
-	roomUsecase          usecase.IRoomUseCase
 	roomBlacklistUsecase usecase.IRoomBlacklistUseCase
 }
 
 // NewRoomBlacklistHandler : ルームブラックリストハンドラの生成
-func NewRoomBlacklistHandler(
-	uU usecase.IUserUseCase,
-	rU usecase.IRoomUseCase,
-	rBU usecase.IRoomBlacklistUseCase) IRoomBlacklistHandler {
+func NewRoomBlacklistHandler(rBU usecase.IRoomBlacklistUseCase) IRoomBlacklistHandler {
 	return &roomBlacklistHandler{
-		userUsecase:          uU,
-		roomUsecase:          rU,
 		roomBlacklistUsecase: rBU,
 	}
 }
 
-func (rH roomBlacklistHandler) GetByID(c *gin.Context) {
-
+func (rH roomBlacklistHandler) GetByRoomID(c *gin.Context) {
+	rB, err := rH.roomBlacklistUsecase.GetByRoomID(c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
+	c.JSON(http.StatusOK, rB)
 }
 
 func (rH roomBlacklistHandler) Create(c *gin.Context) {
-
+	err := rH.roomBlacklistUsecase.Insert(c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Create blacklist"})
 }
 
 func (rH roomBlacklistHandler) Delete(c *gin.Context) {
-
+	err := rH.roomBlacklistUsecase.Delete(c)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Delete blacklist"})
 }

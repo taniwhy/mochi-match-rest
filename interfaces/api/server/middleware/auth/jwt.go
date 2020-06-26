@@ -2,6 +2,7 @@ package auth
 
 import (
 	"fmt"
+	"os"
 	"strconv"
 	"time"
 
@@ -9,6 +10,14 @@ import (
 	"github.com/dgrijalva/jwt-go/request"
 	"github.com/gin-gonic/gin"
 )
+
+var (
+	signBytes []byte
+)
+
+func init() {
+	signBytes = []byte(os.Getenv("AUTHORIZE_RSA"))
+}
 
 // GenerateAccessToken : アクセストークンの生成
 func GenerateAccessToken(userID string, isAdmin bool) string {

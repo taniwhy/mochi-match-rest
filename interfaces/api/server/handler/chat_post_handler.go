@@ -1,14 +1,12 @@
 package handler
 
 import (
-	"encoding/json"
 	"net/http"
-	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/gomodule/redigo/redis"
-	"github.com/google/uuid"
+	log "github.com/sirupsen/logrus"
 	"github.com/taniwhy/mochi-match-rest/application/usecase"
+	"github.com/taniwhy/mochi-match-rest/domain/errors"
 	"github.com/taniwhy/mochi-match-rest/domain/models"
 )
 
@@ -20,14 +18,12 @@ type IChatPostHandler interface {
 
 type chatPostHandler struct {
 	chatPostUsecase usecase.IChatPostUseCase
-	redis           redis.Conn
 }
 
 // NewChatPostHandler : チャット投稿ハンドラの生成
-func NewChatPostHandler(cU usecase.IChatPostUseCase, rC redis.Conn) IChatPostHandler {
+func NewChatPostHandler(cU usecase.IChatPostUseCase) IChatPostHandler {
 	return &chatPostHandler{
 		chatPostUsecase: cU,
-		redis:           rC,
 	}
 }
 
@@ -42,13 +38,13 @@ func (cH chatPostHandler) GetChatPostByRoomID(c *gin.Context) {
 	offset := c.Query("offset")
 	switch {
 	case limitStr == "" && offset == "":
-		messages, err = cH.chatPostUsecase.FindChatPostByRoomID(roomID)
+		messages, err = cH.chatPostUsecase.FindByRoomID(roomID)
 	case limitStr != "" && offset == "":
-		messages, err = cH.chatPostUsecase.FindChatPostByRoomIDAndLimit(roomID, limitStr)
+		messages, err = cH.chatPostUsecase.FindByRoomIDAndLimit(roomID, limitStr)
 	case limitStr == "" && offset != "":
-		messages, err = cH.chatPostUsecase.FindChatPostByRoomIDAndOffset(roomID, offset)
+		messages, err = cH.chatPostUsecase.FindByRoomIDAndOffset(roomID, offset)
 	case limitStr != "" && offset != "":
-		messages, err = cH.chatPostUsecase.FindChatPostByRoomIDAndLimitAndOffset(roomID, limitStr, offset)
+		messages, err = cH.chatPostUsecase.FindByRoomIDAndLimitAndOffset(roomID, limitStr, offset)
 	}
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": err})
@@ -57,37 +53,26 @@ func (cH chatPostHandler) GetChatPostByRoomID(c *gin.Context) {
 }
 
 func (cH chatPostHandler) CreateChatPost(c *gin.Context) {
-	id, err := uuid.NewRandom()
+	err := cH.chatPostUsecase.Insert(c)
 	if err != nil {
-		panic(err)
+		switch err := err.(type) {
+		case errors.ErrChatPostCreateReqBinding:
+			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+			return
+		case errors.ErrGetTokenClaims:
+			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+			return
+		case errors.ErrGenerateID:
+			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			return
+		case errors.ErrDataBase:
+			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			return
+		default:
+			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			log.Warn("Unexpected error")
+			panic(err)
+		}
 	}
-	roomID := c.Params.ByName("id")
-	// todo : テスト用に仮データを記述
-	// idをトークンから取得できるように
-	m := &models.ChatPost{
-		ChatPostID: id.String(),
-		RoomID:     roomID,
-		UserID:     "id",
-		CreatedAt:  time.Now(),
-	}
-	if err := c.BindJSON(&m); err != nil {
-		// todo : エラーメッセージを要修正
-		c.JSON(http.StatusBadRequest, gin.H{"message": err})
-		return
-	}
-	if m.Message == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "message not found"})
-		return
-	}
-	if err := cH.chatPostUsecase.InsertChatPost(m); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": err})
-		return
-	}
-	res, _ := json.Marshal(m)
-	// todo : publishのチャンネル名がハードコーディングされているため要修正
-	_, err = cH.redis.Do("PUBLISH", "channel_1", string(res))
-	if err != nil {
-		panic(err)
-	}
-	c.Status(http.StatusOK)
+	c.JSON(http.StatusOK, gin.H{"message": "Create chatpost"})
 }

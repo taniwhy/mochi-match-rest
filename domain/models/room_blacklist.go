@@ -2,12 +2,30 @@ package models
 
 import (
 	"time"
+
+	"github.com/google/uuid"
+	"github.com/taniwhy/mochi-match-rest/domain/errors"
 )
 
 // RoomBlacklist : room_blacklistテーブルモデル
 type RoomBlacklist struct {
-	ID        int64
-	Room      int64
-	BlackUser int64
-	CreatedAt time.Time
+	RoomBlacklistID string
+	RoomID          string
+	BlackUser       string
+	CreatedAt       time.Time
+}
+
+// NewBlacklist :
+func NewBlacklist(rid, uid string) (*RoomBlacklist, error) {
+	id, err := uuid.NewRandom()
+	if err != nil {
+		return nil, errors.ErrGenerateID{}
+	}
+	r := &RoomBlacklist{
+		RoomBlacklistID: id.String(),
+		RoomID:          rid,
+		BlackUser:       uid,
+		CreatedAt:       time.Now(),
+	}
+	return r, nil
 }

@@ -61,3 +61,8 @@ type ReportReqBody struct {
 	VaiolatorID      string `json:"vaiolator_id" binding:"required"`
 	VaiolationDetail string `json:"detail" binding:"required"`
 }
+
+// ChatPostCreateReqBody : チャットメッセージの作成リクエストボディ
+type ChatPostCreateReqBody struct {
+	Message string `json:"message" binding:"required"`
+}

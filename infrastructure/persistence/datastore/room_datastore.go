@@ -29,6 +29,12 @@ func (rD roomDatastore) FindList() ([]*output.RoomResBody, error) {
 			rooms.capacity,
 			rooms.room_text,
 			user_details.user_name,
+			(
+				SELECT
+					COUNT(entry_histories.entry_history_id)
+				FROM entry_histories
+				WHERE rooms.room_id = entry_histories.room_id
+			) As count,
 			rooms.created_at,
 			rooms.start`).
 		Joins("LEFT JOIN user_details ON rooms.user_id = user_details.user_id").
@@ -62,16 +68,12 @@ func (rD roomDatastore) FindByLimitAndOffset(limit, offset int) ([]*output.RoomR
 					WHERE rooms.room_id = entry_histories.room_id
 				) As count,
 				rooms.created_at,
-				rooms.start`,
-		).
+				rooms.start`).
 		Joins("LEFT JOIN user_details ON rooms.user_id = user_details.user_id").
 		Joins("LEFT JOIN game_hards ON rooms.game_hard_id = game_hards.game_hard_id").
 		Joins("LEFT JOIN game_lists ON rooms.game_list_id = game_lists.game_list_id").
 		Where("rooms.is_lock = ?", false).
-		Limit(limit).
-		Offset(offset).
-		Order("created_at desc").
-		Scan(&rooms).Error
+		Limit(limit).Offset(offset).Order("created_at desc").Scan(&rooms).Error
 	if err != nil {
 		return nil, err
 	}

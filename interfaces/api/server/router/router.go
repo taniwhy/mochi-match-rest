@@ -36,7 +36,7 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 	userUsecase := usecase.NewUserUsecase(userDatastore, userDetailDatastore, userService, favorateGameDatastore)
 	roomUsecase := usecase.NewRoomUsecase(roomDatastore, entryHistoryDatastore, roomService)
 	roomBlacklistUsecase := usecase.NewRoomBlacklistUsecase(roomBalacklistDatastore)
-	chatPostUsecase := usecase.NewChatPostUsecase(chatPostDatastore)
+	chatPostUsecase := usecase.NewChatPostUsecase(chatPostDatastore, redisConn)
 	gameListUsecase := usecase.NewGameListUsecase(gameListDatastore)
 	gameHardUsecase := usecase.NewGameHardUsecase(gameHardDatastore)
 	googleAuthUsecase := usecase.NewGoogleOAuthUsecase(userService)
@@ -44,7 +44,7 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 	userHandler := handler.NewUserHandler(userUsecase)
 	roomHandler := handler.NewRoomHandler(userUsecase, roomUsecase)
 	roomBlacklistHandler := handler.NewRoomBlacklistHandler(roomBlacklistUsecase)
-	chatPostHandler := handler.NewChatPostHandler(chatPostUsecase, redisConn)
+	chatPostHandler := handler.NewChatPostHandler(chatPostUsecase)
 	gameListHandler := handler.NewGameListHandler(gameListUsecase)
 	gameHardHandler := handler.NewGameHardHandler(gameHardUsecase)
 	googleAuthHandler := handler.NewGoogleOAuthHandler(googleAuthUsecase, userUsecase, userService)
@@ -93,18 +93,15 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 		room.DELETE("/:id/leave", roomHandler.Leave)
 	}
 	messages := room.Group("/:id/messages")
-	messages.Use(auth.TokenAuth())
 	{
 		messages.GET("", chatPostHandler.GetChatPostByRoomID)
 		messages.POST("", chatPostHandler.CreateChatPost)
 	}
 	report := room.Group("/:id/report")
-	messages.Use(auth.TokenAuth())
 	{
 		report.POST("")
 	}
 	blacklist := room.Group("/:id/blacklist")
-	blacklist.Use(auth.TokenAuth())
 	{
 		blacklist.GET("", roomBlacklistHandler.GetByRoomID)
 		blacklist.POST("", roomBlacklistHandler.Create)

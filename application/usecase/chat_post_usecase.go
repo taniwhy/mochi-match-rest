@@ -1,94 +1,102 @@
 package usecase
 
 import (
+	"encoding/json"
 	"strconv"
 
+	"github.com/gin-gonic/gin"
+	"github.com/gomodule/redigo/redis"
+	"github.com/taniwhy/mochi-match-rest/domain/errors"
 	"github.com/taniwhy/mochi-match-rest/domain/models"
+	"github.com/taniwhy/mochi-match-rest/domain/models/input"
 	"github.com/taniwhy/mochi-match-rest/domain/repository"
+	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/middleware/auth"
 )
 
 // IChatPostUseCase : インターフェース
 type IChatPostUseCase interface {
-	FindAllChatPost() ([]*models.ChatPost, error)
-	FindChatPostByRoomID(id string) ([]*models.ChatPost, error)
-	FindChatPostByRoomIDAndLimit(id, limit string) ([]*models.ChatPost, error)
-	FindChatPostByRoomIDAndOffset(id, offset string) ([]*models.ChatPost, error)
-	FindChatPostByRoomIDAndLimitAndOffset(id, offset, limit string) ([]*models.ChatPost, error)
-	InsertChatPost(room *models.ChatPost) error
-	DeleteChatPost(room *models.ChatPost) error
+	FindByRoomID(id string) ([]*models.ChatPost, error)
+	FindByRoomIDAndLimit(id, limit string) ([]*models.ChatPost, error)
+	FindByRoomIDAndOffset(id, offset string) ([]*models.ChatPost, error)
+	FindByRoomIDAndLimitAndOffset(id, offset, limit string) ([]*models.ChatPost, error)
+	Insert(*gin.Context) error
 }
 
 type chatPostUsecase struct {
 	chatPostRepository repository.ChatPostRepository
+	redis              redis.Conn
 }
 
 // NewChatPostUsecase : ChatPostユースケースの生成
-func NewChatPostUsecase(rR repository.ChatPostRepository) IChatPostUseCase {
+func NewChatPostUsecase(rR repository.ChatPostRepository, rC redis.Conn) IChatPostUseCase {
 	return &chatPostUsecase{
 		chatPostRepository: rR,
+		redis:              rC,
 	}
 }
 
-func (cU chatPostUsecase) FindAllChatPost() ([]*models.ChatPost, error) {
-	chatposts, err := cU.chatPostRepository.FindAllChatPost()
+func (cU chatPostUsecase) FindByRoomID(id string) ([]*models.ChatPost, error) {
+	chatposts, err := cU.chatPostRepository.FindByRoomID(id)
 	if err != nil {
 		return nil, err
 	}
 	return chatposts, nil
 }
 
-func (cU chatPostUsecase) FindChatPostByRoomID(id string) ([]*models.ChatPost, error) {
-	chatposts, err := cU.chatPostRepository.FindChatPostByRoomID(id)
-	if err != nil {
-		return nil, err
-	}
-	return chatposts, nil
-}
-
-func (cU chatPostUsecase) FindChatPostByRoomIDAndLimit(id, limitStr string) ([]*models.ChatPost, error) {
+func (cU chatPostUsecase) FindByRoomIDAndLimit(id, limitStr string) ([]*models.ChatPost, error) {
 	limit, err := strconv.Atoi(limitStr)
 	if err != nil {
 		return nil, err
 	}
-	chatposts, err := cU.chatPostRepository.FindChatPostByRoomIDAndLimit(id, limit)
+	chatposts, err := cU.chatPostRepository.FindByRoomIDAndLimit(id, limit)
 	if err != nil {
 		return nil, err
 	}
 	return chatposts, nil
 }
 
-func (cU chatPostUsecase) FindChatPostByRoomIDAndOffset(id, offset string) ([]*models.ChatPost, error) {
-	chatposts, err := cU.chatPostRepository.FindChatPostByRoomIDAndOffset(id, offset)
+func (cU chatPostUsecase) FindByRoomIDAndOffset(id, offset string) ([]*models.ChatPost, error) {
+	chatposts, err := cU.chatPostRepository.FindByRoomIDAndOffset(id, offset)
 	if err != nil {
 		return nil, err
 	}
 	return chatposts, nil
 }
 
-func (cU chatPostUsecase) FindChatPostByRoomIDAndLimitAndOffset(id, limitStr, offset string) ([]*models.ChatPost, error) {
+func (cU chatPostUsecase) FindByRoomIDAndLimitAndOffset(id, limitStr, offset string) ([]*models.ChatPost, error) {
 	limit, err := strconv.Atoi(limitStr)
 	if err != nil {
 		return nil, err
 	}
-	chatposts, err := cU.chatPostRepository.FindChatPostByRoomIDAndLimitAndOffset(id, offset, limit)
+	chatposts, err := cU.chatPostRepository.FindByRoomIDAndLimitAndOffset(id, offset, limit)
 	if err != nil {
 		return nil, err
 	}
 	return chatposts, nil
 }
 
-func (cU chatPostUsecase) InsertChatPost(chatpost *models.ChatPost) error {
-	err := cU.chatPostRepository.InsertChatPost(chatpost)
+func (cU chatPostUsecase) Insert(c *gin.Context) error {
+	b := input.ChatPostCreateReqBody{}
+	if err := c.BindJSON(&b); err != nil {
+		return errors.ErrChatPostCreateReqBinding{
+			Message: b.Message,
+		}
+	}
+	rID := c.Params.ByName("id")
+	claims, err := auth.GetTokenClaimsFromRequest(c)
 	if err != nil {
+		return errors.ErrGetTokenClaims{Detail: err.Error()}
+	}
+	uID := claims["sub"].(string)
+	cP, err := models.NewChatPost(rID, uID, b.Message)
+	if err := cU.chatPostRepository.Insert(cP); err != nil {
 		return err
 	}
-	return nil
-}
-
-func (cU chatPostUsecase) DeleteChatPost(chatpost *models.ChatPost) error {
-	err := cU.chatPostRepository.DeleteChatPost(chatpost)
+	res, _ := json.Marshal(cP)
+	// todo : publishのチャンネル名がハードコーディングされているため要修正
+	_, err = cU.redis.Do("PUBLISH", "channel_1", string(res))
 	if err != nil {
-		return err
+		panic(err)
 	}
 	return nil
 }

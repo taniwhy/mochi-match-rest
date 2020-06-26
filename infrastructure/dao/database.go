@@ -1,8 +1,6 @@
 package dao
 
 import (
-	"fmt"
-
 	"github.com/jinzhu/gorm"
 	"github.com/taniwhy/mochi-match-rest/config"
 
@@ -22,7 +20,6 @@ func NewDatabase() *gorm.DB {
 		panic(err.Error())
 	}
 	conn, err = gorm.Open("postgres", dsn)
-	fmt.Println(dsn)
 	if err != nil {
 		panic(err.Error())
 	}

@@ -152,6 +152,20 @@ func (b ErrReportReqBinding) Error() string {
 	return fmt.Sprintf("Binding error! - " + errMsgs + " is required")
 }
 
+// ErrChatPostCreateReqBinding : チャットメッセージ作成リクエストボディのバインディングエラー
+type ErrChatPostCreateReqBinding struct {
+	Message string
+}
+
+func (b ErrChatPostCreateReqBinding) Error() string {
+	var errMsg []string
+	if b.Message == "" {
+		errMsg = append(errMsg, "message")
+	}
+	errMsgs := strings.Join(errMsg, ", ")
+	return fmt.Sprintf("Binding error! - " + errMsgs + " is required")
+}
+
 // ErrSessionSave : セッションのセーブエラー
 type ErrSessionSave struct{}
 

@@ -11,10 +11,23 @@ import (
 )
 
 func init() {
-	err := godotenv.Load(fmt.Sprintf("%s/src/github.com/taniwhy/mochi-match-rest/./config/env/.env", os.Getenv("GOPATH")))
-	if err != nil {
-		panic(err)
+	switch os.Getenv("GO_ENV") {
+	case "development":
+		err := godotenv.Load(
+			fmt.Sprintf(
+				"%s/src/github.com/taniwhy/mochi-match-rest/./config/env/.env.%s", os.Getenv("GOPATH"), os.Getenv("GO_ENV")))
+		if err != nil {
+			panic(err)
+		}
+	default:
+		err := godotenv.Load(
+			fmt.Sprintf(
+				"%s/src/github.com/taniwhy/mochi-match-rest/./config/env/.env", os.Getenv("GOPATH")))
+		if err != nil {
+			panic(err)
+		}
 	}
+
 }
 
 // GetDatabaseConf :　データベースの接続情報の取得

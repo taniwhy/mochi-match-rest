@@ -24,5 +24,4 @@ memo
 main
 key
 .env
-.env.dev
 .DS_Store

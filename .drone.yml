@@ -19,6 +19,13 @@ steps:
       GO_ENV: test
       AUTHORIZE_RSA:
         from_secret: AUTHORIZE_RSA
+      GOOGLE_OAUTH_REDIRECT_URL:
+        from_secret: GOOGLE_OAUTH_REDIRECT_URL
+      GOOGLE_OAUTH_CLIENT_ID:
+        from_secret: GOOGLE_OAUTH_CLIENT_ID
+      GOOGLE_OAUTH_CLIENT_SECRET:
+        from_secret: GOOGLE_OAUTH_CLIENT_SECRET
+
     commands:
       - make test
     when:

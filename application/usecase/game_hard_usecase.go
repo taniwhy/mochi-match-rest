@@ -1,3 +1,5 @@
+//go:generate mockgen -source=$GOFILE -destination=mock_$GOPACKAGE/mock_$GOFILE -package=mock_$GOPACKAGE
+
 package usecase
 
 import (
@@ -19,11 +21,11 @@ type IGameHardUseCase interface {
 }
 
 type gameHardUsecase struct {
-	gameHardRepository repository.GameHardRepository
+	gameHardRepository repository.IGameHardRepository
 }
 
 // NewGameHardUsecase : GameTitleユースケースの生成
-func NewGameHardUsecase(gR repository.GameHardRepository) IGameHardUseCase {
+func NewGameHardUsecase(gR repository.IGameHardRepository) IGameHardUseCase {
 	return &gameHardUsecase{
 		gameHardRepository: gR,
 	}

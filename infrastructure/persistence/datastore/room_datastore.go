@@ -13,7 +13,7 @@ type roomDatastore struct {
 }
 
 // NewRoomDatastore : ルームデータストアの生成
-func NewRoomDatastore(db *gorm.DB) repository.RoomRepository {
+func NewRoomDatastore(db *gorm.DB) repository.IRoomRepository {
 	return &roomDatastore{db}
 }
 

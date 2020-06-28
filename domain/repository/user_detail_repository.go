@@ -6,8 +6,8 @@ import (
 	"github.com/taniwhy/mochi-match-rest/domain/models"
 )
 
-// UserDetailRepository : ユーザー詳細のリポジトリ
-type UserDetailRepository interface {
+// IUserDetailRepository : ユーザー詳細のリポジトリ
+type IUserDetailRepository interface {
 	FindByID(id string) (*models.UserDetail, error)
 	Insert(userDetail *models.UserDetail) error
 	Update(id, name, icon string) error

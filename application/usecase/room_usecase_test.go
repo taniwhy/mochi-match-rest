@@ -22,10 +22,10 @@ func TestGetRoomList(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockRoomRepository := mock_repository.NewMockRoomRepository(ctrl)
+	mockRoomRepository := mock_repository.NewMockIRoomRepository(ctrl)
 	mockRoomRepository.EXPECT().FindByLimitAndOffset(8, 0).Return([]*output.RoomResBody{}, nil)
 
-	mockEntryHistoryRepository := mock_repository.NewMockEntryHistoryRepository(ctrl)
+	mockEntryHistoryRepository := mock_repository.NewMockIEntryHistoryRepository(ctrl)
 	mockRoomService := mock_service.NewMockIRoomService(ctrl)
 
 	test := NewRoomUsecase(mockRoomRepository, mockEntryHistoryRepository, mockRoomService)
@@ -90,10 +90,10 @@ func TestCreateRoom(t *testing.T) {
 	room, _ := models.NewRoom("existID", "testText", "testID", "testID", 4, start)
 	entryHistory, _ := models.NewEntryHistory("existID", "testUUID")
 
-	mockRoomRepository := mock_repository.NewMockRoomRepository(ctrl)
+	mockRoomRepository := mock_repository.NewMockIRoomRepository(ctrl)
 	mockRoomRepository.EXPECT().Insert(room).Return(nil)
 
-	mockEntryHistoryRepository := mock_repository.NewMockEntryHistoryRepository(ctrl)
+	mockEntryHistoryRepository := mock_repository.NewMockIEntryHistoryRepository(ctrl)
 	mockEntryHistoryRepository.EXPECT().Insert(entryHistory).Return(nil)
 
 	mockRoomService := mock_service.NewMockIRoomService(ctrl)

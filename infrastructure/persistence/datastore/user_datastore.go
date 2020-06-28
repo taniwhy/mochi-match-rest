@@ -12,7 +12,7 @@ type userDatastore struct {
 }
 
 // NewUserDatastore : ユーザーデータストアの生成
-func NewUserDatastore(db *gorm.DB) repository.UserRepository {
+func NewUserDatastore(db *gorm.DB) repository.IUserRepository {
 	return &userDatastore{db}
 }
 

@@ -14,11 +14,11 @@ type IRoomService interface {
 }
 
 type roomService struct {
-	roomRepository repository.RoomRepository
+	roomRepository repository.IRoomRepository
 }
 
 // NewRoomService : RoomServiceの生成
-func NewRoomService(rR repository.RoomRepository) IRoomService {
+func NewRoomService(rR repository.IRoomRepository) IRoomService {
 	return &roomService{
 		roomRepository: rR,
 	}

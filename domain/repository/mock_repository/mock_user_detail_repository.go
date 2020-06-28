@@ -10,31 +10,31 @@ import (
 	reflect "reflect"
 )
 
-// MockUserDetailRepository is a mock of UserDetailRepository interface
-type MockUserDetailRepository struct {
+// MockIUserDetailRepository is a mock of IUserDetailRepository interface
+type MockIUserDetailRepository struct {
 	ctrl     *gomock.Controller
-	recorder *MockUserDetailRepositoryMockRecorder
+	recorder *MockIUserDetailRepositoryMockRecorder
 }
 
-// MockUserDetailRepositoryMockRecorder is the mock recorder for MockUserDetailRepository
-type MockUserDetailRepositoryMockRecorder struct {
-	mock *MockUserDetailRepository
+// MockIUserDetailRepositoryMockRecorder is the mock recorder for MockIUserDetailRepository
+type MockIUserDetailRepositoryMockRecorder struct {
+	mock *MockIUserDetailRepository
 }
 
-// NewMockUserDetailRepository creates a new mock instance
-func NewMockUserDetailRepository(ctrl *gomock.Controller) *MockUserDetailRepository {
-	mock := &MockUserDetailRepository{ctrl: ctrl}
-	mock.recorder = &MockUserDetailRepositoryMockRecorder{mock}
+// NewMockIUserDetailRepository creates a new mock instance
+func NewMockIUserDetailRepository(ctrl *gomock.Controller) *MockIUserDetailRepository {
+	mock := &MockIUserDetailRepository{ctrl: ctrl}
+	mock.recorder = &MockIUserDetailRepositoryMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use
-func (m *MockUserDetailRepository) EXPECT() *MockUserDetailRepositoryMockRecorder {
+func (m *MockIUserDetailRepository) EXPECT() *MockIUserDetailRepositoryMockRecorder {
 	return m.recorder
 }
 
 // FindByID mocks base method
-func (m *MockUserDetailRepository) FindByID(id string) (*models.UserDetail, error) {
+func (m *MockIUserDetailRepository) FindByID(id string) (*models.UserDetail, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindByID", id)
 	ret0, _ := ret[0].(*models.UserDetail)
@@ -43,13 +43,13 @@ func (m *MockUserDetailRepository) FindByID(id string) (*models.UserDetail, erro
 }
 
 // FindByID indicates an expected call of FindByID
-func (mr *MockUserDetailRepositoryMockRecorder) FindByID(id interface{}) *gomock.Call {
+func (mr *MockIUserDetailRepositoryMockRecorder) FindByID(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByID", reflect.TypeOf((*MockUserDetailRepository)(nil).FindByID), id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByID", reflect.TypeOf((*MockIUserDetailRepository)(nil).FindByID), id)
 }
 
 // Insert mocks base method
-func (m *MockUserDetailRepository) Insert(userDetail *models.UserDetail) error {
+func (m *MockIUserDetailRepository) Insert(userDetail *models.UserDetail) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Insert", userDetail)
 	ret0, _ := ret[0].(error)
@@ -57,13 +57,13 @@ func (m *MockUserDetailRepository) Insert(userDetail *models.UserDetail) error {
 }
 
 // Insert indicates an expected call of Insert
-func (mr *MockUserDetailRepositoryMockRecorder) Insert(userDetail interface{}) *gomock.Call {
+func (mr *MockIUserDetailRepositoryMockRecorder) Insert(userDetail interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Insert", reflect.TypeOf((*MockUserDetailRepository)(nil).Insert), userDetail)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Insert", reflect.TypeOf((*MockIUserDetailRepository)(nil).Insert), userDetail)
 }
 
 // Update mocks base method
-func (m *MockUserDetailRepository) Update(id, name, icon string) error {
+func (m *MockIUserDetailRepository) Update(id, name, icon string) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Update", id, name, icon)
 	ret0, _ := ret[0].(error)
@@ -71,13 +71,13 @@ func (m *MockUserDetailRepository) Update(id, name, icon string) error {
 }
 
 // Update indicates an expected call of Update
-func (mr *MockUserDetailRepositoryMockRecorder) Update(id, name, icon interface{}) *gomock.Call {
+func (mr *MockIUserDetailRepositoryMockRecorder) Update(id, name, icon interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockUserDetailRepository)(nil).Update), id, name, icon)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockIUserDetailRepository)(nil).Update), id, name, icon)
 }
 
 // Delete mocks base method
-func (m *MockUserDetailRepository) Delete(userDetail *models.UserDetail) error {
+func (m *MockIUserDetailRepository) Delete(userDetail *models.UserDetail) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Delete", userDetail)
 	ret0, _ := ret[0].(error)
@@ -85,7 +85,7 @@ func (m *MockUserDetailRepository) Delete(userDetail *models.UserDetail) error {
 }
 
 // Delete indicates an expected call of Delete
-func (mr *MockUserDetailRepositoryMockRecorder) Delete(userDetail interface{}) *gomock.Call {
+func (mr *MockIUserDetailRepositoryMockRecorder) Delete(userDetail interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockUserDetailRepository)(nil).Delete), userDetail)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockIUserDetailRepository)(nil).Delete), userDetail)
 }

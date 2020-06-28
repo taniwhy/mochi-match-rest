@@ -1,3 +1,5 @@
+//go:generate mockgen -source=$GOFILE -destination=mock_$GOPACKAGE/mock_$GOFILE -package=mock_$GOPACKAGE
+
 package usecase
 
 import (
@@ -25,15 +27,15 @@ type IRoomUseCase interface {
 }
 
 type roomUsecase struct {
-	roomRepository         repository.RoomRepository
-	entryHistoryRepository repository.EntryHistoryRepository
+	roomRepository         repository.IRoomRepository
+	entryHistoryRepository repository.IEntryHistoryRepository
 	roomService            service.IRoomService
 }
 
 // NewRoomUsecase : Roomユースケースの生成
 func NewRoomUsecase(
-	rR repository.RoomRepository,
-	eHR repository.EntryHistoryRepository,
+	rR repository.IRoomRepository,
+	eHR repository.IEntryHistoryRepository,
 	rS service.IRoomService) IRoomUseCase {
 	return &roomUsecase{
 		roomRepository:         rR,

@@ -12,7 +12,7 @@ type gameListDatastore struct {
 }
 
 // NewGameListDatastore : ゲームタイトルデータストアの生成
-func NewGameListDatastore(db *gorm.DB) repository.GameListRepository {
+func NewGameListDatastore(db *gorm.DB) repository.IGameListRepository {
 	return &gameListDatastore{db}
 }
 

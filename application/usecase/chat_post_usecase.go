@@ -1,3 +1,5 @@
+//go:generate mockgen -source=$GOFILE -destination=mock_$GOPACKAGE/mock_$GOFILE -package=mock_$GOPACKAGE
+
 package usecase
 
 import (
@@ -23,12 +25,12 @@ type IChatPostUseCase interface {
 }
 
 type chatPostUsecase struct {
-	chatPostRepository repository.ChatPostRepository
+	chatPostRepository repository.IChatPostRepository
 	redis              redis.Conn
 }
 
 // NewChatPostUsecase : ChatPostユースケースの生成
-func NewChatPostUsecase(rR repository.ChatPostRepository, rC redis.Conn) IChatPostUseCase {
+func NewChatPostUsecase(rR repository.IChatPostRepository, rC redis.Conn) IChatPostUseCase {
 	return &chatPostUsecase{
 		chatPostRepository: rR,
 		redis:              rC,

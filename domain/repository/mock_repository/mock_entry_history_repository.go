@@ -10,31 +10,31 @@ import (
 	reflect "reflect"
 )
 
-// MockEntryHistoryRepository is a mock of EntryHistoryRepository interface
-type MockEntryHistoryRepository struct {
+// MockIEntryHistoryRepository is a mock of IEntryHistoryRepository interface
+type MockIEntryHistoryRepository struct {
 	ctrl     *gomock.Controller
-	recorder *MockEntryHistoryRepositoryMockRecorder
+	recorder *MockIEntryHistoryRepositoryMockRecorder
 }
 
-// MockEntryHistoryRepositoryMockRecorder is the mock recorder for MockEntryHistoryRepository
-type MockEntryHistoryRepositoryMockRecorder struct {
-	mock *MockEntryHistoryRepository
+// MockIEntryHistoryRepositoryMockRecorder is the mock recorder for MockIEntryHistoryRepository
+type MockIEntryHistoryRepositoryMockRecorder struct {
+	mock *MockIEntryHistoryRepository
 }
 
-// NewMockEntryHistoryRepository creates a new mock instance
-func NewMockEntryHistoryRepository(ctrl *gomock.Controller) *MockEntryHistoryRepository {
-	mock := &MockEntryHistoryRepository{ctrl: ctrl}
-	mock.recorder = &MockEntryHistoryRepositoryMockRecorder{mock}
+// NewMockIEntryHistoryRepository creates a new mock instance
+func NewMockIEntryHistoryRepository(ctrl *gomock.Controller) *MockIEntryHistoryRepository {
+	mock := &MockIEntryHistoryRepository{ctrl: ctrl}
+	mock.recorder = &MockIEntryHistoryRepositoryMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use
-func (m *MockEntryHistoryRepository) EXPECT() *MockEntryHistoryRepositoryMockRecorder {
+func (m *MockIEntryHistoryRepository) EXPECT() *MockIEntryHistoryRepositoryMockRecorder {
 	return m.recorder
 }
 
 // FindAll mocks base method
-func (m *MockEntryHistoryRepository) FindAll() ([]*models.EntryHistory, error) {
+func (m *MockIEntryHistoryRepository) FindAll() ([]*models.EntryHistory, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindAll")
 	ret0, _ := ret[0].([]*models.EntryHistory)
@@ -43,13 +43,13 @@ func (m *MockEntryHistoryRepository) FindAll() ([]*models.EntryHistory, error) {
 }
 
 // FindAll indicates an expected call of FindAll
-func (mr *MockEntryHistoryRepositoryMockRecorder) FindAll() *gomock.Call {
+func (mr *MockIEntryHistoryRepositoryMockRecorder) FindAll() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindAll", reflect.TypeOf((*MockEntryHistoryRepository)(nil).FindAll))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindAll", reflect.TypeOf((*MockIEntryHistoryRepository)(nil).FindAll))
 }
 
 // Insert mocks base method
-func (m *MockEntryHistoryRepository) Insert(arg0 *models.EntryHistory) error {
+func (m *MockIEntryHistoryRepository) Insert(arg0 *models.EntryHistory) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Insert", arg0)
 	ret0, _ := ret[0].(error)
@@ -57,13 +57,13 @@ func (m *MockEntryHistoryRepository) Insert(arg0 *models.EntryHistory) error {
 }
 
 // Insert indicates an expected call of Insert
-func (mr *MockEntryHistoryRepositoryMockRecorder) Insert(arg0 interface{}) *gomock.Call {
+func (mr *MockIEntryHistoryRepositoryMockRecorder) Insert(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Insert", reflect.TypeOf((*MockEntryHistoryRepository)(nil).Insert), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Insert", reflect.TypeOf((*MockIEntryHistoryRepository)(nil).Insert), arg0)
 }
 
 // Update mocks base method
-func (m *MockEntryHistoryRepository) Update(arg0 *models.EntryHistory) error {
+func (m *MockIEntryHistoryRepository) Update(arg0 *models.EntryHistory) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Update", arg0)
 	ret0, _ := ret[0].(error)
@@ -71,13 +71,13 @@ func (m *MockEntryHistoryRepository) Update(arg0 *models.EntryHistory) error {
 }
 
 // Update indicates an expected call of Update
-func (mr *MockEntryHistoryRepositoryMockRecorder) Update(arg0 interface{}) *gomock.Call {
+func (mr *MockIEntryHistoryRepositoryMockRecorder) Update(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockEntryHistoryRepository)(nil).Update), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockIEntryHistoryRepository)(nil).Update), arg0)
 }
 
 // Delete mocks base method
-func (m *MockEntryHistoryRepository) Delete(arg0 *models.EntryHistory) error {
+func (m *MockIEntryHistoryRepository) Delete(arg0 *models.EntryHistory) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Delete", arg0)
 	ret0, _ := ret[0].(error)
@@ -85,13 +85,13 @@ func (m *MockEntryHistoryRepository) Delete(arg0 *models.EntryHistory) error {
 }
 
 // Delete indicates an expected call of Delete
-func (mr *MockEntryHistoryRepositoryMockRecorder) Delete(arg0 interface{}) *gomock.Call {
+func (mr *MockIEntryHistoryRepositoryMockRecorder) Delete(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockEntryHistoryRepository)(nil).Delete), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockIEntryHistoryRepository)(nil).Delete), arg0)
 }
 
 // CountEntryUser mocks base method
-func (m *MockEntryHistoryRepository) CountEntryUser(arg0 string) (int, error) {
+func (m *MockIEntryHistoryRepository) CountEntryUser(arg0 string) (int, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CountEntryUser", arg0)
 	ret0, _ := ret[0].(int)
@@ -100,13 +100,13 @@ func (m *MockEntryHistoryRepository) CountEntryUser(arg0 string) (int, error) {
 }
 
 // CountEntryUser indicates an expected call of CountEntryUser
-func (mr *MockEntryHistoryRepositoryMockRecorder) CountEntryUser(arg0 interface{}) *gomock.Call {
+func (mr *MockIEntryHistoryRepositoryMockRecorder) CountEntryUser(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CountEntryUser", reflect.TypeOf((*MockEntryHistoryRepository)(nil).CountEntryUser), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CountEntryUser", reflect.TypeOf((*MockIEntryHistoryRepository)(nil).CountEntryUser), arg0)
 }
 
 // CheckEntry mocks base method
-func (m *MockEntryHistoryRepository) CheckEntry(rid, uid string) (bool, error) {
+func (m *MockIEntryHistoryRepository) CheckEntry(rid, uid string) (bool, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CheckEntry", rid, uid)
 	ret0, _ := ret[0].(bool)
@@ -115,13 +115,13 @@ func (m *MockEntryHistoryRepository) CheckEntry(rid, uid string) (bool, error) {
 }
 
 // CheckEntry indicates an expected call of CheckEntry
-func (mr *MockEntryHistoryRepositoryMockRecorder) CheckEntry(rid, uid interface{}) *gomock.Call {
+func (mr *MockIEntryHistoryRepositoryMockRecorder) CheckEntry(rid, uid interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckEntry", reflect.TypeOf((*MockEntryHistoryRepository)(nil).CheckEntry), rid, uid)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckEntry", reflect.TypeOf((*MockIEntryHistoryRepository)(nil).CheckEntry), rid, uid)
 }
 
 // LeaveFlg mocks base method
-func (m *MockEntryHistoryRepository) LeaveFlg(rid, uid string) error {
+func (m *MockIEntryHistoryRepository) LeaveFlg(rid, uid string) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "LeaveFlg", rid, uid)
 	ret0, _ := ret[0].(error)
@@ -129,7 +129,7 @@ func (m *MockEntryHistoryRepository) LeaveFlg(rid, uid string) error {
 }
 
 // LeaveFlg indicates an expected call of LeaveFlg
-func (mr *MockEntryHistoryRepositoryMockRecorder) LeaveFlg(rid, uid interface{}) *gomock.Call {
+func (mr *MockIEntryHistoryRepositoryMockRecorder) LeaveFlg(rid, uid interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LeaveFlg", reflect.TypeOf((*MockEntryHistoryRepository)(nil).LeaveFlg), rid, uid)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LeaveFlg", reflect.TypeOf((*MockIEntryHistoryRepository)(nil).LeaveFlg), rid, uid)
 }

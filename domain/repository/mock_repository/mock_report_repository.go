@@ -10,31 +10,31 @@ import (
 	reflect "reflect"
 )
 
-// MockReportRepository is a mock of ReportRepository interface
-type MockReportRepository struct {
+// MockIReportRepository is a mock of IReportRepository interface
+type MockIReportRepository struct {
 	ctrl     *gomock.Controller
-	recorder *MockReportRepositoryMockRecorder
+	recorder *MockIReportRepositoryMockRecorder
 }
 
-// MockReportRepositoryMockRecorder is the mock recorder for MockReportRepository
-type MockReportRepositoryMockRecorder struct {
-	mock *MockReportRepository
+// MockIReportRepositoryMockRecorder is the mock recorder for MockIReportRepository
+type MockIReportRepositoryMockRecorder struct {
+	mock *MockIReportRepository
 }
 
-// NewMockReportRepository creates a new mock instance
-func NewMockReportRepository(ctrl *gomock.Controller) *MockReportRepository {
-	mock := &MockReportRepository{ctrl: ctrl}
-	mock.recorder = &MockReportRepositoryMockRecorder{mock}
+// NewMockIReportRepository creates a new mock instance
+func NewMockIReportRepository(ctrl *gomock.Controller) *MockIReportRepository {
+	mock := &MockIReportRepository{ctrl: ctrl}
+	mock.recorder = &MockIReportRepositoryMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use
-func (m *MockReportRepository) EXPECT() *MockReportRepositoryMockRecorder {
+func (m *MockIReportRepository) EXPECT() *MockIReportRepositoryMockRecorder {
 	return m.recorder
 }
 
 // FindAllReport mocks base method
-func (m *MockReportRepository) FindAllReport() ([]*models.Report, error) {
+func (m *MockIReportRepository) FindAllReport() ([]*models.Report, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindAllReport")
 	ret0, _ := ret[0].([]*models.Report)
@@ -43,13 +43,13 @@ func (m *MockReportRepository) FindAllReport() ([]*models.Report, error) {
 }
 
 // FindAllReport indicates an expected call of FindAllReport
-func (mr *MockReportRepositoryMockRecorder) FindAllReport() *gomock.Call {
+func (mr *MockIReportRepositoryMockRecorder) FindAllReport() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindAllReport", reflect.TypeOf((*MockReportRepository)(nil).FindAllReport))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindAllReport", reflect.TypeOf((*MockIReportRepository)(nil).FindAllReport))
 }
 
 // InsertReport mocks base method
-func (m *MockReportRepository) InsertReport(report *models.Report) error {
+func (m *MockIReportRepository) InsertReport(report *models.Report) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "InsertReport", report)
 	ret0, _ := ret[0].(error)
@@ -57,13 +57,13 @@ func (m *MockReportRepository) InsertReport(report *models.Report) error {
 }
 
 // InsertReport indicates an expected call of InsertReport
-func (mr *MockReportRepositoryMockRecorder) InsertReport(report interface{}) *gomock.Call {
+func (mr *MockIReportRepositoryMockRecorder) InsertReport(report interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InsertReport", reflect.TypeOf((*MockReportRepository)(nil).InsertReport), report)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InsertReport", reflect.TypeOf((*MockIReportRepository)(nil).InsertReport), report)
 }
 
 // DeleteReport mocks base method
-func (m *MockReportRepository) DeleteReport(report *models.Report) error {
+func (m *MockIReportRepository) DeleteReport(report *models.Report) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteReport", report)
 	ret0, _ := ret[0].(error)
@@ -71,7 +71,7 @@ func (m *MockReportRepository) DeleteReport(report *models.Report) error {
 }
 
 // DeleteReport indicates an expected call of DeleteReport
-func (mr *MockReportRepositoryMockRecorder) DeleteReport(report interface{}) *gomock.Call {
+func (mr *MockIReportRepositoryMockRecorder) DeleteReport(report interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteReport", reflect.TypeOf((*MockReportRepository)(nil).DeleteReport), report)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteReport", reflect.TypeOf((*MockIReportRepository)(nil).DeleteReport), report)
 }

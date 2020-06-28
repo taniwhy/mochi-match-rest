@@ -1,3 +1,5 @@
+//go:generate mockgen -source=$GOFILE -destination=mock_$GOPACKAGE/mock_$GOFILE -package=mock_$GOPACKAGE
+
 package usecase
 
 import (
@@ -26,18 +28,18 @@ type IUserUseCase interface {
 }
 
 type userUsecase struct {
-	userRepository         repository.UserRepository
-	userDetailRepository   repository.UserDetailRepository
+	userRepository         repository.IUserRepository
+	userDetailRepository   repository.IUserDetailRepository
 	userService            service.IUserService
-	favoriteGameRepository repository.FavoriteGameRepository
+	favoriteGameRepository repository.IFavoriteGameRepository
 }
 
 // NewUserUsecase : Userユースケースの生成
 func NewUserUsecase(
-	uR repository.UserRepository,
-	uDR repository.UserDetailRepository,
+	uR repository.IUserRepository,
+	uDR repository.IUserDetailRepository,
 	uS service.IUserService,
-	fGR repository.FavoriteGameRepository) IUserUseCase {
+	fGR repository.IFavoriteGameRepository) IUserUseCase {
 	return &userUsecase{
 		userRepository:         uR,
 		userDetailRepository:   uDR,

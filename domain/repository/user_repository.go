@@ -6,8 +6,8 @@ import (
 	"github.com/taniwhy/mochi-match-rest/domain/models"
 )
 
-// UserRepository : ユーザーのリポジトリ
-type UserRepository interface {
+// IUserRepository : ユーザーのリポジトリ
+type IUserRepository interface {
 	FindByID(id string) (*models.User, error)
 	FindByProviderID(provider, id string) (*models.User, error)
 	Insert(user *models.User) error

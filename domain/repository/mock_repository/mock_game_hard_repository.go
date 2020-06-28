@@ -10,31 +10,31 @@ import (
 	reflect "reflect"
 )
 
-// MockGameHardRepository is a mock of GameHardRepository interface
-type MockGameHardRepository struct {
+// MockIGameHardRepository is a mock of IGameHardRepository interface
+type MockIGameHardRepository struct {
 	ctrl     *gomock.Controller
-	recorder *MockGameHardRepositoryMockRecorder
+	recorder *MockIGameHardRepositoryMockRecorder
 }
 
-// MockGameHardRepositoryMockRecorder is the mock recorder for MockGameHardRepository
-type MockGameHardRepositoryMockRecorder struct {
-	mock *MockGameHardRepository
+// MockIGameHardRepositoryMockRecorder is the mock recorder for MockIGameHardRepository
+type MockIGameHardRepositoryMockRecorder struct {
+	mock *MockIGameHardRepository
 }
 
-// NewMockGameHardRepository creates a new mock instance
-func NewMockGameHardRepository(ctrl *gomock.Controller) *MockGameHardRepository {
-	mock := &MockGameHardRepository{ctrl: ctrl}
-	mock.recorder = &MockGameHardRepositoryMockRecorder{mock}
+// NewMockIGameHardRepository creates a new mock instance
+func NewMockIGameHardRepository(ctrl *gomock.Controller) *MockIGameHardRepository {
+	mock := &MockIGameHardRepository{ctrl: ctrl}
+	mock.recorder = &MockIGameHardRepositoryMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use
-func (m *MockGameHardRepository) EXPECT() *MockGameHardRepositoryMockRecorder {
+func (m *MockIGameHardRepository) EXPECT() *MockIGameHardRepositoryMockRecorder {
 	return m.recorder
 }
 
 // FindAll mocks base method
-func (m *MockGameHardRepository) FindAll() ([]*models.GameHard, error) {
+func (m *MockIGameHardRepository) FindAll() ([]*models.GameHard, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindAll")
 	ret0, _ := ret[0].([]*models.GameHard)
@@ -43,13 +43,13 @@ func (m *MockGameHardRepository) FindAll() ([]*models.GameHard, error) {
 }
 
 // FindAll indicates an expected call of FindAll
-func (mr *MockGameHardRepositoryMockRecorder) FindAll() *gomock.Call {
+func (mr *MockIGameHardRepositoryMockRecorder) FindAll() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindAll", reflect.TypeOf((*MockGameHardRepository)(nil).FindAll))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindAll", reflect.TypeOf((*MockIGameHardRepository)(nil).FindAll))
 }
 
 // Insert mocks base method
-func (m *MockGameHardRepository) Insert(arg0 *models.GameHard) error {
+func (m *MockIGameHardRepository) Insert(arg0 *models.GameHard) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Insert", arg0)
 	ret0, _ := ret[0].(error)
@@ -57,13 +57,13 @@ func (m *MockGameHardRepository) Insert(arg0 *models.GameHard) error {
 }
 
 // Insert indicates an expected call of Insert
-func (mr *MockGameHardRepositoryMockRecorder) Insert(arg0 interface{}) *gomock.Call {
+func (mr *MockIGameHardRepositoryMockRecorder) Insert(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Insert", reflect.TypeOf((*MockGameHardRepository)(nil).Insert), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Insert", reflect.TypeOf((*MockIGameHardRepository)(nil).Insert), arg0)
 }
 
 // Update mocks base method
-func (m *MockGameHardRepository) Update(arg0 *models.GameHard) error {
+func (m *MockIGameHardRepository) Update(arg0 *models.GameHard) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Update", arg0)
 	ret0, _ := ret[0].(error)
@@ -71,13 +71,13 @@ func (m *MockGameHardRepository) Update(arg0 *models.GameHard) error {
 }
 
 // Update indicates an expected call of Update
-func (mr *MockGameHardRepositoryMockRecorder) Update(arg0 interface{}) *gomock.Call {
+func (mr *MockIGameHardRepositoryMockRecorder) Update(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockGameHardRepository)(nil).Update), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockIGameHardRepository)(nil).Update), arg0)
 }
 
 // Delete mocks base method
-func (m *MockGameHardRepository) Delete(arg0 *models.GameHard) error {
+func (m *MockIGameHardRepository) Delete(arg0 *models.GameHard) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Delete", arg0)
 	ret0, _ := ret[0].(error)
@@ -85,7 +85,7 @@ func (m *MockGameHardRepository) Delete(arg0 *models.GameHard) error {
 }
 
 // Delete indicates an expected call of Delete
-func (mr *MockGameHardRepositoryMockRecorder) Delete(arg0 interface{}) *gomock.Call {
+func (mr *MockIGameHardRepositoryMockRecorder) Delete(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockGameHardRepository)(nil).Delete), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockIGameHardRepository)(nil).Delete), arg0)
 }

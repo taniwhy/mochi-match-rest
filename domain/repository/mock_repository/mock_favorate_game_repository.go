@@ -10,31 +10,31 @@ import (
 	reflect "reflect"
 )
 
-// MockFavoriteGameRepository is a mock of FavoriteGameRepository interface
-type MockFavoriteGameRepository struct {
+// MockIFavoriteGameRepository is a mock of IFavoriteGameRepository interface
+type MockIFavoriteGameRepository struct {
 	ctrl     *gomock.Controller
-	recorder *MockFavoriteGameRepositoryMockRecorder
+	recorder *MockIFavoriteGameRepositoryMockRecorder
 }
 
-// MockFavoriteGameRepositoryMockRecorder is the mock recorder for MockFavoriteGameRepository
-type MockFavoriteGameRepositoryMockRecorder struct {
-	mock *MockFavoriteGameRepository
+// MockIFavoriteGameRepositoryMockRecorder is the mock recorder for MockIFavoriteGameRepository
+type MockIFavoriteGameRepositoryMockRecorder struct {
+	mock *MockIFavoriteGameRepository
 }
 
-// NewMockFavoriteGameRepository creates a new mock instance
-func NewMockFavoriteGameRepository(ctrl *gomock.Controller) *MockFavoriteGameRepository {
-	mock := &MockFavoriteGameRepository{ctrl: ctrl}
-	mock.recorder = &MockFavoriteGameRepositoryMockRecorder{mock}
+// NewMockIFavoriteGameRepository creates a new mock instance
+func NewMockIFavoriteGameRepository(ctrl *gomock.Controller) *MockIFavoriteGameRepository {
+	mock := &MockIFavoriteGameRepository{ctrl: ctrl}
+	mock.recorder = &MockIFavoriteGameRepositoryMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use
-func (m *MockFavoriteGameRepository) EXPECT() *MockFavoriteGameRepositoryMockRecorder {
+func (m *MockIFavoriteGameRepository) EXPECT() *MockIFavoriteGameRepositoryMockRecorder {
 	return m.recorder
 }
 
 // FindByID mocks base method
-func (m *MockFavoriteGameRepository) FindByID(id string) ([]*models.FavoriteGame, error) {
+func (m *MockIFavoriteGameRepository) FindByID(id string) ([]*models.FavoriteGame, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindByID", id)
 	ret0, _ := ret[0].([]*models.FavoriteGame)
@@ -43,13 +43,13 @@ func (m *MockFavoriteGameRepository) FindByID(id string) ([]*models.FavoriteGame
 }
 
 // FindByID indicates an expected call of FindByID
-func (mr *MockFavoriteGameRepositoryMockRecorder) FindByID(id interface{}) *gomock.Call {
+func (mr *MockIFavoriteGameRepositoryMockRecorder) FindByID(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByID", reflect.TypeOf((*MockFavoriteGameRepository)(nil).FindByID), id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByID", reflect.TypeOf((*MockIFavoriteGameRepository)(nil).FindByID), id)
 }
 
 // Insert mocks base method
-func (m *MockFavoriteGameRepository) Insert(room *models.FavoriteGame) error {
+func (m *MockIFavoriteGameRepository) Insert(room *models.FavoriteGame) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Insert", room)
 	ret0, _ := ret[0].(error)
@@ -57,13 +57,13 @@ func (m *MockFavoriteGameRepository) Insert(room *models.FavoriteGame) error {
 }
 
 // Insert indicates an expected call of Insert
-func (mr *MockFavoriteGameRepositoryMockRecorder) Insert(room interface{}) *gomock.Call {
+func (mr *MockIFavoriteGameRepositoryMockRecorder) Insert(room interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Insert", reflect.TypeOf((*MockFavoriteGameRepository)(nil).Insert), room)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Insert", reflect.TypeOf((*MockIFavoriteGameRepository)(nil).Insert), room)
 }
 
 // Delete mocks base method
-func (m *MockFavoriteGameRepository) Delete(uID, fID string) error {
+func (m *MockIFavoriteGameRepository) Delete(uID, fID string) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Delete", uID, fID)
 	ret0, _ := ret[0].(error)
@@ -71,7 +71,7 @@ func (m *MockFavoriteGameRepository) Delete(uID, fID string) error {
 }
 
 // Delete indicates an expected call of Delete
-func (mr *MockFavoriteGameRepositoryMockRecorder) Delete(uID, fID interface{}) *gomock.Call {
+func (mr *MockIFavoriteGameRepositoryMockRecorder) Delete(uID, fID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockFavoriteGameRepository)(nil).Delete), uID, fID)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockIFavoriteGameRepository)(nil).Delete), uID, fID)
 }

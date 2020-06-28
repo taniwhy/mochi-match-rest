@@ -11,31 +11,31 @@ import (
 	reflect "reflect"
 )
 
-// MockRoomRepository is a mock of RoomRepository interface
-type MockRoomRepository struct {
+// MockIRoomRepository is a mock of IRoomRepository interface
+type MockIRoomRepository struct {
 	ctrl     *gomock.Controller
-	recorder *MockRoomRepositoryMockRecorder
+	recorder *MockIRoomRepositoryMockRecorder
 }
 
-// MockRoomRepositoryMockRecorder is the mock recorder for MockRoomRepository
-type MockRoomRepositoryMockRecorder struct {
-	mock *MockRoomRepository
+// MockIRoomRepositoryMockRecorder is the mock recorder for MockIRoomRepository
+type MockIRoomRepositoryMockRecorder struct {
+	mock *MockIRoomRepository
 }
 
-// NewMockRoomRepository creates a new mock instance
-func NewMockRoomRepository(ctrl *gomock.Controller) *MockRoomRepository {
-	mock := &MockRoomRepository{ctrl: ctrl}
-	mock.recorder = &MockRoomRepositoryMockRecorder{mock}
+// NewMockIRoomRepository creates a new mock instance
+func NewMockIRoomRepository(ctrl *gomock.Controller) *MockIRoomRepository {
+	mock := &MockIRoomRepository{ctrl: ctrl}
+	mock.recorder = &MockIRoomRepositoryMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use
-func (m *MockRoomRepository) EXPECT() *MockRoomRepositoryMockRecorder {
+func (m *MockIRoomRepository) EXPECT() *MockIRoomRepositoryMockRecorder {
 	return m.recorder
 }
 
 // FindList mocks base method
-func (m *MockRoomRepository) FindList() ([]*output.RoomResBody, error) {
+func (m *MockIRoomRepository) FindList() ([]*output.RoomResBody, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindList")
 	ret0, _ := ret[0].([]*output.RoomResBody)
@@ -44,13 +44,13 @@ func (m *MockRoomRepository) FindList() ([]*output.RoomResBody, error) {
 }
 
 // FindList indicates an expected call of FindList
-func (mr *MockRoomRepositoryMockRecorder) FindList() *gomock.Call {
+func (mr *MockIRoomRepositoryMockRecorder) FindList() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindList", reflect.TypeOf((*MockRoomRepository)(nil).FindList))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindList", reflect.TypeOf((*MockIRoomRepository)(nil).FindList))
 }
 
 // FindByLimitAndOffset mocks base method
-func (m *MockRoomRepository) FindByLimitAndOffset(limit, offset int) ([]*output.RoomResBody, error) {
+func (m *MockIRoomRepository) FindByLimitAndOffset(limit, offset int) ([]*output.RoomResBody, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindByLimitAndOffset", limit, offset)
 	ret0, _ := ret[0].([]*output.RoomResBody)
@@ -59,13 +59,13 @@ func (m *MockRoomRepository) FindByLimitAndOffset(limit, offset int) ([]*output.
 }
 
 // FindByLimitAndOffset indicates an expected call of FindByLimitAndOffset
-func (mr *MockRoomRepositoryMockRecorder) FindByLimitAndOffset(limit, offset interface{}) *gomock.Call {
+func (mr *MockIRoomRepositoryMockRecorder) FindByLimitAndOffset(limit, offset interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByLimitAndOffset", reflect.TypeOf((*MockRoomRepository)(nil).FindByLimitAndOffset), limit, offset)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByLimitAndOffset", reflect.TypeOf((*MockIRoomRepository)(nil).FindByLimitAndOffset), limit, offset)
 }
 
 // FindByID mocks base method
-func (m *MockRoomRepository) FindByID(arg0 string) (*models.Room, error) {
+func (m *MockIRoomRepository) FindByID(arg0 string) (*models.Room, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindByID", arg0)
 	ret0, _ := ret[0].(*models.Room)
@@ -74,13 +74,13 @@ func (m *MockRoomRepository) FindByID(arg0 string) (*models.Room, error) {
 }
 
 // FindByID indicates an expected call of FindByID
-func (mr *MockRoomRepositoryMockRecorder) FindByID(arg0 interface{}) *gomock.Call {
+func (mr *MockIRoomRepositoryMockRecorder) FindByID(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByID", reflect.TypeOf((*MockRoomRepository)(nil).FindByID), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByID", reflect.TypeOf((*MockIRoomRepository)(nil).FindByID), arg0)
 }
 
 // FindByUserID mocks base method
-func (m *MockRoomRepository) FindByUserID(arg0 string) ([]*models.Room, error) {
+func (m *MockIRoomRepository) FindByUserID(arg0 string) ([]*models.Room, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindByUserID", arg0)
 	ret0, _ := ret[0].([]*models.Room)
@@ -89,13 +89,13 @@ func (m *MockRoomRepository) FindByUserID(arg0 string) ([]*models.Room, error) {
 }
 
 // FindByUserID indicates an expected call of FindByUserID
-func (mr *MockRoomRepositoryMockRecorder) FindByUserID(arg0 interface{}) *gomock.Call {
+func (mr *MockIRoomRepositoryMockRecorder) FindByUserID(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByUserID", reflect.TypeOf((*MockRoomRepository)(nil).FindByUserID), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByUserID", reflect.TypeOf((*MockIRoomRepository)(nil).FindByUserID), arg0)
 }
 
 // FindUnlockByID mocks base method
-func (m *MockRoomRepository) FindUnlockByID(arg0 string) (*models.Room, error) {
+func (m *MockIRoomRepository) FindUnlockByID(arg0 string) (*models.Room, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindUnlockByID", arg0)
 	ret0, _ := ret[0].(*models.Room)
@@ -104,13 +104,13 @@ func (m *MockRoomRepository) FindUnlockByID(arg0 string) (*models.Room, error) {
 }
 
 // FindUnlockByID indicates an expected call of FindUnlockByID
-func (mr *MockRoomRepositoryMockRecorder) FindUnlockByID(arg0 interface{}) *gomock.Call {
+func (mr *MockIRoomRepositoryMockRecorder) FindUnlockByID(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindUnlockByID", reflect.TypeOf((*MockRoomRepository)(nil).FindUnlockByID), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindUnlockByID", reflect.TypeOf((*MockIRoomRepository)(nil).FindUnlockByID), arg0)
 }
 
 // Insert mocks base method
-func (m *MockRoomRepository) Insert(room *models.Room) error {
+func (m *MockIRoomRepository) Insert(room *models.Room) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Insert", room)
 	ret0, _ := ret[0].(error)
@@ -118,13 +118,13 @@ func (m *MockRoomRepository) Insert(room *models.Room) error {
 }
 
 // Insert indicates an expected call of Insert
-func (mr *MockRoomRepositoryMockRecorder) Insert(room interface{}) *gomock.Call {
+func (mr *MockIRoomRepositoryMockRecorder) Insert(room interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Insert", reflect.TypeOf((*MockRoomRepository)(nil).Insert), room)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Insert", reflect.TypeOf((*MockIRoomRepository)(nil).Insert), room)
 }
 
 // Update mocks base method
-func (m *MockRoomRepository) Update(room *models.Room) error {
+func (m *MockIRoomRepository) Update(room *models.Room) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Update", room)
 	ret0, _ := ret[0].(error)
@@ -132,13 +132,13 @@ func (m *MockRoomRepository) Update(room *models.Room) error {
 }
 
 // Update indicates an expected call of Update
-func (mr *MockRoomRepositoryMockRecorder) Update(room interface{}) *gomock.Call {
+func (mr *MockIRoomRepositoryMockRecorder) Update(room interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockRoomRepository)(nil).Update), room)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockIRoomRepository)(nil).Update), room)
 }
 
 // Delete mocks base method
-func (m *MockRoomRepository) Delete(room *models.Room) error {
+func (m *MockIRoomRepository) Delete(room *models.Room) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Delete", room)
 	ret0, _ := ret[0].(error)
@@ -146,13 +146,13 @@ func (m *MockRoomRepository) Delete(room *models.Room) error {
 }
 
 // Delete indicates an expected call of Delete
-func (mr *MockRoomRepositoryMockRecorder) Delete(room interface{}) *gomock.Call {
+func (mr *MockIRoomRepositoryMockRecorder) Delete(room interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockRoomRepository)(nil).Delete), room)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockIRoomRepository)(nil).Delete), room)
 }
 
 // LockFlg mocks base method
-func (m *MockRoomRepository) LockFlg(arg0, arg1 string) error {
+func (m *MockIRoomRepository) LockFlg(arg0, arg1 string) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "LockFlg", arg0, arg1)
 	ret0, _ := ret[0].(error)
@@ -160,7 +160,7 @@ func (m *MockRoomRepository) LockFlg(arg0, arg1 string) error {
 }
 
 // LockFlg indicates an expected call of LockFlg
-func (mr *MockRoomRepositoryMockRecorder) LockFlg(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockIRoomRepositoryMockRecorder) LockFlg(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LockFlg", reflect.TypeOf((*MockRoomRepository)(nil).LockFlg), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LockFlg", reflect.TypeOf((*MockIRoomRepository)(nil).LockFlg), arg0, arg1)
 }

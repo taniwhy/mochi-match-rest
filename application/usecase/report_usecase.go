@@ -1,3 +1,5 @@
+//go:generate mockgen -source=$GOFILE -destination=mock_$GOPACKAGE/mock_$GOFILE -package=mock_$GOPACKAGE
+
 package usecase
 
 import (
@@ -15,11 +17,11 @@ type IReportUsecase interface {
 }
 
 type reportUsecase struct {
-	reportRepository repository.ReportRepository
+	reportRepository repository.IReportRepository
 }
 
 // NewReportUsecase : Reportユースケースの生成
-func NewReportUsecase(rR repository.ReportRepository) IReportUsecase {
+func NewReportUsecase(rR repository.IReportRepository) IReportUsecase {
 	return &reportUsecase{
 		reportRepository: rR,
 	}

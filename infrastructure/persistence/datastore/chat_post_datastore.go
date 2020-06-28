@@ -11,7 +11,7 @@ type chatPostDatastore struct {
 }
 
 // NewChatPostDatastore : チャット投稿データストアの生成
-func NewChatPostDatastore(db *gorm.DB) repository.ChatPostRepository {
+func NewChatPostDatastore(db *gorm.DB) repository.IChatPostRepository {
 	return &chatPostDatastore{db}
 }
 

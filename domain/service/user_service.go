@@ -16,11 +16,11 @@ type IUserService interface {
 }
 
 type userService struct {
-	userRepository repository.UserRepository
+	userRepository repository.IUserRepository
 }
 
 // NewUserService : UserServiceの生成
-func NewUserService(uR repository.UserRepository) IUserService {
+func NewUserService(uR repository.IUserRepository) IUserService {
 	return &userService{
 		userRepository: uR,
 	}

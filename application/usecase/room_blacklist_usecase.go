@@ -1,3 +1,5 @@
+//go:generate mockgen -source=$GOFILE -destination=mock_$GOPACKAGE/mock_$GOFILE -package=mock_$GOPACKAGE
+
 package usecase
 
 import (
@@ -16,11 +18,11 @@ type IRoomBlacklistUseCase interface {
 }
 
 type roomBlacklistUsecase struct {
-	roomBlacklistRepository repository.RoomBlacklistRepository
+	roomBlacklistRepository repository.IRoomBlacklistRepository
 }
 
 // NewRoomBlacklistUsecase : RoomBlacklistユースケースの生成
-func NewRoomBlacklistUsecase(rR repository.RoomBlacklistRepository) IRoomBlacklistUseCase {
+func NewRoomBlacklistUsecase(rR repository.IRoomBlacklistRepository) IRoomBlacklistUseCase {
 	return &roomBlacklistUsecase{
 		roomBlacklistRepository: rR,
 	}

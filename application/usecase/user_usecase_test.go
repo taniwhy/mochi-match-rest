@@ -23,18 +23,18 @@ func TestGetMe(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockUserRepository := mock_repository.NewMockUserRepository(ctrl)
+	mockUserRepository := mock_repository.NewMockIUserRepository(ctrl)
 	mockUserRepository.EXPECT().FindByID("existID").Return(&models.User{}, nil)
 	mockUserRepository.EXPECT().FindByID("notExistID").Return(nil, nil)
 
-	mockUserDetailRepository := mock_repository.NewMockUserDetailRepository(ctrl)
+	mockUserDetailRepository := mock_repository.NewMockIUserDetailRepository(ctrl)
 	mockUserDetailRepository.EXPECT().FindByID("existID").Return(&models.UserDetail{}, nil)
 
 	mockUserService := mock_service.NewMockIUserService(ctrl)
 	mockUserService.EXPECT().IsDelete("existID").Return(true, nil)
 	mockUserService.EXPECT().IsDelete("notExistID").Return(false, nil)
 
-	mockFavoriteGameRepository := mock_repository.NewMockFavoriteGameRepository(ctrl)
+	mockFavoriteGameRepository := mock_repository.NewMockIFavoriteGameRepository(ctrl)
 	mockFavoriteGameRepository.EXPECT().FindByID("existID").Return([]*models.FavoriteGame{{}, {}}, nil)
 
 	test := NewUserUsecase(mockUserRepository, mockUserDetailRepository, mockUserService, mockFavoriteGameRepository)
@@ -76,17 +76,17 @@ func TestGetUserByID(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockUserRepository := mock_repository.NewMockUserRepository(ctrl)
+	mockUserRepository := mock_repository.NewMockIUserRepository(ctrl)
 	mockUserRepository.EXPECT().FindByID("existID").Return(&models.User{}, nil)
 
-	mockUserDetailRepository := mock_repository.NewMockUserDetailRepository(ctrl)
+	mockUserDetailRepository := mock_repository.NewMockIUserDetailRepository(ctrl)
 	mockUserDetailRepository.EXPECT().FindByID("existID").Return(&models.UserDetail{}, nil)
 
 	mockUserService := mock_service.NewMockIUserService(ctrl)
 	mockUserService.EXPECT().IsDelete("existID").Return(true, nil)
 	mockUserService.EXPECT().IsDelete("notExistID").Return(false, nil)
 
-	mockFavoriteGameRepository := mock_repository.NewMockFavoriteGameRepository(ctrl)
+	mockFavoriteGameRepository := mock_repository.NewMockIFavoriteGameRepository(ctrl)
 	mockFavoriteGameRepository.EXPECT().FindByID("existID").Return([]*models.FavoriteGame{{}, {}}, nil)
 
 	test := NewUserUsecase(mockUserRepository, mockUserDetailRepository, mockUserService, mockFavoriteGameRepository)
@@ -117,14 +117,14 @@ func TestGetUserByProviderID(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockUserRepository := mock_repository.NewMockUserRepository(ctrl)
+	mockUserRepository := mock_repository.NewMockIUserRepository(ctrl)
 	mockUserRepository.EXPECT().FindByProviderID("google", "existID").Return(&models.User{UserID: "foo"}, nil)
 	mockUserRepository.EXPECT().FindByProviderID("google", "notExistID").Return(nil, nil)
 	mockUserRepository.EXPECT().FindByProviderID("foo", "bar").Return(nil, errors.ErrUnexpectedQueryProvider{})
 
-	mockUserDetailRepository := mock_repository.NewMockUserDetailRepository(ctrl)
+	mockUserDetailRepository := mock_repository.NewMockIUserDetailRepository(ctrl)
 	mockUserService := mock_service.NewMockIUserService(ctrl)
-	mockFavoriteGameRepository := mock_repository.NewMockFavoriteGameRepository(ctrl)
+	mockFavoriteGameRepository := mock_repository.NewMockIFavoriteGameRepository(ctrl)
 
 	test := NewUserUsecase(mockUserRepository, mockUserDetailRepository, mockUserService, mockFavoriteGameRepository)
 
@@ -157,18 +157,18 @@ func TestCreateUser(t *testing.T) {
 	user, _ := models.NewUser("testEmail")
 	userDetail, _ := models.NewUserDetail("testUUID", "testName")
 
-	mockUserRepository := mock_repository.NewMockUserRepository(ctrl)
+	mockUserRepository := mock_repository.NewMockIUserRepository(ctrl)
 	user.GoogleID = sql.NullString{String: "notExistID", Valid: true}
 	mockUserRepository.EXPECT().Insert(user).Return(nil)
 
-	mockUserDetailRepository := mock_repository.NewMockUserDetailRepository(ctrl)
+	mockUserDetailRepository := mock_repository.NewMockIUserDetailRepository(ctrl)
 	mockUserDetailRepository.EXPECT().Insert(userDetail).Return(nil)
 
 	mockUserService := mock_service.NewMockIUserService(ctrl)
 	mockUserService.EXPECT().IsExist("google", "notExistID").Return(true, nil)
 	mockUserService.EXPECT().IsExist("google", "existID").Return(false, nil)
 
-	mockFavoriteGameRepository := mock_repository.NewMockFavoriteGameRepository(ctrl)
+	mockFavoriteGameRepository := mock_repository.NewMockIFavoriteGameRepository(ctrl)
 
 	test := NewUserUsecase(mockUserRepository, mockUserDetailRepository, mockUserService, mockFavoriteGameRepository)
 
@@ -205,15 +205,15 @@ func TestUpdateUser(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockUserRepository := mock_repository.NewMockUserRepository(ctrl)
+	mockUserRepository := mock_repository.NewMockIUserRepository(ctrl)
 	mockUserRepository.EXPECT().FindByID("existID").Return(&models.User{}, nil)
 	mockUserRepository.EXPECT().FindByID("notExistID").Return(nil, nil)
 
-	mockUserDetailRepository := mock_repository.NewMockUserDetailRepository(ctrl)
+	mockUserDetailRepository := mock_repository.NewMockIUserDetailRepository(ctrl)
 	mockUserDetailRepository.EXPECT().Update("existID", "testName", "testIcon").Return(nil)
 
 	mockUserService := mock_service.NewMockIUserService(ctrl)
-	mockFavoriteGameRepository := mock_repository.NewMockFavoriteGameRepository(ctrl)
+	mockFavoriteGameRepository := mock_repository.NewMockIFavoriteGameRepository(ctrl)
 	mockFavoriteGameRepository.EXPECT().FindByID("existID").Return(nil, nil)
 
 	test := NewUserUsecase(mockUserRepository, mockUserDetailRepository, mockUserService, mockFavoriteGameRepository)
@@ -268,14 +268,14 @@ func TestDeleteUser(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockUserRepository := mock_repository.NewMockUserRepository(ctrl)
+	mockUserRepository := mock_repository.NewMockIUserRepository(ctrl)
 	mockUserRepository.EXPECT().FindByID("existID").Return(&models.User{}, nil)
 	mockUserRepository.EXPECT().FindByID("notExistID").Return(nil, nil)
 	mockUserRepository.EXPECT().Delete("existID").Return(nil)
 
-	mockUserDetailRepository := mock_repository.NewMockUserDetailRepository(ctrl)
+	mockUserDetailRepository := mock_repository.NewMockIUserDetailRepository(ctrl)
 	mockUserService := mock_service.NewMockIUserService(ctrl)
-	mockFavoriteGameRepository := mock_repository.NewMockFavoriteGameRepository(ctrl)
+	mockFavoriteGameRepository := mock_repository.NewMockIFavoriteGameRepository(ctrl)
 
 	test := NewUserUsecase(mockUserRepository, mockUserDetailRepository, mockUserService, mockFavoriteGameRepository)
 

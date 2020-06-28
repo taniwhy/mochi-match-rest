@@ -20,6 +20,7 @@ require (
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
 	golang.org/x/sync v0.0.0-20200317015054-43a5402ce75a
 	gopkg.in/guregu/null.v4 v4.0.0
+	gotest.tools v2.2.0+incompatible
 	gotest.tools/v3 v3.0.2
 	rsc.io/quote/v3 v3.1.0 // indirect
 )

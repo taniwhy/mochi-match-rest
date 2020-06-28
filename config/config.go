@@ -12,24 +12,27 @@ import (
 
 func init() {
 	switch os.Getenv("GO_ENV") {
-	case "development":
+	case "dev":
 		err := godotenv.Load(
-			fmt.Sprintf(
-				"%s/src/github.com/taniwhy/mochi-match-rest/config/env/.env.dev", os.Getenv("GOPATH")))
+			fmt.Sprintf("%s/src/github.com/taniwhy/mochi-match-rest/config/env/.env.dev", os.Getenv("GOPATH")))
 		if err != nil {
 			panic(err)
 		}
 	case "test":
 		err := godotenv.Load(
-			fmt.Sprint(
-				"/drone/src/config/env/.env.test"))
+			fmt.Sprintf("%s/src/github.com/taniwhy/mochi-match-rest/config/env/.env.test", os.Getenv("GOPATH")))
+		if err != nil {
+			panic(err)
+		}
+	case "prod":
+		err := godotenv.Load(
+			fmt.Sprintf("%s/src/github.com/taniwhy/mochi-match-rest/config/env/.env", os.Getenv("GOPATH")))
 		if err != nil {
 			panic(err)
 		}
 	default:
 		err := godotenv.Load(
-			fmt.Sprintf(
-				"%s/src/github.com/taniwhy/mochi-match-rest/config/env/.env", os.Getenv("GOPATH")))
+			fmt.Sprintf("%s/src/github.com/taniwhy/mochi-match-rest/config/env/.env.dev", os.Getenv("GOPATH")))
 		if err != nil {
 			panic(err)
 		}

@@ -43,7 +43,7 @@ func TestGetMe(t *testing.T) {
 	notExistToken := auth.GenerateAccessToken("notExistID", false)
 	invalidToken := "foo"
 
-	// 有効なトークン
+	// 正常処理テスト
 	req, _ := http.NewRequest("GET", "/", nil)
 	req.Header.Add("Authorization", existToken)
 	context := &gin.Context{Request: req}
@@ -52,7 +52,8 @@ func TestGetMe(t *testing.T) {
 	assert.NotEmpty(t, user)
 	assert.NoError(t, err)
 
-	// 登録されていないトークン
+	// 異常処理テスト
+	// 1. 登録されていないユーザートークン
 	req, _ = http.NewRequest("GET", "/", nil)
 	req.Header.Add("Authorization", notExistToken)
 	context = &gin.Context{Request: req}
@@ -61,7 +62,7 @@ func TestGetMe(t *testing.T) {
 	assert.Empty(t, user)
 	assert.Error(t, err)
 
-	// 無効なトークン
+	// 2. 無効なトークン
 	req, _ = http.NewRequest("GET", "/", nil)
 	req.Header.Add("Authorization", invalidToken)
 	context = &gin.Context{Request: req}
@@ -71,7 +72,7 @@ func TestGetMe(t *testing.T) {
 	assert.Error(t, err)
 }
 
-func TestGetByID(t *testing.T) {
+func TestGetUserByID(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -90,7 +91,7 @@ func TestGetByID(t *testing.T) {
 
 	test := NewUserUsecase(mockUserRepository, mockUserDetailRepository, mockUserService, mockFavoriteGameRepository)
 
-	// 有効なID
+	// 正常処理テスト
 	req, _ := http.NewRequest("GET", "", nil)
 	param := gin.Param{Key: "id", Value: "existID"}
 	params := gin.Params{param}
@@ -100,7 +101,8 @@ func TestGetByID(t *testing.T) {
 	assert.NotEmpty(t, user)
 	assert.NoError(t, err)
 
-	// 登録されていないID
+	// 異常処理テスト
+	// 1. 登録されていないID
 	req, _ = http.NewRequest("GET", "", nil)
 	param = gin.Param{Key: "id", Value: "notExistID"}
 	params = gin.Params{param}
@@ -111,7 +113,7 @@ func TestGetByID(t *testing.T) {
 	assert.Error(t, err)
 }
 
-func TestGetByProviderID(t *testing.T) {
+func TestGetUserByProviderID(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -126,23 +128,24 @@ func TestGetByProviderID(t *testing.T) {
 
 	test := NewUserUsecase(mockUserRepository, mockUserDetailRepository, mockUserService, mockFavoriteGameRepository)
 
-	// 存在するプロバイダーとID
+	// 正常処理テスト
 	user, err := test.GetByProviderID("google", "existID")
 	assert.NotEmpty(t, user)
 	assert.NoError(t, err)
 
-	// 存在するプロバイダーと存在しないID
+	// 異常処理テスト
+	// 1. 存在するプロバイダーと存在しないID
 	user, err = test.GetByProviderID("google", "notExistID")
 	assert.Empty(t, user)
 	assert.NoError(t, err)
 
-	// 存在しないプロバイダー
+	// 2. 存在しないプロバイダー
 	user, err = test.GetByProviderID("foo", "bar")
 	assert.Empty(t, user)
 	assert.Error(t, err)
 }
 
-func TestCreate(t *testing.T) {
+func TestCreateUser(t *testing.T) {
 	jst, _ := time.LoadLocation("Asia/Tokyo")
 	testDate := time.Date(2000, time.April, 1, 1, 00, 00, 00, jst)
 	testutil.SetFakeUuID("testUUID")
@@ -198,7 +201,7 @@ func TestCreate(t *testing.T) {
 	assert.Error(t, err)
 }
 
-func TestUpdate(t *testing.T) {
+func TestUpdateUser(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -261,7 +264,7 @@ func TestUpdate(t *testing.T) {
 	assert.Error(t, err)
 }
 
-func TestDelete(t *testing.T) {
+func TestDeleteUser(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 

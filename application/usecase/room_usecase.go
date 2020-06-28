@@ -4,6 +4,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+
 	"github.com/taniwhy/mochi-match-rest/domain/errors"
 	"github.com/taniwhy/mochi-match-rest/domain/models"
 	"github.com/taniwhy/mochi-match-rest/domain/models/input"
@@ -15,13 +16,12 @@ import (
 
 // IRoomUseCase : インターフェース
 type IRoomUseCase interface {
-	GetList(*gin.Context) ([]*output.RoomResBody, error)
-	GetByID(*gin.Context) (*models.Room, error)
-	Create(*gin.Context) error
-	Update(*gin.Context) error
-	Delete(*gin.Context) error
-	Join(*gin.Context) error
-	Leave(*gin.Context) error
+	GetList(c *gin.Context) ([]*output.RoomResBody, error)
+	Create(c *gin.Context) error
+	Update(c *gin.Context) error
+	Delete(c *gin.Context) error
+	Join(c *gin.Context) error
+	Leave(c *gin.Context) error
 }
 
 type roomUsecase struct {
@@ -42,34 +42,33 @@ func NewRoomUsecase(
 	}
 }
 
-func (rU roomUsecase) GetList(c *gin.Context) ([]*output.RoomResBody, error) {
+func (u roomUsecase) GetList(c *gin.Context) ([]*output.RoomResBody, error) {
 	pageStr := c.Query("page")
 	page, err := strconv.Atoi(pageStr)
 	if err != nil {
-		return nil, errors.ErrParams{Need: "page", Got: pageStr}
+		return nil, errors.ErrParams{Need: "page=`int`", Got: pageStr}
+	}
+	if page < 1 {
+		return nil, errors.ErrParams{Need: "page=`int`", Got: pageStr}
 	}
 	limit := 8
 	offset := 8 * (page - 1)
 	if page == 1 {
 		offset = 0
 	}
-	r, err := rU.roomRepository.FindByLimitAndOffset(limit, offset)
-	return r, nil
+	rooms, err := u.roomRepository.FindByLimitAndOffset(limit, offset)
+	return rooms, nil
 }
 
-func (rU roomUsecase) GetByID(c *gin.Context) (*models.Room, error) {
-	return nil, nil
-}
-
-func (rU roomUsecase) Create(c *gin.Context) error {
-	b := input.RoomCreateReqBody{}
-	if err := c.BindJSON(&b); err != nil {
+func (u roomUsecase) Create(c *gin.Context) error {
+	body := input.RoomCreateReqBody{}
+	if err := c.BindJSON(&body); err != nil {
 		return errors.ErrRoomCreateReqBinding{
-			RoomText:   b.RoomText,
-			GameListID: b.GameListID,
-			GameHardID: b.GameHardID,
-			Capacity:   b.Capacity,
-			Start:      b.Start.Time,
+			RoomText:   body.RoomText,
+			GameListID: body.GameListID,
+			GameHardID: body.GameHardID,
+			Capacity:   body.Capacity,
+			Start:      body.Start.Time,
 		}
 	}
 	claims, err := auth.GetTokenClaimsFromRequest(c)
@@ -77,100 +76,100 @@ func (rU roomUsecase) Create(c *gin.Context) error {
 		return errors.ErrGetTokenClaims{Detail: err.Error()}
 	}
 	userID := claims["sub"].(string)
-	ok, err := rU.roomService.CanInsert(userID)
+	ok, err := u.roomService.CanInsert(userID)
 	if err != nil {
 		return err
 	}
 	if !ok {
 		return errors.ErrRoomAlreadyExists{}
 	}
-	r, err := models.NewRoom(userID, b.RoomText, b.GameListID, b.GameHardID, b.Capacity, b.Start.Time)
+	room, err := models.NewRoom(userID, body.RoomText, body.GameListID, body.GameHardID, body.Capacity, body.Start.Time)
 	if err != nil {
 		return err
 	}
-	if err := rU.roomRepository.Insert(r); err != nil {
+	if err := u.roomRepository.Insert(room); err != nil {
 		return err
 	}
-	h, err := models.NewEntryHistory(userID, r.RoomID)
-	if err := rU.entryHistoryRepository.Insert(h); err != nil {
+	history, err := models.NewEntryHistory(userID, room.RoomID)
+	if err := u.entryHistoryRepository.Insert(history); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (rU roomUsecase) Update(c *gin.Context) error {
+func (u roomUsecase) Update(c *gin.Context) error {
 	return nil
 }
 
-func (rU roomUsecase) Delete(c *gin.Context) error {
-	rid := c.Params.ByName("id")
+func (u roomUsecase) Delete(c *gin.Context) error {
+	roomID := c.Params.ByName("id")
 	claims, err := auth.GetTokenClaimsFromRequest(c)
 	if err != nil {
 		return errors.ErrGetTokenClaims{Detail: err.Error()}
 	}
-	uid := claims["sub"].(string)
-	ok, err := rU.roomService.IsOwner(uid, rid)
+	userID := claims["sub"].(string)
+	ok, err := u.roomService.IsOwner(userID, roomID)
 	if err != nil {
 		return err
 	}
 	if !ok {
-		return errors.ErrNotRoomOwner{RoomID: rid}
+		return errors.ErrNotRoomOwner{RoomID: userID}
 	}
-	if err := rU.roomRepository.LockFlg(uid, rid); err != nil {
+	if err := u.roomRepository.LockFlg(userID, roomID); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (rU roomUsecase) Join(c *gin.Context) error {
-	rid := c.Params.ByName("id")
-	ok, err := rU.roomService.IsLock(rid)
+func (u roomUsecase) Join(c *gin.Context) error {
+	roomID := c.Params.ByName("id")
+	ok, err := u.roomService.IsLock(roomID)
 	if err != nil {
 		return err
 	}
 	if !ok {
-		return errors.ErrRoomAlreadyLock{RoomID: rid}
+		return errors.ErrRoomAlreadyLock{RoomID: roomID}
 	}
 	claims, err := auth.GetTokenClaimsFromRequest(c)
 	if err != nil {
 		return errors.ErrGetTokenClaims{Detail: err.Error()}
 	}
-	uid := claims["sub"].(string)
-	ok, err = rU.entryHistoryRepository.CheckEntry(rid, uid)
+	userID := claims["sub"].(string)
+	ok, err = u.entryHistoryRepository.CheckEntry(roomID, userID)
 	if err != nil {
 		return err
 	}
 	if !ok {
-		return errors.ErrRoomAlreadyEntry{RoomID: rid}
+		return errors.ErrRoomAlreadyEntry{RoomID: roomID}
 	}
-	r, err := rU.roomRepository.FindByID(rid)
-	cap := r.Capacity
-	cnt, err := rU.entryHistoryRepository.CountEntryUser(rid)
-	if cap <= cnt {
-		return errors.ErrRoomCapacityOver{RoomID: rid, Count: cnt}
+	r, err := u.roomRepository.FindByID(roomID)
+	roomCap := r.Capacity
+	userCnt, err := u.entryHistoryRepository.CountEntryUser(roomID)
+	if roomCap <= userCnt {
+		return errors.ErrRoomCapacityOver{RoomID: roomID, Count: userCnt}
 	}
-	h, err := models.NewEntryHistory(uid, rid)
-	if err := rU.entryHistoryRepository.Insert(h); err != nil {
+	history, err := models.NewEntryHistory(userID, roomID)
+	if err := u.entryHistoryRepository.Insert(history); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (rU roomUsecase) Leave(c *gin.Context) error {
-	rid := c.Params.ByName("id")
+func (u roomUsecase) Leave(c *gin.Context) error {
+	roomID := c.Params.ByName("id")
 	claims, err := auth.GetTokenClaimsFromRequest(c)
 	if err != nil {
 		return errors.ErrGetTokenClaims{Detail: err.Error()}
 	}
-	uid := claims["sub"].(string)
-	ok, err := rU.entryHistoryRepository.CheckEntry(rid, uid)
+	userID := claims["sub"].(string)
+	ok, err := u.entryHistoryRepository.CheckEntry(roomID, userID)
 	if err != nil {
 		return err
 	}
 	if ok {
-		return errors.ErrNotEntryRoom{RoomID: rid}
+		return errors.ErrNotEntryRoom{RoomID: roomID}
 	}
-	if err := rU.entryHistoryRepository.LeaveFlg(rid, uid); err != nil {
+	if err := u.entryHistoryRepository.LeaveFlg(roomID, userID); err != nil {
 		return err
 	}
 	return nil

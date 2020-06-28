@@ -21,8 +21,8 @@ func init() {
 		}
 	case "test":
 		err := godotenv.Load(
-			fmt.Sprintf(
-				"%s/src/github.com/taniwhy/mochi-match-rest/config/env/.env.test", os.Getenv("GOPATH")))
+			fmt.Sprint(
+				"/drone/src/config/env/.env.test"))
 		if err != nil {
 			panic(err)
 		}

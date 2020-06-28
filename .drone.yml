@@ -7,6 +7,21 @@ steps:
     image: golang:1.13
     commands:
       - make build
+    when:
+      event:
+        - push
+        - pull_request
+        - tag
+
+  - name: test
+    image: golang:1.13
+    commands:
+      - make test
+    when:
+      event:
+        - push
+        - pull_request
+        - tag
 
   - name: publish
     image: plugins/docker:18
@@ -18,6 +33,11 @@ steps:
         from_secret: DOCKER_USERNAME
       password:
         from_secret: DOCKER_PASSWORD
+    when:
+      event:
+        - push
+      repo:
+        - master
 
   - name: deploy
     image: appleboy/drone-ssh
@@ -32,11 +52,14 @@ steps:
       script:
         - cd /var/www/mochi-match
         - sh deploy.sh
+    when:
+      event:
+        - push
+      repo:
+        - master
 
   - name: discord notification
     image: appleboy/drone-discord
-    when:
-      status: [success, failure]
     settings:
       username: close me
       webhook_id:
@@ -53,10 +76,12 @@ steps:
           ``` {{commit.message}} ```
           duration: {{duration build.started build.finished}}
         {{/success}}
-
-trigger:
-  event:
-    - push
+    when:
+      status: [success, failure]
+      event:
+        - push
+        - pull_request
+        - tag
 
 services:
   - name: db

@@ -15,21 +15,21 @@ func init() {
 	case "development":
 		err := godotenv.Load(
 			fmt.Sprintf(
-				"%s/src/github.com/taniwhy/mochi-match-rest/./config/env/.env.dev", os.Getenv("GOPATH")))
+				"%s/src/github.com/taniwhy/mochi-match-rest/config/env/.env.dev", os.Getenv("GOPATH")))
 		if err != nil {
 			panic(err)
 		}
 	case "test":
 		err := godotenv.Load(
 			fmt.Sprintf(
-				"%s/src/github.com/taniwhy/mochi-match-rest/./config/env/.env.test", os.Getenv("GOPATH")))
+				"%s/src/github.com/taniwhy/mochi-match-rest/config/env/.env.test", os.Getenv("GOPATH")))
 		if err != nil {
 			panic(err)
 		}
 	default:
 		err := godotenv.Load(
 			fmt.Sprintf(
-				"%s/src/github.com/taniwhy/mochi-match-rest/./config/env/.env", os.Getenv("GOPATH")))
+				"%s/src/github.com/taniwhy/mochi-match-rest/config/env/.env", os.Getenv("GOPATH")))
 		if err != nil {
 			panic(err)
 		}

@@ -11,7 +11,7 @@ type reportDatastore struct {
 }
 
 // NewReportDatastore : レポートデータストアの生成
-func NewReportDatastore(db *gorm.DB) repository.ReportRepository {
+func NewReportDatastore(db *gorm.DB) repository.IReportRepository {
 	return &reportDatastore{db}
 }
 

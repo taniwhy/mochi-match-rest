@@ -3,7 +3,7 @@ package input
 import "gopkg.in/guregu/null.v4"
 
 // UserCreateBody : ユーザー作成リクエストボディ
-type UserCreateBody struct {
+type UserCreateReqBody struct {
 	Provider   string
 	ProviderID string
 	UserName   string

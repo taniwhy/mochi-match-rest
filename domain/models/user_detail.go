@@ -3,8 +3,8 @@ package models
 import (
 	"time"
 
-	"github.com/google/uuid"
-	"github.com/taniwhy/mochi-match-rest/domain/errors"
+	"github.com/taniwhy/mochi-match-rest/util/clock"
+	"github.com/taniwhy/mochi-match-rest/util/uuid"
 )
 
 // UserDetail : user_detailテーブルモデル
@@ -18,15 +18,11 @@ type UserDetail struct {
 
 // NewUserDetail : user_detailテーブルのレコードモデル生成
 func NewUserDetail(uid, name string) (*UserDetail, error) {
-	udid, err := uuid.NewRandom()
-	if err != nil {
-		return nil, errors.ErrGenerateID{}
-	}
 	return &UserDetail{
-		UserDetailID: udid.String(),
+		UserDetailID: uuid.UuID(),
 		UserID:       uid,
 		UserName:     name,
 		Icon:         "",
-		UpdateAt:     time.Now(),
+		UpdateAt:     clock.Now(),
 	}, nil
 }

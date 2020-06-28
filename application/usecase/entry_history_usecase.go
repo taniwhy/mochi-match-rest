@@ -1,3 +1,5 @@
+//go:generate mockgen -source=$GOFILE -destination=mock_$GOPACKAGE/mock_$GOFILE -package=mock_$GOPACKAGE
+
 package usecase
 
 import (
@@ -14,11 +16,11 @@ type IEntryHistoryUsecase interface {
 }
 
 type entryHistoryUsecase struct {
-	entryHistoryRepository repository.EntryHistoryRepository
+	entryHistoryRepository repository.IEntryHistoryRepository
 }
 
 // NewEntryHistoryUsecase : EntryHistoryユースケースの生成
-func NewEntryHistoryUsecase(eR repository.EntryHistoryRepository) IEntryHistoryUsecase {
+func NewEntryHistoryUsecase(eR repository.IEntryHistoryRepository) IEntryHistoryUsecase {
 	return &entryHistoryUsecase{
 		entryHistoryRepository: eR,
 	}

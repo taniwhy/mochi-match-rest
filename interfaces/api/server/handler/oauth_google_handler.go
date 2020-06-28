@@ -60,7 +60,7 @@ func (gA *googleOAuthHandler) Callback(c *gin.Context) {
 		return
 	}
 	if ok {
-		b := input.UserCreateBody{
+		b := input.UserCreateReqBody{
 			Provider:   "google",
 			ProviderID: gU.ID,
 			UserName:   gU.Name,

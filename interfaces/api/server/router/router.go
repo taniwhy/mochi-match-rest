@@ -58,11 +58,16 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 	gin.DefaultWriter = io.MultiWriter(f)
 
 	r := gin.Default()
-	r.Use(cors.Write())
+
 	store := dao.NewRedisStore()
 	r.Use(sessions.Sessions("session", store))
+	r.Use(cors.Write())
+	r.LoadHTMLGlob("public/*")
 
 	v1 := r.Group("/v1")
+	v1.GET("/", func(ctx *gin.Context) {
+		ctx.HTML(200, "index.html", gin.H{"content-type": "text/html"})
+	})
 	authHandle := v1.Group("/auth")
 	{
 		authHandle.GET("/get", authHandler.GetToken)

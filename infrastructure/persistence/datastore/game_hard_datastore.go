@@ -12,7 +12,7 @@ type gameHardDatastore struct {
 }
 
 // NewGameHardDatastore : ゲームハードデータストアの生成
-func NewGameHardDatastore(db *gorm.DB) repository.GameHardRepository {
+func NewGameHardDatastore(db *gorm.DB) repository.IGameHardRepository {
 	return &gameHardDatastore{db}
 }
 

@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"os"
 	"strconv"
 
@@ -10,10 +11,33 @@ import (
 )
 
 func init() {
-	err := godotenv.Load("./config/env/.env")
-	if err != nil {
-		panic(err)
+	switch os.Getenv("GO_ENV") {
+	case "dev":
+		err := godotenv.Load(
+			fmt.Sprintf("%s/src/github.com/taniwhy/mochi-match-rest/config/env/.env.dev", os.Getenv("GOPATH")))
+		if err != nil {
+			panic(err)
+		}
+	case "test":
+		err := godotenv.Load(
+			fmt.Sprint("/drone/src/config/env/.env.test"))
+		if err != nil {
+			panic(err)
+		}
+	case "prod":
+		err := godotenv.Load(
+			fmt.Sprintf("%s/src/github.com/taniwhy/mochi-match-rest/config/env/.env", os.Getenv("GOPATH")))
+		if err != nil {
+			panic(err)
+		}
+	default:
+		err := godotenv.Load(
+			fmt.Sprintf("%s/src/github.com/taniwhy/mochi-match-rest/config/env/.env.dev", os.Getenv("GOPATH")))
+		if err != nil {
+			panic(err)
+		}
 	}
+
 }
 
 // GetDatabaseConf :　データベースの接続情報の取得

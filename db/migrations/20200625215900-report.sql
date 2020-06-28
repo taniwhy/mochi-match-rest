@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS reports
         ON DELETE SET NULL,
     FOREIGN KEY(vaiolator_id)REFERENCES users(user_id)
         ON UPDATE CASCADE
-        ON DELETE SET NULL
+        ON DELETE SET NULL,
     FOREIGN KEY(reported_room_id)REFERENCES rooms(room_id)
         ON UPDATE CASCADE
         ON DELETE SET NULL

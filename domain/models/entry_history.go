@@ -4,8 +4,8 @@ import (
 	"database/sql"
 	"time"
 
-	"github.com/google/uuid"
-	"github.com/taniwhy/mochi-match-rest/domain/errors"
+	"github.com/taniwhy/mochi-match-rest/util/clock"
+	"github.com/taniwhy/mochi-match-rest/util/uuid"
 )
 
 // EntryHistory : entry_historyテーブルモデル
@@ -20,16 +20,12 @@ type EntryHistory struct {
 
 // NewEntryHistory : entry_historyテーブルのレコードモデル生成
 func NewEntryHistory(uid, rid string) (*EntryHistory, error) {
-	id, err := uuid.NewRandom()
-	if err != nil {
-		return nil, errors.ErrGenerateID{}
-	}
 	return &EntryHistory{
-		EntryHistoryID: id.String(),
+		EntryHistoryID: uuid.UuID(),
 		UserID:         uid,
 		RoomID:         rid,
 		IsLeave:        false,
-		CreatedAt:      time.Now(),
-		LeavedAt:       sql.NullTime{Time: time.Now(), Valid: false},
+		CreatedAt:      clock.Now(),
+		LeavedAt:       sql.NullTime{Time: clock.Now(), Valid: false},
 	}, nil
 }

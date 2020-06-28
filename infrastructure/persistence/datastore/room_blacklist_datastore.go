@@ -12,7 +12,7 @@ type roomBlacklistDatastore struct {
 }
 
 // NewRoomBlacklistDatastore : ルームブラックリストデータストアの生成
-func NewRoomBlacklistDatastore(db *gorm.DB) repository.RoomBlacklistRepository {
+func NewRoomBlacklistDatastore(db *gorm.DB) repository.IRoomBlacklistRepository {
 	return &roomBlacklistDatastore{db}
 }
 

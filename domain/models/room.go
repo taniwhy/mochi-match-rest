@@ -3,8 +3,8 @@ package models
 import (
 	"time"
 
-	"github.com/google/uuid"
-	"github.com/taniwhy/mochi-match-rest/domain/errors"
+	"github.com/taniwhy/mochi-match-rest/util/clock"
+	"github.com/taniwhy/mochi-match-rest/util/uuid"
 	"gopkg.in/guregu/null.v4"
 )
 
@@ -24,20 +24,16 @@ type Room struct {
 
 // NewRoom : roomテーブルのレコードモデル生成
 func NewRoom(uid, text, glid, ghid string, cap int, s time.Time) (*Room, error) {
-	id, err := uuid.NewRandom()
-	if err != nil {
-		return nil, errors.ErrGenerateID{}
-	}
 	r := &Room{
-		RoomID:     id.String(),
+		RoomID:     uuid.UuID(),
 		UserID:     uid,
 		RoomText:   text,
 		GameListID: glid,
 		GameHardID: ghid,
 		Capacity:   cap,
 		IsLock:     false,
-		CreatedAt:  time.Now(),
-		UpdateAt:   time.Now(),
+		CreatedAt:  clock.Now(),
+		UpdateAt:   clock.Now(),
 	}
 	if s.IsZero() == true {
 		r.Start = null.NewTime(s, false)

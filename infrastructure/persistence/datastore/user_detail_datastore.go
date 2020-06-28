@@ -14,7 +14,7 @@ type userDetailDatastore struct {
 }
 
 // NewUserDetailDatastore : ユーザー詳細データストアの生成
-func NewUserDetailDatastore(db *gorm.DB) repository.UserDetailRepository {
+func NewUserDetailDatastore(db *gorm.DB) repository.IUserDetailRepository {
 	return &userDetailDatastore{db}
 }
 

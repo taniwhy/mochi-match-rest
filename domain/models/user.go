@@ -4,8 +4,8 @@ import (
 	"database/sql"
 	"time"
 
-	"github.com/google/uuid"
-	"github.com/taniwhy/mochi-match-rest/domain/errors"
+	"github.com/taniwhy/mochi-match-rest/util/clock"
+	"github.com/taniwhy/mochi-match-rest/util/uuid"
 )
 
 // User : usersテーブルモデル
@@ -25,12 +25,8 @@ type User struct {
 
 // NewUser : usersテーブルのレコードモデル生成
 func NewUser(email string) (*User, error) {
-	id, err := uuid.NewRandom()
-	if err != nil {
-		return nil, errors.ErrGenerateID{}
-	}
 	return &User{
-		UserID:     id.String(),
+		UserID:     uuid.UuID(),
 		GoogleID:   sql.NullString{String: "", Valid: false},
 		FacebookID: sql.NullString{String: "", Valid: false},
 		TwitterID:  sql.NullString{String: "", Valid: false},
@@ -38,8 +34,8 @@ func NewUser(email string) (*User, error) {
 		IsAdmin:    false,
 		IsFreeze:   false,
 		IsDelete:   false,
-		CreatedAt:  time.Now(),
-		UpdateAt:   time.Now(),
-		DeleteAt:   sql.NullTime{Time: time.Now(), Valid: false},
+		CreatedAt:  clock.Now(),
+		UpdateAt:   clock.Now(),
+		DeleteAt:   sql.NullTime{Time: clock.Now(), Valid: false},
 	}, nil
 }

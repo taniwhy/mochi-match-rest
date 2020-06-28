@@ -120,7 +120,7 @@ googleログイン後のコールバック処理
     + Attributes
         + message: `ok` (string) - 処理メッセージ
 
-# Group Room2
+# Group Room
 ## ルーム操作のエンドポイント [/v1/rooms]
 ### ルーム取得 [GET /v1/rooms{?page}]
 現在立っているルームを指定されたページ数で取得、最大6件
@@ -244,70 +244,3 @@ googleログイン後のコールバック処理
         + refresh_token: `example token` (string) - リフレッシュトークン
         + expires_in: `123456` (string) - UNIX形式のリフレッシュトークンの有効期限
 
-
-
-# Data Structures
-
-## Room (object)
-+ room_id: 1 (number) - ルーム識別番号
-+ owner_id: 1 (number) - ホストユーザ識別番号
-+ icon: 1 (number) - ホストアイコン識別番号
-+ name: ﾓቻﾓቻ (string) - ホストユーザ名
-+ hard: 1 (number) - ゲームハード識別番号
-+ title: MOCHIMOCHI (string) - ゲームタイトル名
-+ capacity: 4 (number) - 制限人数
-+ text: もちもちしたい人集まれ～＞＜一緒にもちもちしましょう！！！ (string) - 募集テキスト
-+ created: 4/5 16:50 (string) - ルーム作成日時
-+ start: 4/18 14:30~ (string, nullable) - ルーム開始時間
-
-# Group Room
-## ルームリスト全取得 [GET /room/list]
-現在立っているルームを全件取得
-
-+ Response 200 (application/json)
-    + Attributes (array, fixed-type)
-        + (Room)
-        + (Room)
-
-## ルームリスト取得（ページ） [GET /rooms/{page}]
-現在立っているルームを指定されたページ数で取得、最大6件
-
-+ Parameters
-    + page: 1 (number)  - ページ数
-
-+ Response 200 (application/json)
-    + Attributes (array, fixed-type)
-        + (Room)
-        + (Room)
-
-
-# Group Game
-## お気に入りゲーム取得 [GET /favorite-game/{id}]
-ユーザが登録しているお気に入りゲームの取得
-
-+ Parameters
-    + id: 1 (number) - ユーザ識別番号
-
-+ Response 200 (application/json)
-    + Body
-    ```
-    [
-        { "favorite": "パズドラ" },
-        { "favorite": "ダー糞ウル（糞）" },
-        { "favorite": "グラブル" }
-    ]
-    ```
-
-## 人気ゲーム取得 [GET /popular-game]
-今一番ホットなゲーム
-
-+ Response 200 (application/json)
-    + Body
-    ```
-    [
-        { "popular": "ダー糞ウル（糞）" },
-        { "popular": "パズドラ" },
-        { "popular": "モンスト" },
-        { "popular": "グラブル" }
-    ]
-    ```

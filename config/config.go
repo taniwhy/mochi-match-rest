@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"os"
 	"strconv"
 
@@ -10,7 +11,7 @@ import (
 )
 
 func init() {
-	err := godotenv.Load("./config/env/.env")
+	err := godotenv.Load(fmt.Sprintf("%s/src/github.com/taniwhy/mochi-match-rest/./config/env/.env", os.Getenv("GOPATH")))
 	if err != nil {
 		panic(err)
 	}

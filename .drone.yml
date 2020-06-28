@@ -16,9 +16,9 @@ steps:
   - name: test
     image: golang:1.13
     environment:
-      GO_ENV: development
+      GO_ENV: test
       AUTHORIZE_RSA:
-        from_secret: DISCORD_WEBHOCK_ID
+        from_secret: AUTHORIZE_RSA
     commands:
       - make test
     when:

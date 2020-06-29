@@ -12,7 +12,7 @@ func Write() gin.HandlerFunc {
 		switch os.Getenv("GO_ENV") {
 		case "staging":
 			c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:4000")
-		case "production":
+		case "prod":
 			c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:4000")
 		default:
 			c.Writer.Header().Set("Access-Control-Allow-Origin", "http://127.0.0.1:5500")

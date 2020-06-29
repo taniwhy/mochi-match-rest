@@ -47,8 +47,6 @@ steps:
     when:
       event:
         - push
-      repo:
-        - master
 
   - name: deploy
     image: appleboy/drone-ssh
@@ -66,8 +64,6 @@ steps:
     when:
       event:
         - push
-      repo:
-        - master
 
   - name: discord notification
     image: appleboy/drone-discord

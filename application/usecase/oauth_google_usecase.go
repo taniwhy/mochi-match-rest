@@ -4,17 +4,17 @@ package usecase
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
+	"golang.org/x/oauth2"
+
 	"github.com/taniwhy/mochi-match-rest/config"
 	"github.com/taniwhy/mochi-match-rest/domain/errors"
 	"github.com/taniwhy/mochi-match-rest/domain/models"
 	"github.com/taniwhy/mochi-match-rest/domain/service"
-	"golang.org/x/oauth2"
+	"github.com/taniwhy/mochi-match-rest/util/uuid"
 )
 
 const oauthGoogleURLAPI = "https://www.googleapis.com/oauth2/v3/userinfo?access_token="
@@ -38,42 +38,35 @@ func NewGoogleOAuthUsecase(uS service.IUserService) IGoogleOAuthUsecase {
 	}
 }
 
-func (gA *googleOAuthUsecase) Login(c *gin.Context) (string, error) {
-	u, err := uuid.NewRandom()
-	if err != nil {
-		return "", errors.ErrGenerateID{}
-	}
+func (u *googleOAuthUsecase) Login(c *gin.Context) (string, error) {
 	session := sessions.Default(c)
-
 	option := sessions.Options{Path: "/", Domain: "", MaxAge: 300, Secure: false, HttpOnly: true}
 	session.Options(option)
 
-	sessionID := u.String()
+	sessionID := uuid.UuID()
 	session.Set("state", sessionID)
 	session.Save()
 
-	url := gA.oauthConf.AuthCodeURL(sessionID)
+	url := u.oauthConf.AuthCodeURL(sessionID)
 	return url, nil
 }
 
-func (gA *googleOAuthUsecase) Callback(c *gin.Context) (bool, *models.GoogleUser, error) {
+func (u *googleOAuthUsecase) Callback(c *gin.Context) (bool, *models.GoogleUser, error) {
 	session := sessions.Default(c)
 	retrievedState := session.Get("state")
-	fmt.Println(retrievedState, c.Query("state"))
 	if retrievedState != c.Query("state") {
 		return false, nil, errors.ErrInvalidSessionState{State: retrievedState}
 	}
-
-	tok, err := gA.oauthConf.Exchange(oauth2.NoContext, c.Query("code"))
+	token, err := u.oauthConf.Exchange(oauth2.NoContext, c.Query("code"))
 	if err != nil {
 		return false, nil, errors.ErrGoogleOAuthTokenExchange{}
 	}
 
-	if tok.Valid() == false {
+	if token.Valid() == false {
 		return false, nil, errors.ErrInvalidGoogleOAuthToken{}
 	}
 
-	client := gA.oauthConf.Client(oauth2.NoContext, tok)
+	client := u.oauthConf.Client(oauth2.NoContext, token)
 	response, err := client.Get(oauthGoogleURLAPI)
 	if err != nil {
 		return false, nil, errors.ErrGoogleAPIRequest{}
@@ -83,18 +76,18 @@ func (gA *googleOAuthUsecase) Callback(c *gin.Context) (bool, *models.GoogleUser
 	if err != nil {
 		return false, nil, errors.ErrReadGoogleAPIResponse{}
 	}
-	gU := models.GoogleUser{}
-	err = json.Unmarshal(data, &gU)
+	googleUser := models.GoogleUser{}
+	err = json.Unmarshal(data, &googleUser)
 	if err != nil {
 		return false, nil, errors.ErrUnmarshalJSON{}
 	}
 
-	ok, err := gA.userService.IsExist("google", gU.ID)
+	ok, err := u.userService.IsExist("google", googleUser.ID)
 	if err != nil {
 		return false, nil, err
 	}
 	if ok {
-		return true, &gU, nil
+		return true, &googleUser, nil
 	}
-	return false, &gU, nil
+	return false, &googleUser, nil
 }

@@ -45,8 +45,6 @@ steps:
       password:
         from_secret: DOCKER_PASSWORD
     when:
-      event:
-        - push
       repo:
         - master
 
@@ -64,8 +62,6 @@ steps:
         - cd /var/www/mochi-match
         - sh deploy.sh
     when:
-      event:
-        - push
       repo:
         - master
 

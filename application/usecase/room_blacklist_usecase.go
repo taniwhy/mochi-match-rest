@@ -4,6 +4,7 @@ package usecase
 
 import (
 	"github.com/gin-gonic/gin"
+
 	"github.com/taniwhy/mochi-match-rest/domain/errors"
 	"github.com/taniwhy/mochi-match-rest/domain/models"
 	"github.com/taniwhy/mochi-match-rest/domain/repository"
@@ -12,9 +13,9 @@ import (
 
 // IRoomBlacklistUseCase : インターフェース
 type IRoomBlacklistUseCase interface {
-	GetByRoomID(*gin.Context) ([]*models.RoomBlacklist, error)
-	Insert(*gin.Context) error
-	Delete(*gin.Context) error
+	GetByRoomID(c *gin.Context) ([]*models.RoomBlacklist, error)
+	Insert(c *gin.Context) error
+	Delete(c *gin.Context) error
 }
 
 type roomBlacklistUsecase struct {
@@ -28,35 +29,35 @@ func NewRoomBlacklistUsecase(rR repository.IRoomBlacklistRepository) IRoomBlackl
 	}
 }
 
-func (rU roomBlacklistUsecase) GetByRoomID(c *gin.Context) ([]*models.RoomBlacklist, error) {
-	rid := c.Params.ByName("id")
-	blacklist, err := rU.roomBlacklistRepository.FindByRoomID(rid)
+func (u *roomBlacklistUsecase) GetByRoomID(c *gin.Context) ([]*models.RoomBlacklist, error) {
+	roomID := c.Params.ByName("id")
+	blacklist, err := u.roomBlacklistRepository.FindByRoomID(roomID)
 	if err != nil {
 		return nil, err
 	}
 	return blacklist, nil
 }
 
-func (rU roomBlacklistUsecase) Insert(c *gin.Context) error {
-	rid := c.Params.ByName("id")
+func (u *roomBlacklistUsecase) Insert(c *gin.Context) error {
+	roomID := c.Params.ByName("id")
 	claims, err := auth.GetTokenClaimsFromRequest(c)
 	if err != nil {
 		return errors.ErrGetTokenClaims{Detail: err.Error()}
 	}
-	uid := claims["sub"].(string)
-	rB, err := models.NewBlacklist(rid, uid)
+	userID := claims["sub"].(string)
+	blacklist, err := models.NewBlacklist(roomID, userID)
 	if err != nil {
 		return err
 	}
-	if err := rU.roomBlacklistRepository.Insert(rB); err != nil {
+	if err := u.roomBlacklistRepository.Insert(blacklist); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (rU roomBlacklistUsecase) Delete(c *gin.Context) error {
-	rid := c.Params.ByName("id")
-	err := rU.roomBlacklistRepository.Delete(rid)
+func (u *roomBlacklistUsecase) Delete(c *gin.Context) error {
+	roomID := c.Params.ByName("id")
+	err := u.roomBlacklistRepository.Delete(roomID)
 	if err != nil {
 		return err
 	}

@@ -21,37 +21,35 @@ type entryHistoryUsecase struct {
 
 // NewEntryHistoryUsecase : EntryHistoryユースケースの生成
 func NewEntryHistoryUsecase(eR repository.IEntryHistoryRepository) IEntryHistoryUsecase {
-	return &entryHistoryUsecase{
-		entryHistoryRepository: eR,
-	}
+	return &entryHistoryUsecase{entryHistoryRepository: eR}
 }
 
-func (eU entryHistoryUsecase) FindAllEntryHistory() ([]*models.EntryHistory, error) {
-	entryHistories, err := eU.entryHistoryRepository.FindAll()
+func (u *entryHistoryUsecase) FindAllEntryHistory() ([]*models.EntryHistory, error) {
+	entryHistories, err := u.entryHistoryRepository.FindAll()
 	if err != nil {
 		return nil, err
 	}
 	return entryHistories, nil
 }
 
-func (eU entryHistoryUsecase) InsertEntryHistory(entryHistory *models.EntryHistory) error {
-	err := eU.entryHistoryRepository.Insert(entryHistory)
+func (u *entryHistoryUsecase) InsertEntryHistory(entryHistory *models.EntryHistory) error {
+	err := u.entryHistoryRepository.Insert(entryHistory)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (eU entryHistoryUsecase) UpdateEntryHistory(entryHistory *models.EntryHistory) error {
-	err := eU.entryHistoryRepository.Update(entryHistory)
+func (u *entryHistoryUsecase) UpdateEntryHistory(entryHistory *models.EntryHistory) error {
+	err := u.entryHistoryRepository.Update(entryHistory)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (eU entryHistoryUsecase) DeleteEntryHistory(entryHistory *models.EntryHistory) error {
-	err := eU.entryHistoryRepository.Delete(entryHistory)
+func (u *entryHistoryUsecase) DeleteEntryHistory(entryHistory *models.EntryHistory) error {
+	err := u.entryHistoryRepository.Delete(entryHistory)
 	if err != nil {
 		return err
 	}

@@ -4,6 +4,7 @@ package usecase
 
 import (
 	"github.com/gin-gonic/gin"
+
 	"github.com/taniwhy/mochi-match-rest/domain/errors"
 	"github.com/taniwhy/mochi-match-rest/domain/models"
 	"github.com/taniwhy/mochi-match-rest/domain/models/input"
@@ -13,7 +14,7 @@ import (
 
 // IReportUsecase : インターフェース
 type IReportUsecase interface {
-	Insert(*gin.Context) error
+	Insert(c *gin.Context) error
 }
 
 type reportUsecase struct {
@@ -22,30 +23,28 @@ type reportUsecase struct {
 
 // NewReportUsecase : Reportユースケースの生成
 func NewReportUsecase(rR repository.IReportRepository) IReportUsecase {
-	return &reportUsecase{
-		reportRepository: rR,
-	}
+	return &reportUsecase{reportRepository: rR}
 }
 
-func (rU reportUsecase) Insert(c *gin.Context) error {
-	b := input.ReportReqBody{}
-	if err := c.BindJSON(&b); err != nil {
+func (u *reportUsecase) Insert(c *gin.Context) error {
+	body := input.ReportReqBody{}
+	if err := c.BindJSON(&body); err != nil {
 		return errors.ErrReportReqBinding{
-			VaiolatorID:      b.VaiolatorID,
-			VaiolationDetail: b.VaiolationDetail,
+			VaiolatorID:      body.VaiolatorID,
+			VaiolationDetail: body.VaiolationDetail,
 		}
 	}
 	claims, err := auth.GetTokenClaimsFromRequest(c)
 	if err != nil {
 		return errors.ErrGetTokenClaims{Detail: err.Error()}
 	}
-	cID := claims["sub"].(string)
-	rID := c.Params.ByName("id")
-	r, err := models.NewReport(cID, b.VaiolatorID, rID, b.VaiolationDetail)
+	callerID := claims["sub"].(string)
+	roomID := c.Params.ByName("id")
+	report, err := models.NewReport(callerID, body.VaiolatorID, roomID, body.VaiolationDetail)
 	if err != nil {
 		return err
 	}
-	if err := rU.reportRepository.InsertReport(r); err != nil {
+	if err := u.reportRepository.InsertReport(report); err != nil {
 		return err
 	}
 	return nil

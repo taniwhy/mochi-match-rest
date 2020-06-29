@@ -144,8 +144,8 @@ func (u roomUsecase) Join(c *gin.Context) error {
 	if !ok {
 		return errors.ErrRoomAlreadyEntry{RoomID: roomID}
 	}
-	r, err := u.roomRepository.FindByID(roomID)
-	roomCap := r.Capacity
+	room, err := u.roomRepository.FindByID(roomID)
+	roomCap := room.Capacity
 	userCnt, err := u.entryHistoryRepository.CountEntryUser(roomID)
 	if roomCap <= userCnt {
 		return errors.ErrRoomCapacityOver{RoomID: roomID, Count: userCnt}

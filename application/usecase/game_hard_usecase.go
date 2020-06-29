@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+
 	"github.com/taniwhy/mochi-match-rest/domain/errors"
 	"github.com/taniwhy/mochi-match-rest/domain/models"
 	"github.com/taniwhy/mochi-match-rest/domain/models/input"
@@ -14,10 +15,10 @@ import (
 
 // IGameHardUseCase : インターフェース
 type IGameHardUseCase interface {
-	FindAll(*gin.Context) ([]*models.GameHard, error)
-	Insert(*gin.Context) error
-	Update(*gin.Context) error
-	Delete(*gin.Context) error
+	FindAll(c *gin.Context) ([]*models.GameHard, error)
+	Insert(c *gin.Context) error
+	Update(c *gin.Context) error
+	Delete(c *gin.Context) error
 }
 
 type gameHardUsecase struct {
@@ -26,59 +27,57 @@ type gameHardUsecase struct {
 
 // NewGameHardUsecase : GameTitleユースケースの生成
 func NewGameHardUsecase(gR repository.IGameHardRepository) IGameHardUseCase {
-	return &gameHardUsecase{
-		gameHardRepository: gR,
-	}
+	return &gameHardUsecase{gameHardRepository: gR}
 }
 
-func (gU gameHardUsecase) FindAll(c *gin.Context) ([]*models.GameHard, error) {
-	gameHards, err := gU.gameHardRepository.FindAll()
+func (u *gameHardUsecase) FindAll(c *gin.Context) ([]*models.GameHard, error) {
+	gamehards, err := u.gameHardRepository.FindAll()
 	if err != nil {
 		return nil, err
 	}
-	return gameHards, nil
+	return gamehards, nil
 }
 
-func (gU gameHardUsecase) Insert(c *gin.Context) error {
-	b := input.GameHardCreateReqBody{}
-	if err := c.BindJSON(&b); err != nil {
-		return errors.ErrGameHardCreateReqBinding{HardName: b.HardName}
+func (u *gameHardUsecase) Insert(c *gin.Context) error {
+	body := input.GameHardCreateReqBody{}
+	if err := c.BindJSON(&body); err != nil {
+		return errors.ErrGameHardCreateReqBinding{HardName: body.HardName}
 	}
-	gH, err := models.NewGameHard(b.HardName)
+	gamehard, err := models.NewGameHard(body.HardName)
 	if err != nil {
 		return err
 	}
-	if err := gU.gameHardRepository.Insert(gH); err != nil {
+	if err := u.gameHardRepository.Insert(gamehard); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (gU gameHardUsecase) Update(c *gin.Context) error {
-	gid := c.Params.ByName("id")
-	b := input.GameHardUpdateReqBody{}
-	if err := c.BindJSON(&b); err != nil {
-		return errors.ErrGameHardUpdateReqBinding{HardName: b.HardName}
+func (u *gameHardUsecase) Update(c *gin.Context) error {
+	gamehardID := c.Params.ByName("id")
+	body := input.GameHardUpdateReqBody{}
+	if err := c.BindJSON(&body); err != nil {
+		return errors.ErrGameHardUpdateReqBinding{HardName: body.HardName}
 	}
-	gH := &models.GameHard{
-		GameHardID: gid,
-		HardName:   b.HardName,
+	gamehard := &models.GameHard{
+		GameHardID: gamehardID,
+		HardName:   body.HardName,
 		UpdateAt:   time.Now(),
 	}
-	if err := gU.gameHardRepository.Update(gH); err != nil {
+	if err := u.gameHardRepository.Update(gamehard); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (gU gameHardUsecase) Delete(c *gin.Context) error {
-	id := c.Params.ByName("id")
-	gH := &models.GameHard{
-		GameHardID: id,
-	}
-	err := gU.gameHardRepository.Delete(gH)
-	if err != nil {
-		return err
+func (u *gameHardUsecase) Delete(c *gin.Context) error {
+	gamehardID, _ := c.GetQueryArray("id")
+	for _, id := range gamehardID {
+		gamehard := &models.GameHard{GameHardID: id}
+		err := u.gameHardRepository.Delete(gamehard)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }

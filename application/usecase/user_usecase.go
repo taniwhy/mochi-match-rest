@@ -7,6 +7,8 @@ import (
 	"database/sql"
 
 	"github.com/gin-gonic/gin"
+	"golang.org/x/sync/errgroup"
+
 	"github.com/taniwhy/mochi-match-rest/domain/errors"
 	"github.com/taniwhy/mochi-match-rest/domain/models"
 	"github.com/taniwhy/mochi-match-rest/domain/models/input"
@@ -14,7 +16,6 @@ import (
 	"github.com/taniwhy/mochi-match-rest/domain/repository"
 	"github.com/taniwhy/mochi-match-rest/domain/service"
 	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/middleware/auth"
-	"golang.org/x/sync/errgroup"
 )
 
 // IUserUseCase : インターフェース
@@ -70,20 +71,20 @@ func (u *userUsecase) GetMe(c *gin.Context) (*output.UserResBody, error) {
 	if err != nil {
 		return nil, err
 	}
-	b := &output.UserResBody{
+	resBody := &output.UserResBody{
 		UserID:    user.UserID,
 		UserName:  userDetail.UserName,
 		Icon:      userDetail.Icon,
 		CreatedAt: user.CreatedAt,
 	}
 	for _, g := range favoriteGames {
-		d := output.FavoriteGamesRes{
+		r := output.FavoriteGamesRes{
 			GameTitle: g.GameTitle,
 			CreatedAt: g.CreatedAt,
 		}
-		b.FavoriteGames = append(b.FavoriteGames, d)
+		resBody.FavoriteGames = append(resBody.FavoriteGames, r)
 	}
-	return b, nil
+	return resBody, nil
 }
 
 func (u *userUsecase) GetByID(c *gin.Context) (*output.UserResBody, error) {

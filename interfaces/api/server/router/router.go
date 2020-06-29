@@ -130,7 +130,7 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 	{
 		gamehard.POST("", gameHardHandler.Create)
 		gamehard.PUT("/:id", gameHardHandler.Update)
-		gamehard.DELETE("/:id", gameHardHandler.Delete)
+		gamehard.DELETE("/", gameHardHandler.Delete)
 	}
 	return r
 }

@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+
 	"github.com/taniwhy/mochi-match-rest/domain/models/input"
 )
 

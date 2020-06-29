@@ -10,13 +10,15 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
+
 	"github.com/taniwhy/mochi-match-rest/domain/errors"
 	"github.com/taniwhy/mochi-match-rest/domain/models"
 	"github.com/taniwhy/mochi-match-rest/domain/models/input"
-	mock_repository "github.com/taniwhy/mochi-match-rest/domain/repository/mock_repository"
-	mock_service "github.com/taniwhy/mochi-match-rest/domain/service/mock_service"
 	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/middleware/auth"
 	"github.com/taniwhy/mochi-match-rest/util/testutil"
+
+	mock_repository "github.com/taniwhy/mochi-match-rest/domain/repository/mock_repository"
+	mock_service "github.com/taniwhy/mochi-match-rest/domain/service/mock_service"
 )
 
 func TestGetMe(t *testing.T) {

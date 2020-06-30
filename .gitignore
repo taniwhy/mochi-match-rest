@@ -16,8 +16,8 @@
 config.yml
 dbconf.yml
 
-access.log
-server.log
+access.*
+server.*
 
 memo
 main

@@ -1,9 +1,6 @@
 package router
 
 import (
-	"io"
-	"os"
-
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/gomodule/redigo/redis"
@@ -52,12 +49,6 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 	googleAuthHandler := handler.NewGoogleOAuthHandler(googleAuthUsecase, userUsecase, userService)
 
 	authHandler := handler.NewAuthHandler()
-
-	f, err := os.Create("./config/log/access.log")
-	if err != nil {
-		panic(err.Error())
-	}
-	gin.DefaultWriter = io.MultiWriter(f)
 
 	r := gin.Default()
 	r.Use(cors.Write())

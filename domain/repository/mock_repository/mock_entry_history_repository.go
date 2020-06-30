@@ -48,6 +48,36 @@ func (mr *MockIEntryHistoryRepositoryMockRecorder) FindAll() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindAll", reflect.TypeOf((*MockIEntryHistoryRepository)(nil).FindAll))
 }
 
+// FindNotLeave mocks base method
+func (m *MockIEntryHistoryRepository) FindNotLeave(userID string) (*models.EntryHistory, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FindNotLeave", userID)
+	ret0, _ := ret[0].(*models.EntryHistory)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FindNotLeave indicates an expected call of FindNotLeave
+func (mr *MockIEntryHistoryRepositoryMockRecorder) FindNotLeave(userID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindNotLeave", reflect.TypeOf((*MockIEntryHistoryRepository)(nil).FindNotLeave), userID)
+}
+
+// FindNotLeaveByRoomID mocks base method
+func (m *MockIEntryHistoryRepository) FindNotLeaveByRoomID(userID, roomID string) (*models.EntryHistory, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FindNotLeaveByRoomID", userID, roomID)
+	ret0, _ := ret[0].(*models.EntryHistory)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FindNotLeaveByRoomID indicates an expected call of FindNotLeaveByRoomID
+func (mr *MockIEntryHistoryRepositoryMockRecorder) FindNotLeaveByRoomID(userID, roomID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindNotLeaveByRoomID", reflect.TypeOf((*MockIEntryHistoryRepository)(nil).FindNotLeaveByRoomID), userID, roomID)
+}
+
 // Insert mocks base method
 func (m *MockIEntryHistoryRepository) Insert(arg0 *models.EntryHistory) error {
 	m.ctrl.T.Helper()
@@ -103,21 +133,6 @@ func (m *MockIEntryHistoryRepository) CountEntryUser(arg0 string) (int, error) {
 func (mr *MockIEntryHistoryRepositoryMockRecorder) CountEntryUser(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CountEntryUser", reflect.TypeOf((*MockIEntryHistoryRepository)(nil).CountEntryUser), arg0)
-}
-
-// CheckEntry mocks base method
-func (m *MockIEntryHistoryRepository) CheckEntry(rid, uid string) (bool, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CheckEntry", rid, uid)
-	ret0, _ := ret[0].(bool)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// CheckEntry indicates an expected call of CheckEntry
-func (mr *MockIEntryHistoryRepositoryMockRecorder) CheckEntry(rid, uid interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckEntry", reflect.TypeOf((*MockIEntryHistoryRepository)(nil).CheckEntry), rid, uid)
 }
 
 // LeaveFlg mocks base method

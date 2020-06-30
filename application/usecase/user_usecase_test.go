@@ -224,12 +224,13 @@ func TestUpdateUser(t *testing.T) {
 	notExistToken := auth.GenerateAccessToken("notExistID", false)
 
 	// 正常処理テスト
-	bodyReader := strings.NewReader(
-		`{
+	bodyReader := strings.NewReader(`
+		{
 			"user_name": "testName",
 			"icon": "testIcon",
 			"favorite_games":[]
-		}`)
+		}
+		`)
 	req, _ := http.NewRequest("GET", "", bodyReader)
 	req.Header.Add("Authorization", existToken)
 	context := &gin.Context{Request: req}
@@ -239,12 +240,13 @@ func TestUpdateUser(t *testing.T) {
 
 	// 異常処理テスト
 	// 1. 存在しないID
-	bodyReader = strings.NewReader(
-		`{
+	bodyReader = strings.NewReader(`
+		{
 			"user_name": "testName",
 			"icon": "testIcon",
 			"favorite_games":[]
-		}`)
+		}
+		`)
 	req, _ = http.NewRequest("GET", "", bodyReader)
 	req.Header.Add("Authorization", notExistToken)
 	context = &gin.Context{Request: req}
@@ -253,12 +255,13 @@ func TestUpdateUser(t *testing.T) {
 	assert.Error(t, err)
 
 	// 2. トークン無し
-	bodyReader = strings.NewReader(
-		`{
+	bodyReader = strings.NewReader(`
+		{
 			"user_name": "testName",
 			"icon": "testIcon",
 			"favorite_games":[]
-		}`)
+		}
+		`)
 	req, _ = http.NewRequest("GET", "", bodyReader)
 	context = &gin.Context{Request: req}
 	err = test.Update(context)

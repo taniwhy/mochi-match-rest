@@ -35,58 +35,58 @@ func (m *MockIGameHardUseCase) EXPECT() *MockIGameHardUseCaseMockRecorder {
 }
 
 // FindAll mocks base method
-func (m *MockIGameHardUseCase) FindAll(arg0 *gin.Context) ([]*models.GameHard, error) {
+func (m *MockIGameHardUseCase) FindAll(c *gin.Context) ([]*models.GameHard, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FindAll", arg0)
+	ret := m.ctrl.Call(m, "FindAll", c)
 	ret0, _ := ret[0].([]*models.GameHard)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // FindAll indicates an expected call of FindAll
-func (mr *MockIGameHardUseCaseMockRecorder) FindAll(arg0 interface{}) *gomock.Call {
+func (mr *MockIGameHardUseCaseMockRecorder) FindAll(c interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindAll", reflect.TypeOf((*MockIGameHardUseCase)(nil).FindAll), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindAll", reflect.TypeOf((*MockIGameHardUseCase)(nil).FindAll), c)
 }
 
 // Insert mocks base method
-func (m *MockIGameHardUseCase) Insert(arg0 *gin.Context) error {
+func (m *MockIGameHardUseCase) Insert(c *gin.Context) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Insert", arg0)
+	ret := m.ctrl.Call(m, "Insert", c)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Insert indicates an expected call of Insert
-func (mr *MockIGameHardUseCaseMockRecorder) Insert(arg0 interface{}) *gomock.Call {
+func (mr *MockIGameHardUseCaseMockRecorder) Insert(c interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Insert", reflect.TypeOf((*MockIGameHardUseCase)(nil).Insert), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Insert", reflect.TypeOf((*MockIGameHardUseCase)(nil).Insert), c)
 }
 
 // Update mocks base method
-func (m *MockIGameHardUseCase) Update(arg0 *gin.Context) error {
+func (m *MockIGameHardUseCase) Update(c *gin.Context) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Update", arg0)
+	ret := m.ctrl.Call(m, "Update", c)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Update indicates an expected call of Update
-func (mr *MockIGameHardUseCaseMockRecorder) Update(arg0 interface{}) *gomock.Call {
+func (mr *MockIGameHardUseCaseMockRecorder) Update(c interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockIGameHardUseCase)(nil).Update), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockIGameHardUseCase)(nil).Update), c)
 }
 
 // Delete mocks base method
-func (m *MockIGameHardUseCase) Delete(arg0 *gin.Context) error {
+func (m *MockIGameHardUseCase) Delete(c *gin.Context) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Delete", arg0)
+	ret := m.ctrl.Call(m, "Delete", c)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Delete indicates an expected call of Delete
-func (mr *MockIGameHardUseCaseMockRecorder) Delete(arg0 interface{}) *gomock.Call {
+func (mr *MockIGameHardUseCaseMockRecorder) Delete(c interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockIGameHardUseCase)(nil).Delete), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockIGameHardUseCase)(nil).Delete), c)
 }

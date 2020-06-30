@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gomodule/redigo/redis"
 	"github.com/jinzhu/gorm"
+
 	"github.com/taniwhy/mochi-match-rest/application/usecase"
 	"github.com/taniwhy/mochi-match-rest/domain/service"
 	"github.com/taniwhy/mochi-match-rest/infrastructure/dao"
@@ -32,9 +33,10 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 
 	userService := service.NewUserService(userDatastore)
 	roomService := service.NewRoomService(roomDatastore)
+	entryHistoryService := service.NewEntryHistoryService(entryHistoryDatastore)
 
 	userUsecase := usecase.NewUserUsecase(userDatastore, userDetailDatastore, userService, favorateGameDatastore)
-	roomUsecase := usecase.NewRoomUsecase(roomDatastore, entryHistoryDatastore, roomService)
+	roomUsecase := usecase.NewRoomUsecase(roomDatastore, entryHistoryDatastore, roomService, entryHistoryService)
 	roomBlacklistUsecase := usecase.NewRoomBlacklistUsecase(roomBalacklistDatastore)
 	chatPostUsecase := usecase.NewChatPostUsecase(chatPostDatastore, redisConn)
 	gameListUsecase := usecase.NewGameListUsecase(gameListDatastore)
@@ -58,6 +60,7 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 	gin.DefaultWriter = io.MultiWriter(f)
 
 	r := gin.Default()
+	r.Use(cors.Write())
 
 	store := dao.NewRedisStore()
 	r.Use(sessions.Sessions("session", store))

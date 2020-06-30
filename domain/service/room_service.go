@@ -24,8 +24,8 @@ func NewRoomService(rR repository.IRoomRepository) IRoomService {
 	}
 }
 
-func (rS roomService) CanInsert(id string) (bool, error) {
-	r, err := rS.roomRepository.FindUnlockByID(id)
+func (s *roomService) CanInsert(id string) (bool, error) {
+	r, err := s.roomRepository.FindUnlockByID(id)
 	if err != nil {
 		return false, err
 	}
@@ -35,8 +35,8 @@ func (rS roomService) CanInsert(id string) (bool, error) {
 	return true, nil
 }
 
-func (rS roomService) IsLock(id string) (bool, error) {
-	r, err := rS.roomRepository.FindByID(id)
+func (s *roomService) IsLock(id string) (bool, error) {
+	r, err := s.roomRepository.FindByID(id)
 	if err != nil {
 		return false, err
 	}
@@ -46,8 +46,8 @@ func (rS roomService) IsLock(id string) (bool, error) {
 	return true, nil
 }
 
-func (rS roomService) IsOwner(uid, rid string) (bool, error) {
-	r, err := rS.roomRepository.FindByID(rid)
+func (s *roomService) IsOwner(uid, rid string) (bool, error) {
+	r, err := s.roomRepository.FindByID(rid)
 	if err != nil {
 		return false, err
 	}

@@ -35,44 +35,44 @@ func (m *MockIRoomBlacklistUseCase) EXPECT() *MockIRoomBlacklistUseCaseMockRecor
 }
 
 // GetByRoomID mocks base method
-func (m *MockIRoomBlacklistUseCase) GetByRoomID(arg0 *gin.Context) ([]*models.RoomBlacklist, error) {
+func (m *MockIRoomBlacklistUseCase) GetByRoomID(c *gin.Context) ([]*models.RoomBlacklist, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetByRoomID", arg0)
+	ret := m.ctrl.Call(m, "GetByRoomID", c)
 	ret0, _ := ret[0].([]*models.RoomBlacklist)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetByRoomID indicates an expected call of GetByRoomID
-func (mr *MockIRoomBlacklistUseCaseMockRecorder) GetByRoomID(arg0 interface{}) *gomock.Call {
+func (mr *MockIRoomBlacklistUseCaseMockRecorder) GetByRoomID(c interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByRoomID", reflect.TypeOf((*MockIRoomBlacklistUseCase)(nil).GetByRoomID), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByRoomID", reflect.TypeOf((*MockIRoomBlacklistUseCase)(nil).GetByRoomID), c)
 }
 
 // Insert mocks base method
-func (m *MockIRoomBlacklistUseCase) Insert(arg0 *gin.Context) error {
+func (m *MockIRoomBlacklistUseCase) Insert(c *gin.Context) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Insert", arg0)
+	ret := m.ctrl.Call(m, "Insert", c)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Insert indicates an expected call of Insert
-func (mr *MockIRoomBlacklistUseCaseMockRecorder) Insert(arg0 interface{}) *gomock.Call {
+func (mr *MockIRoomBlacklistUseCaseMockRecorder) Insert(c interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Insert", reflect.TypeOf((*MockIRoomBlacklistUseCase)(nil).Insert), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Insert", reflect.TypeOf((*MockIRoomBlacklistUseCase)(nil).Insert), c)
 }
 
 // Delete mocks base method
-func (m *MockIRoomBlacklistUseCase) Delete(arg0 *gin.Context) error {
+func (m *MockIRoomBlacklistUseCase) Delete(c *gin.Context) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Delete", arg0)
+	ret := m.ctrl.Call(m, "Delete", c)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Delete indicates an expected call of Delete
-func (mr *MockIRoomBlacklistUseCaseMockRecorder) Delete(arg0 interface{}) *gomock.Call {
+func (mr *MockIRoomBlacklistUseCaseMockRecorder) Delete(c interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockIRoomBlacklistUseCase)(nil).Delete), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockIRoomBlacklistUseCase)(nil).Delete), c)
 }

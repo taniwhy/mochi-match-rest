@@ -5,6 +5,7 @@ go 1.13
 require (
 	github.com/DATA-DOG/go-sqlmock v1.4.1 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/gin-contrib/cors v1.3.1 // indirect
 	github.com/gin-contrib/sessions v0.0.3
 	github.com/gin-gonic/gin v1.6.3
 	github.com/golang/mock v1.2.0
@@ -20,7 +21,7 @@ require (
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
 	golang.org/x/sync v0.0.0-20200317015054-43a5402ce75a
 	gopkg.in/guregu/null.v4 v4.0.0
-	gotest.tools v2.2.0+incompatible
-	gotest.tools/v3 v3.0.2
+	gotest.tools v2.2.0+incompatible // indirect
+	gotest.tools/v3 v3.0.2 // indirect
 	rsc.io/quote/v3 v3.1.0 // indirect
 )

@@ -24,7 +24,7 @@ func init() {
 	logrus.SetFormatter(&formatter)
 
 	//ログ出力ファイルの設定
-	f, err := os.Create(fmt.Sprintf("%s/src/github.com/taniwhy/mochi-match-rest/config/log/access/access.%s.log",
+	f, err := os.Create(fmt.Sprintf("%s/src/github.com/taniwhy/mochi-match-rest/config/log/access.%s.log",
 		os.Getenv("GOPATH"), time.Now().Format("2006-01-02-15:04:05")))
 	if err != nil {
 		panic(err.Error())
@@ -32,7 +32,7 @@ func init() {
 
 	gin.DefaultWriter = io.MultiWriter(f)
 
-	f, err = openFile(fmt.Sprintf("%s/src/github.com/taniwhy/mochi-match-rest/config/log/server/server.%s.log",
+	f, err = openFile(fmt.Sprintf("%s/src/github.com/taniwhy/mochi-match-rest/config/log/server.%s.log",
 		os.Getenv("GOPATH"), time.Now().Format("2006-01-02-15:04:05")))
 	if err != nil {
 		logrus.Fatal(err)

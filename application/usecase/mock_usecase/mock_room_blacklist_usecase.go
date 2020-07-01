@@ -49,18 +49,18 @@ func (mr *MockIRoomBlacklistUseCaseMockRecorder) GetByRoomID(c interface{}) *gom
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByRoomID", reflect.TypeOf((*MockIRoomBlacklistUseCase)(nil).GetByRoomID), c)
 }
 
-// Insert mocks base method
-func (m *MockIRoomBlacklistUseCase) Insert(c *gin.Context) error {
+// Create mocks base method
+func (m *MockIRoomBlacklistUseCase) Create(c *gin.Context) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Insert", c)
+	ret := m.ctrl.Call(m, "Create", c)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// Insert indicates an expected call of Insert
-func (mr *MockIRoomBlacklistUseCaseMockRecorder) Insert(c interface{}) *gomock.Call {
+// Create indicates an expected call of Create
+func (mr *MockIRoomBlacklistUseCaseMockRecorder) Create(c interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Insert", reflect.TypeOf((*MockIRoomBlacklistUseCase)(nil).Insert), c)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockIRoomBlacklistUseCase)(nil).Create), c)
 }
 
 // Delete mocks base method

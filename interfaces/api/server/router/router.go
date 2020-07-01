@@ -34,7 +34,7 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 
 	userUsecase := usecase.NewUserUsecase(userDatastore, userDetailDatastore, userService, favorateGameDatastore)
 	roomUsecase := usecase.NewRoomUsecase(roomDatastore, entryHistoryDatastore, roomService, entryHistoryService)
-	roomBlacklistUsecase := usecase.NewRoomBlacklistUsecase(roomBalacklistDatastore)
+	roomBlacklistUsecase := usecase.NewRoomBlacklistUsecase(roomBalacklistDatastore, roomService)
 	chatPostUsecase := usecase.NewChatPostUsecase(chatPostDatastore, redisConn)
 	gameListUsecase := usecase.NewGameListUsecase(gameListDatastore)
 	gameHardUsecase := usecase.NewGameHardUsecase(gameHardDatastore)
@@ -47,7 +47,6 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 	gameListHandler := handler.NewGameListHandler(gameListUsecase)
 	gameHardHandler := handler.NewGameHardHandler(gameHardUsecase)
 	googleAuthHandler := handler.NewGoogleOAuthHandler(googleAuthUsecase, userUsecase, userService)
-
 	authHandler := handler.NewAuthHandler()
 
 	r := gin.Default()

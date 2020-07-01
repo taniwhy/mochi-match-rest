@@ -33,9 +33,9 @@ func (rD roomBlacklistDatastore) Insert(rB *models.RoomBlacklist) error {
 	return nil
 }
 
-func (rD roomBlacklistDatastore) Delete(rid string) error {
+func (rD roomBlacklistDatastore) Delete(roomID, userID string) error {
 	rB := models.RoomBlacklist{}
-	err := rD.db.Where("room_id = ?", rid).Delete(rB).Error
+	err := rD.db.Where("room_id = ? AND user_id = ?", roomID, userID).Delete(rB).Error
 	if err != nil {
 		return errors.ErrDataBase{Detail: err.Error()}
 	}

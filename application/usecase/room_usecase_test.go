@@ -333,7 +333,7 @@ func TestLaveRoom(t *testing.T) {
 
 	mockRoomService := mock_service.NewMockIRoomService(ctrl)
 	mockEntryHistoryService := mock_service.NewMockIEntryHistoryService(ctrl)
-	mockEntryHistoryService.EXPECT().CheckJoin("existRoomID", "existID").Return(true, nil)
+	mockEntryHistoryService.EXPECT().CheckJoin("existRoomID", "existID").Return(false, nil)
 
 	test := NewRoomUsecase(mockRoomRepository, mockEntryHistoryRepository, mockRoomService, mockEntryHistoryService)
 

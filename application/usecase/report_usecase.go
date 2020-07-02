@@ -14,7 +14,7 @@ import (
 
 // IReportUsecase : インターフェース
 type IReportUsecase interface {
-	Insert(c *gin.Context) error
+	Create(c *gin.Context) error
 }
 
 type reportUsecase struct {
@@ -26,7 +26,7 @@ func NewReportUsecase(rR repository.IReportRepository) IReportUsecase {
 	return &reportUsecase{reportRepository: rR}
 }
 
-func (u *reportUsecase) Insert(c *gin.Context) error {
+func (u *reportUsecase) Create(c *gin.Context) error {
 	body := input.ReportReqBody{}
 	if err := c.BindJSON(&body); err != nil {
 		return errors.ErrReportReqBinding{

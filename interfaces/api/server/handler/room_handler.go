@@ -122,6 +122,9 @@ func (rH roomHandler) Join(c *gin.Context) {
 		case errors.ErrRecordNotFound:
 			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 			return
+		case errors.ErrRoomAlreadyEntry:
+			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+			return
 		case errors.ErrGenerateID:
 			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 			return

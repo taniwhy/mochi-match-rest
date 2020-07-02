@@ -177,7 +177,7 @@ func (u roomUsecase) Leave(c *gin.Context) error {
 	if err != nil {
 		return err
 	}
-	if !ok {
+	if ok {
 		return errors.ErrNotEntryRoom{RoomID: roomID}
 	}
 	if err := u.entryHistoryRepository.LeaveFlg(roomID, userID); err != nil {

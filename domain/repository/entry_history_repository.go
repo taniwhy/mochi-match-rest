@@ -4,6 +4,7 @@ package repository
 
 import (
 	"github.com/taniwhy/mochi-match-rest/domain/models"
+	"github.com/taniwhy/mochi-match-rest/domain/models/output"
 )
 
 // IEntryHistoryRepository : 入室履歴のリポジトリ
@@ -11,6 +12,7 @@ type IEntryHistoryRepository interface {
 	FindAll() ([]*models.EntryHistory, error)
 	FindNotLeave(userID string) (*models.EntryHistory, error)
 	FindNotLeaveByRoomID(userID, roomID string) (*models.EntryHistory, error)
+	FindNotLeaveListByRoomID(roomID string) ([]*output.JoinUserRes, error)
 	Insert(*models.EntryHistory) error
 	Update(*models.EntryHistory) error
 	Delete(*models.EntryHistory) error

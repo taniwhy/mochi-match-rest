@@ -241,7 +241,7 @@ func TestJoinRoom(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockRoomRepository := mock_repository.NewMockIRoomRepository(ctrl)
-	mockRoomRepository.EXPECT().FindByID("notLockRoomID").Return(&models.Room{Capacity: 2}, nil)
+	mockRoomRepository.EXPECT().FindByID("notLockRoomID").Return(&output.RoomResBody{Capacity: 2}, nil)
 
 	history, _ := models.NewEntryHistory("existID", "notLockRoomID")
 

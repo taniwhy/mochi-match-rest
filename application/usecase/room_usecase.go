@@ -19,6 +19,7 @@ import (
 // IRoomUseCase : インターフェース
 type IRoomUseCase interface {
 	GetList(c *gin.Context) ([]*output.RoomResBody, error)
+	GetByID(c *gin.Context) (*output.RoomDetailResBody, error)
 	Create(c *gin.Context) error
 	Update(c *gin.Context) error
 	Delete(c *gin.Context) error
@@ -63,6 +64,33 @@ func (u roomUsecase) GetList(c *gin.Context) ([]*output.RoomResBody, error) {
 	}
 	rooms, err := u.roomRepository.FindByLimitAndOffset(limit, offset)
 	return rooms, nil
+}
+
+func (u roomUsecase) GetByID(c *gin.Context) (*output.RoomDetailResBody, error) {
+	roomID := c.Params.ByName("id")
+	room, err := u.roomRepository.FindByID(roomID)
+	if err != nil {
+		return nil, err
+	}
+	joinUsers, err := u.entryHistoryRepository.FindNotLeaveListByRoomID(roomID)
+
+	resBody := &output.RoomDetailResBody{
+		RoomID:    roomID,
+		OwnerID:   room.UserID,
+		HardName:  room.HardName,
+		GameTitle: room.GameTitle,
+		Capacity:  room.Capacity,
+		RoomText:  room.RoomText,
+	}
+	for _, g := range joinUsers {
+		r := output.JoinUserRes{
+			UserID:   g.UserID,
+			UserName: g.UserName,
+			Icon:     g.Icon,
+		}
+		resBody.JoinUsers = append(resBody.JoinUsers, r)
+	}
+	return resBody, nil
 }
 
 func (u roomUsecase) Create(c *gin.Context) error {

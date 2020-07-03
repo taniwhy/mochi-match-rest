@@ -49,6 +49,21 @@ func (mr *MockIRoomUseCaseMockRecorder) GetList(c interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetList", reflect.TypeOf((*MockIRoomUseCase)(nil).GetList), c)
 }
 
+// GetByID mocks base method
+func (m *MockIRoomUseCase) GetByID(c *gin.Context) (*output.RoomDetailResBody, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetByID", c)
+	ret0, _ := ret[0].(*output.RoomDetailResBody)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetByID indicates an expected call of GetByID
+func (mr *MockIRoomUseCaseMockRecorder) GetByID(c interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByID", reflect.TypeOf((*MockIRoomUseCase)(nil).GetByID), c)
+}
+
 // Create mocks base method
 func (m *MockIRoomUseCase) Create(c *gin.Context) error {
 	m.ctrl.T.Helper()

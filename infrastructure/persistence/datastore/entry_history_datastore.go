@@ -7,6 +7,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/taniwhy/mochi-match-rest/domain/errors"
 	"github.com/taniwhy/mochi-match-rest/domain/models"
+	"github.com/taniwhy/mochi-match-rest/domain/models/output"
 	"github.com/taniwhy/mochi-match-rest/domain/repository"
 )
 
@@ -50,6 +51,26 @@ func (eD entryHistoryDatastore) FindNotLeaveByRoomID(userID, roomID string) (*mo
 		return nil, errors.ErrDataBase{Detail: err}
 	}
 	return history, nil
+}
+
+func (eD entryHistoryDatastore) FindNotLeaveListByRoomID(roomID string) ([]*output.JoinUserRes, error) {
+	users := []*output.JoinUserRes{}
+	err := eD.db.
+		Table("entry_histories").
+		Select(`
+			entry_histories.user_id,
+			user_details.user_name,
+			user_details.icon
+			`).
+		Joins("LEFT JOIN user_details ON entry_histories.user_id = user_details.user_id").
+		Where("entry_histories.is_leave = ?", false).Order("created_at asc").Scan(&users).Error
+	if gorm.IsRecordNotFoundError(err) {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, errors.ErrDataBase{Detail: err}
+	}
+	return users, nil
 }
 
 func (eD entryHistoryDatastore) Insert(entryHistory *models.EntryHistory) error {

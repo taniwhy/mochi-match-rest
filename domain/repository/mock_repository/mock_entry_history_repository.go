@@ -7,6 +7,7 @@ package mock_repository
 import (
 	gomock "github.com/golang/mock/gomock"
 	models "github.com/taniwhy/mochi-match-rest/domain/models"
+	output "github.com/taniwhy/mochi-match-rest/domain/models/output"
 	reflect "reflect"
 )
 
@@ -76,6 +77,21 @@ func (m *MockIEntryHistoryRepository) FindNotLeaveByRoomID(userID, roomID string
 func (mr *MockIEntryHistoryRepositoryMockRecorder) FindNotLeaveByRoomID(userID, roomID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindNotLeaveByRoomID", reflect.TypeOf((*MockIEntryHistoryRepository)(nil).FindNotLeaveByRoomID), userID, roomID)
+}
+
+// FindNotLeaveListByRoomID mocks base method
+func (m *MockIEntryHistoryRepository) FindNotLeaveListByRoomID(roomID string) ([]*output.JoinUserRes, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FindNotLeaveListByRoomID", roomID)
+	ret0, _ := ret[0].([]*output.JoinUserRes)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FindNotLeaveListByRoomID indicates an expected call of FindNotLeaveListByRoomID
+func (mr *MockIEntryHistoryRepositoryMockRecorder) FindNotLeaveListByRoomID(roomID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindNotLeaveListByRoomID", reflect.TypeOf((*MockIEntryHistoryRepository)(nil).FindNotLeaveListByRoomID), roomID)
 }
 
 // Insert mocks base method

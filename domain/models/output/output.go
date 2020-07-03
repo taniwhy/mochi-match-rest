@@ -51,6 +51,7 @@ type RoomDetailResBody struct {
 	HardName  string        `json:"hard" binding:"required"`
 	GameTitle string        `json:"title" binding:"required"`
 	Capacity  int           `json:"capacity" binding:"required"`
+	Count     int           `json:"count" binding:"required"`
 	RoomText  string        `json:"text" binding:"required"`
 	JoinUsers []JoinUserRes `json:"join_users" binding:"required"`
 }

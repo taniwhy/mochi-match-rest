@@ -80,6 +80,7 @@ func (u roomUsecase) GetByID(c *gin.Context) (*output.RoomDetailResBody, error) 
 		HardName:  room.HardName,
 		GameTitle: room.GameTitle,
 		Capacity:  room.Capacity,
+		Count:     room.Count,
 		RoomText:  room.RoomText,
 	}
 	for _, g := range joinUsers {

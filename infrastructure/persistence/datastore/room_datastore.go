@@ -50,7 +50,6 @@ func (rD roomDatastore) FindList() ([]*output.RoomResBody, error) {
 
 func (rD roomDatastore) FindByLimitAndOffset(limit, offset int) ([]*output.RoomResBody, error) {
 	rooms := []*output.RoomResBody{}
-
 	err := rD.db.
 		Table("rooms").
 		Select(`rooms.room_id,

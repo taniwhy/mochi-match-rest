@@ -12,7 +12,6 @@
 # vendor/
 
 .env.dev
-
 config.yml
 dbconf.yml
 

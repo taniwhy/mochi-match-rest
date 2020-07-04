@@ -63,15 +63,15 @@ func (mr *MockIRoomBlacklistRepositoryMockRecorder) Insert(arg0 interface{}) *go
 }
 
 // Delete mocks base method
-func (m *MockIRoomBlacklistRepository) Delete(arg0 string) error {
+func (m *MockIRoomBlacklistRepository) Delete(roomID, userID string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Delete", arg0)
+	ret := m.ctrl.Call(m, "Delete", roomID, userID)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Delete indicates an expected call of Delete
-func (mr *MockIRoomBlacklistRepositoryMockRecorder) Delete(arg0 interface{}) *gomock.Call {
+func (mr *MockIRoomBlacklistRepositoryMockRecorder) Delete(roomID, userID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockIRoomBlacklistRepository)(nil).Delete), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockIRoomBlacklistRepository)(nil).Delete), roomID, userID)
 }

@@ -1,11 +1,13 @@
 version: '3'
 services:
   mochi-app:
-    build: .
+    image: taniwhy/mochi-match-rest:latest
     container_name: 'app'
+    volumes:
+      - ./log/:/go/src/github.com/taniwhy/mochi-match-rest/config/log:z
+      - ./config/env/:/go/src/github.com/taniwhy/mochi-match-rest/config/env:z
     ports:
       - '8000:8000'
-    command: ['go', 'run', 'main.go']
 
 networks:
   default:

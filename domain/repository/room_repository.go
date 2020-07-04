@@ -11,9 +11,9 @@ import (
 type IRoomRepository interface {
 	FindList() ([]*output.RoomResBody, error)
 	FindByLimitAndOffset(limit, offset int) ([]*output.RoomResBody, error)
-	FindByID(string) (*models.Room, error)
-	FindByUserID(string) ([]*models.Room, error)
-	FindUnlockByID(string) (*models.Room, error)
+	FindByID(roomID string) (*output.RoomResBody, error)
+	FindByUserID(userID string) ([]*models.Room, error)
+	FindUnlockByID(roomID string) (*models.Room, error)
 	Insert(room *models.Room) error
 	Update(room *models.Room) error
 	Delete(room *models.Room) error

@@ -35,7 +35,7 @@ func (rH roomBlacklistHandler) GetByRoomID(c *gin.Context) {
 }
 
 func (rH roomBlacklistHandler) Create(c *gin.Context) {
-	err := rH.roomBlacklistUsecase.Insert(c)
+	err := rH.roomBlacklistUsecase.Create(c)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err.Error())
 		return

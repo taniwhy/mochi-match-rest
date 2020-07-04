@@ -27,7 +27,7 @@ func NewReportHanlder(rU usecase.IReportUsecase) IReportHandler {
 }
 
 func (rH *reportHandler) Create(c *gin.Context) {
-	err := rH.reportUsecase.Insert(c)
+	err := rH.reportUsecase.Create(c)
 	if err != nil {
 		switch err := err.(type) {
 		case errors.ErrReportReqBinding:

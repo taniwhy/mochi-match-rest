@@ -65,48 +65,48 @@ func (mr *MockIRoomRepositoryMockRecorder) FindByLimitAndOffset(limit, offset in
 }
 
 // FindByID mocks base method
-func (m *MockIRoomRepository) FindByID(arg0 string) (*models.Room, error) {
+func (m *MockIRoomRepository) FindByID(roomID string) (*output.RoomResBody, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FindByID", arg0)
-	ret0, _ := ret[0].(*models.Room)
+	ret := m.ctrl.Call(m, "FindByID", roomID)
+	ret0, _ := ret[0].(*output.RoomResBody)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // FindByID indicates an expected call of FindByID
-func (mr *MockIRoomRepositoryMockRecorder) FindByID(arg0 interface{}) *gomock.Call {
+func (mr *MockIRoomRepositoryMockRecorder) FindByID(roomID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByID", reflect.TypeOf((*MockIRoomRepository)(nil).FindByID), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByID", reflect.TypeOf((*MockIRoomRepository)(nil).FindByID), roomID)
 }
 
 // FindByUserID mocks base method
-func (m *MockIRoomRepository) FindByUserID(arg0 string) ([]*models.Room, error) {
+func (m *MockIRoomRepository) FindByUserID(userID string) ([]*models.Room, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FindByUserID", arg0)
+	ret := m.ctrl.Call(m, "FindByUserID", userID)
 	ret0, _ := ret[0].([]*models.Room)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // FindByUserID indicates an expected call of FindByUserID
-func (mr *MockIRoomRepositoryMockRecorder) FindByUserID(arg0 interface{}) *gomock.Call {
+func (mr *MockIRoomRepositoryMockRecorder) FindByUserID(userID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByUserID", reflect.TypeOf((*MockIRoomRepository)(nil).FindByUserID), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByUserID", reflect.TypeOf((*MockIRoomRepository)(nil).FindByUserID), userID)
 }
 
 // FindUnlockByID mocks base method
-func (m *MockIRoomRepository) FindUnlockByID(arg0 string) (*models.Room, error) {
+func (m *MockIRoomRepository) FindUnlockByID(roomID string) (*models.Room, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FindUnlockByID", arg0)
+	ret := m.ctrl.Call(m, "FindUnlockByID", roomID)
 	ret0, _ := ret[0].(*models.Room)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // FindUnlockByID indicates an expected call of FindUnlockByID
-func (mr *MockIRoomRepositoryMockRecorder) FindUnlockByID(arg0 interface{}) *gomock.Call {
+func (mr *MockIRoomRepositoryMockRecorder) FindUnlockByID(roomID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindUnlockByID", reflect.TypeOf((*MockIRoomRepository)(nil).FindUnlockByID), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindUnlockByID", reflect.TypeOf((*MockIRoomRepository)(nil).FindUnlockByID), roomID)
 }
 
 // Insert mocks base method

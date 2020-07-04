@@ -45,8 +45,8 @@ steps:
       password:
         from_secret: DOCKER_PASSWORD
     when:
-      repo:
-        - master
+      event:
+        - push
 
   - name: deploy
     image: appleboy/drone-ssh
@@ -62,8 +62,8 @@ steps:
         - cd /var/www/mochi-match
         - sh deploy.sh
     when:
-      repo:
-        - master
+      event:
+        - push
 
   - name: discord notification
     image: appleboy/drone-discord

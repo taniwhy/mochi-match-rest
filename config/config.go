@@ -5,6 +5,7 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
@@ -25,6 +26,8 @@ func init() {
 			panic(err)
 		}
 	case "prod":
+		gin.SetMode(gin.ReleaseMode)
+
 		err := godotenv.Load(
 			fmt.Sprintf("%s/src/github.com/taniwhy/mochi-match-rest/config/env/.env", os.Getenv("GOPATH")))
 		if err != nil {

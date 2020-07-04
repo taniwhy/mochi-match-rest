@@ -12,10 +12,10 @@ import (
 
 // IGameHardHandler : インターフェース
 type IGameHardHandler interface {
-	GetAll(*gin.Context)
-	Create(*gin.Context)
-	Update(*gin.Context)
-	Delete(*gin.Context)
+	GetAll(c *gin.Context)
+	Create(c *gin.Context)
+	Update(c *gin.Context)
+	Delete(c *gin.Context)
 }
 
 type gameHardHandler struct {

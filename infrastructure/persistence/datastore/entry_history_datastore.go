@@ -7,6 +7,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/taniwhy/mochi-match-rest/domain/errors"
 	"github.com/taniwhy/mochi-match-rest/domain/models"
+	"github.com/taniwhy/mochi-match-rest/domain/models/output"
 	"github.com/taniwhy/mochi-match-rest/domain/repository"
 )
 
@@ -21,12 +22,55 @@ func NewEntryHistoryDatastore(db *gorm.DB) repository.IEntryHistoryRepository {
 
 func (eD entryHistoryDatastore) FindAll() ([]*models.EntryHistory, error) {
 	entryHistorys := []*models.EntryHistory{}
-
 	err := eD.db.Find(&entryHistorys).Error
 	if err != nil {
 		return nil, err
 	}
 	return entryHistorys, nil
+}
+
+func (eD entryHistoryDatastore) FindNotLeave(userID string) (*models.EntryHistory, error) {
+	history := &models.EntryHistory{}
+	err := eD.db.Where("user_id = ? AND is_leave = ?", userID, false).First(&history).Error
+	if gorm.IsRecordNotFoundError(err) {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, errors.ErrDataBase{Detail: err}
+	}
+	return history, nil
+}
+
+func (eD entryHistoryDatastore) FindNotLeaveByRoomID(userID, roomID string) (*models.EntryHistory, error) {
+	history := &models.EntryHistory{}
+	err := eD.db.Where("user_id = ? AND room_id = ? AND is_leave = ?", userID, roomID, false).First(&history).Error
+	if gorm.IsRecordNotFoundError(err) {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, errors.ErrDataBase{Detail: err}
+	}
+	return history, nil
+}
+
+func (eD entryHistoryDatastore) FindNotLeaveListByRoomID(roomID string) ([]*output.JoinUserRes, error) {
+	users := []*output.JoinUserRes{}
+	err := eD.db.
+		Table("entry_histories").
+		Select(`
+			entry_histories.user_id,
+			user_details.user_name,
+			user_details.icon
+			`).
+		Joins("LEFT JOIN user_details ON entry_histories.user_id = user_details.user_id").
+		Where("entry_histories.is_leave = ?", false).Order("created_at asc").Scan(&users).Error
+	if gorm.IsRecordNotFoundError(err) {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, errors.ErrDataBase{Detail: err}
+	}
+	return users, nil
 }
 
 func (eD entryHistoryDatastore) Insert(entryHistory *models.EntryHistory) error {
@@ -56,18 +100,6 @@ func (eD entryHistoryDatastore) CountEntryUser(rid string) (int, error) {
 		return 0, errors.ErrDataBase{Detail: err}
 	}
 	return count, nil
-}
-
-func (eD entryHistoryDatastore) CheckEntry(rid, uid string) (bool, error) {
-	h := &models.EntryHistory{}
-	err := eD.db.Where("room_id = ? AND user_id = ? AND is_leave = ?", rid, uid, false).First(&h).Error
-	if gorm.IsRecordNotFoundError(err) {
-		return true, nil
-	}
-	if err != nil {
-		return false, errors.ErrDataBase{Detail: err}
-	}
-	return false, nil
 }
 
 func (eD entryHistoryDatastore) LeaveFlg(rid, uid string) error {

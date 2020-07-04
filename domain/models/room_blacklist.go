@@ -3,8 +3,8 @@ package models
 import (
 	"time"
 
-	"github.com/google/uuid"
-	"github.com/taniwhy/mochi-match-rest/domain/errors"
+	"github.com/taniwhy/mochi-match-rest/util/clock"
+	"github.com/taniwhy/mochi-match-rest/util/uuid"
 )
 
 // RoomBlacklist : room_blacklistテーブルモデル
@@ -15,17 +15,13 @@ type RoomBlacklist struct {
 	CreatedAt       time.Time
 }
 
-// NewBlacklist :
-func NewBlacklist(rid, uid string) (*RoomBlacklist, error) {
-	id, err := uuid.NewRandom()
-	if err != nil {
-		return nil, errors.ErrGenerateID{}
+// NewBlacklist : ブラックリストレコードの生成
+func NewBlacklist(roomID, userID string) (*RoomBlacklist, error) {
+	blacklist := &RoomBlacklist{
+		RoomBlacklistID: uuid.UuID(),
+		RoomID:          roomID,
+		BlackUser:       userID,
+		CreatedAt:       clock.Now(),
 	}
-	r := &RoomBlacklist{
-		RoomBlacklistID: id.String(),
-		RoomID:          rid,
-		BlackUser:       uid,
-		CreatedAt:       time.Now(),
-	}
-	return r, nil
+	return blacklist, nil
 }

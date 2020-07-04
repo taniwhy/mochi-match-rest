@@ -33,16 +33,16 @@ func (m *MockIReportUsecase) EXPECT() *MockIReportUsecaseMockRecorder {
 	return m.recorder
 }
 
-// Insert mocks base method
-func (m *MockIReportUsecase) Insert(arg0 *gin.Context) error {
+// Create mocks base method
+func (m *MockIReportUsecase) Create(c *gin.Context) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Insert", arg0)
+	ret := m.ctrl.Call(m, "Create", c)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// Insert indicates an expected call of Insert
-func (mr *MockIReportUsecaseMockRecorder) Insert(arg0 interface{}) *gomock.Call {
+// Create indicates an expected call of Create
+func (mr *MockIReportUsecaseMockRecorder) Create(c interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Insert", reflect.TypeOf((*MockIReportUsecase)(nil).Insert), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockIReportUsecase)(nil).Create), c)
 }

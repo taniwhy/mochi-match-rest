@@ -10,13 +10,15 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
+
 	"github.com/taniwhy/mochi-match-rest/domain/errors"
 	"github.com/taniwhy/mochi-match-rest/domain/models"
 	"github.com/taniwhy/mochi-match-rest/domain/models/input"
-	mock_repository "github.com/taniwhy/mochi-match-rest/domain/repository/mock_repository"
-	mock_service "github.com/taniwhy/mochi-match-rest/domain/service/mock_service"
 	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/middleware/auth"
 	"github.com/taniwhy/mochi-match-rest/util/testutil"
+
+	mock_repository "github.com/taniwhy/mochi-match-rest/domain/repository/mock_repository"
+	mock_service "github.com/taniwhy/mochi-match-rest/domain/service/mock_service"
 )
 
 func TestGetMe(t *testing.T) {
@@ -222,12 +224,13 @@ func TestUpdateUser(t *testing.T) {
 	notExistToken := auth.GenerateAccessToken("notExistID", false)
 
 	// 正常処理テスト
-	bodyReader := strings.NewReader(
-		`{
+	bodyReader := strings.NewReader(`
+		{
 			"user_name": "testName",
 			"icon": "testIcon",
 			"favorite_games":[]
-		}`)
+		}
+		`)
 	req, _ := http.NewRequest("GET", "", bodyReader)
 	req.Header.Add("Authorization", existToken)
 	context := &gin.Context{Request: req}
@@ -237,12 +240,13 @@ func TestUpdateUser(t *testing.T) {
 
 	// 異常処理テスト
 	// 1. 存在しないID
-	bodyReader = strings.NewReader(
-		`{
+	bodyReader = strings.NewReader(`
+		{
 			"user_name": "testName",
 			"icon": "testIcon",
 			"favorite_games":[]
-		}`)
+		}
+		`)
 	req, _ = http.NewRequest("GET", "", bodyReader)
 	req.Header.Add("Authorization", notExistToken)
 	context = &gin.Context{Request: req}
@@ -251,12 +255,13 @@ func TestUpdateUser(t *testing.T) {
 	assert.Error(t, err)
 
 	// 2. トークン無し
-	bodyReader = strings.NewReader(
-		`{
+	bodyReader = strings.NewReader(`
+		{
 			"user_name": "testName",
 			"icon": "testIcon",
 			"favorite_games":[]
-		}`)
+		}
+		`)
 	req, _ = http.NewRequest("GET", "", bodyReader)
 	context = &gin.Context{Request: req}
 	err = test.Update(context)

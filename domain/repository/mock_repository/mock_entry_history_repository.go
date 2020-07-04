@@ -7,6 +7,7 @@ package mock_repository
 import (
 	gomock "github.com/golang/mock/gomock"
 	models "github.com/taniwhy/mochi-match-rest/domain/models"
+	output "github.com/taniwhy/mochi-match-rest/domain/models/output"
 	reflect "reflect"
 )
 
@@ -46,6 +47,51 @@ func (m *MockIEntryHistoryRepository) FindAll() ([]*models.EntryHistory, error) 
 func (mr *MockIEntryHistoryRepositoryMockRecorder) FindAll() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindAll", reflect.TypeOf((*MockIEntryHistoryRepository)(nil).FindAll))
+}
+
+// FindNotLeave mocks base method
+func (m *MockIEntryHistoryRepository) FindNotLeave(userID string) (*models.EntryHistory, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FindNotLeave", userID)
+	ret0, _ := ret[0].(*models.EntryHistory)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FindNotLeave indicates an expected call of FindNotLeave
+func (mr *MockIEntryHistoryRepositoryMockRecorder) FindNotLeave(userID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindNotLeave", reflect.TypeOf((*MockIEntryHistoryRepository)(nil).FindNotLeave), userID)
+}
+
+// FindNotLeaveByRoomID mocks base method
+func (m *MockIEntryHistoryRepository) FindNotLeaveByRoomID(userID, roomID string) (*models.EntryHistory, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FindNotLeaveByRoomID", userID, roomID)
+	ret0, _ := ret[0].(*models.EntryHistory)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FindNotLeaveByRoomID indicates an expected call of FindNotLeaveByRoomID
+func (mr *MockIEntryHistoryRepositoryMockRecorder) FindNotLeaveByRoomID(userID, roomID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindNotLeaveByRoomID", reflect.TypeOf((*MockIEntryHistoryRepository)(nil).FindNotLeaveByRoomID), userID, roomID)
+}
+
+// FindNotLeaveListByRoomID mocks base method
+func (m *MockIEntryHistoryRepository) FindNotLeaveListByRoomID(roomID string) ([]*output.JoinUserRes, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FindNotLeaveListByRoomID", roomID)
+	ret0, _ := ret[0].([]*output.JoinUserRes)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FindNotLeaveListByRoomID indicates an expected call of FindNotLeaveListByRoomID
+func (mr *MockIEntryHistoryRepositoryMockRecorder) FindNotLeaveListByRoomID(roomID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindNotLeaveListByRoomID", reflect.TypeOf((*MockIEntryHistoryRepository)(nil).FindNotLeaveListByRoomID), roomID)
 }
 
 // Insert mocks base method
@@ -103,21 +149,6 @@ func (m *MockIEntryHistoryRepository) CountEntryUser(arg0 string) (int, error) {
 func (mr *MockIEntryHistoryRepositoryMockRecorder) CountEntryUser(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CountEntryUser", reflect.TypeOf((*MockIEntryHistoryRepository)(nil).CountEntryUser), arg0)
-}
-
-// CheckEntry mocks base method
-func (m *MockIEntryHistoryRepository) CheckEntry(rid, uid string) (bool, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CheckEntry", rid, uid)
-	ret0, _ := ret[0].(bool)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// CheckEntry indicates an expected call of CheckEntry
-func (mr *MockIEntryHistoryRepositoryMockRecorder) CheckEntry(rid, uid interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckEntry", reflect.TypeOf((*MockIEntryHistoryRepository)(nil).CheckEntry), rid, uid)
 }
 
 // LeaveFlg mocks base method

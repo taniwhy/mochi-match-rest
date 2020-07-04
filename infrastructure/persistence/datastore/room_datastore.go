@@ -50,7 +50,6 @@ func (rD roomDatastore) FindList() ([]*output.RoomResBody, error) {
 
 func (rD roomDatastore) FindByLimitAndOffset(limit, offset int) ([]*output.RoomResBody, error) {
 	rooms := []*output.RoomResBody{}
-
 	err := rD.db.
 		Table("rooms").
 		Select(`rooms.room_id,
@@ -65,8 +64,9 @@ func (rD roomDatastore) FindByLimitAndOffset(limit, offset int) ([]*output.RoomR
 					SELECT
 						COUNT(entry_histories.entry_history_id)
 					FROM entry_histories
-					WHERE rooms.room_id = entry_histories.room_id
+					WHERE rooms.room_id = entry_histories.room_id AND entry_histories.is_leave = false
 				) As count,
+				rooms.is_lock,
 				rooms.created_at,
 				rooms.start`).
 		Joins("LEFT JOIN user_details ON rooms.user_id = user_details.user_id").
@@ -80,9 +80,31 @@ func (rD roomDatastore) FindByLimitAndOffset(limit, offset int) ([]*output.RoomR
 	return rooms, nil
 }
 
-func (rD roomDatastore) FindByID(id string) (*models.Room, error) {
-	room := &models.Room{}
-	err := rD.db.Where("room_id = ?", id).First(&room).Error
+func (rD roomDatastore) FindByID(id string) (*output.RoomResBody, error) {
+	room := &output.RoomResBody{}
+	err := rD.db.
+		Table("rooms").
+		Select(`rooms.room_id,
+				rooms.user_id,
+				user_details.icon,
+				game_hards.hard_name,
+				game_lists.game_title,
+				rooms.capacity,
+				rooms.room_text,
+				user_details.user_name,
+				(
+					SELECT
+						COUNT(entry_histories.entry_history_id)
+					FROM entry_histories
+					WHERE rooms.room_id = entry_histories.room_id AND entry_histories.is_leave = false
+				) As count,
+				rooms.is_lock,
+				rooms.created_at,
+				rooms.start`).
+		Joins("LEFT JOIN user_details ON rooms.user_id = user_details.user_id").
+		Joins("LEFT JOIN game_hards ON rooms.game_hard_id = game_hards.game_hard_id").
+		Joins("LEFT JOIN game_lists ON rooms.game_list_id = game_lists.game_list_id").
+		Where("rooms.is_lock = ?", false).Order("created_at desc").Scan(&room).Error
 	if err != nil {
 		return nil, err
 	}

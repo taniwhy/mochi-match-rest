@@ -64,7 +64,7 @@ func (rD roomDatastore) FindByLimitAndOffset(limit, offset int) ([]*output.RoomR
 					SELECT
 						COUNT(entry_histories.entry_history_id)
 					FROM entry_histories
-					WHERE rooms.room_id = entry_histories.room_id
+					WHERE rooms.room_id = entry_histories.room_id AND entry_histories.is_leave = false
 				) As count,
 				rooms.is_lock,
 				rooms.created_at,
@@ -96,7 +96,7 @@ func (rD roomDatastore) FindByID(id string) (*output.RoomResBody, error) {
 					SELECT
 						COUNT(entry_histories.entry_history_id)
 					FROM entry_histories
-					WHERE rooms.room_id = entry_histories.room_id
+					WHERE rooms.room_id = entry_histories.room_id AND entry_histories.is_leave = false
 				) As count,
 				rooms.is_lock,
 				rooms.created_at,

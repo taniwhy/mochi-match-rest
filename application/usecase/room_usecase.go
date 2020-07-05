@@ -25,6 +25,7 @@ type IRoomUseCase interface {
 	Delete(c *gin.Context) error
 	Join(c *gin.Context) error
 	Leave(c *gin.Context) error
+	CheckEntry(c *gin.Context) (bool, *output.RoomDetailResBody, error)
 }
 
 type roomUsecase struct {
@@ -48,7 +49,7 @@ func NewRoomUsecase(
 	}
 }
 
-func (u roomUsecase) GetList(c *gin.Context) ([]*output.RoomResBody, error) {
+func (u *roomUsecase) GetList(c *gin.Context) ([]*output.RoomResBody, error) {
 	pageStr := c.Query("page")
 	page, err := strconv.Atoi(pageStr)
 	if err != nil {
@@ -66,7 +67,7 @@ func (u roomUsecase) GetList(c *gin.Context) ([]*output.RoomResBody, error) {
 	return rooms, nil
 }
 
-func (u roomUsecase) GetByID(c *gin.Context) (*output.RoomDetailResBody, error) {
+func (u *roomUsecase) GetByID(c *gin.Context) (*output.RoomDetailResBody, error) {
 	roomID := c.Params.ByName("id")
 	room, err := u.roomRepository.FindByID(roomID)
 	if err != nil {
@@ -94,7 +95,7 @@ func (u roomUsecase) GetByID(c *gin.Context) (*output.RoomDetailResBody, error) 
 	return resBody, nil
 }
 
-func (u roomUsecase) Create(c *gin.Context) error {
+func (u *roomUsecase) Create(c *gin.Context) error {
 	body := input.RoomCreateReqBody{}
 	if err := c.BindJSON(&body); err != nil {
 		return errors.ErrRoomCreateReqBinding{
@@ -131,11 +132,11 @@ func (u roomUsecase) Create(c *gin.Context) error {
 	return nil
 }
 
-func (u roomUsecase) Update(c *gin.Context) error {
+func (u *roomUsecase) Update(c *gin.Context) error {
 	return nil
 }
 
-func (u roomUsecase) Delete(c *gin.Context) error {
+func (u *roomUsecase) Delete(c *gin.Context) error {
 	roomID := c.Params.ByName("id")
 	claims, err := auth.GetTokenClaimsFromRequest(c)
 	if err != nil {
@@ -155,7 +156,7 @@ func (u roomUsecase) Delete(c *gin.Context) error {
 	return nil
 }
 
-func (u roomUsecase) Join(c *gin.Context) error {
+func (u *roomUsecase) Join(c *gin.Context) error {
 	roomID := c.Params.ByName("id")
 	if roomID == "" {
 		return errors.ErrParams{Need: "id", Got: roomID}
@@ -192,7 +193,7 @@ func (u roomUsecase) Join(c *gin.Context) error {
 	return nil
 }
 
-func (u roomUsecase) Leave(c *gin.Context) error {
+func (u *roomUsecase) Leave(c *gin.Context) error {
 	roomID := c.Params.ByName("id")
 	if roomID == "" {
 		return errors.ErrParams{Need: "id", Got: roomID}
@@ -213,4 +214,43 @@ func (u roomUsecase) Leave(c *gin.Context) error {
 		return err
 	}
 	return nil
+}
+
+func (u *roomUsecase) CheckEntry(c *gin.Context) (bool, *output.RoomDetailResBody, error) {
+	claims, err := auth.GetTokenClaimsFromRequest(c)
+	if err != nil {
+		return false, nil, errors.ErrGetTokenClaims{Detail: err.Error()}
+	}
+	userID := claims["sub"].(string)
+	history, err := u.entryHistoryRepository.FindNotLeave(userID)
+	// 入室していない
+	if history == nil {
+		return false, nil, nil
+	}
+	// 入室している
+	roomID := history.RoomID
+	room, err := u.roomRepository.FindByID(roomID)
+	if err != nil {
+		return false, nil, err
+	}
+	joinUsers, err := u.entryHistoryRepository.FindNotLeaveListByRoomID(roomID)
+
+	resBody := &output.RoomDetailResBody{
+		RoomID:    roomID,
+		OwnerID:   room.UserID,
+		HardName:  room.HardName,
+		GameTitle: room.GameTitle,
+		Capacity:  room.Capacity,
+		Count:     room.Count,
+		RoomText:  room.RoomText,
+	}
+	for _, g := range joinUsers {
+		r := output.JoinUserRes{
+			UserID:   g.UserID,
+			UserName: g.UserName,
+			Icon:     g.Icon,
+		}
+		resBody.JoinUsers = append(resBody.JoinUsers, r)
+	}
+	return true, resBody, nil
 }

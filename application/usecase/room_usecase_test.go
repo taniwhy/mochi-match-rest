@@ -378,3 +378,65 @@ func TestLaveRoom(t *testing.T) {
 
 	assert.Error(t, err)
 }
+
+func TestCheckEntryRoom(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockRoomRepository := mock_repository.NewMockIRoomRepository(ctrl)
+	mockRoomRepository.EXPECT().FindByID("testRoomID").Return(&output.RoomResBody{}, nil)
+
+	mockEntryHistoryRepository := mock_repository.NewMockIEntryHistoryRepository(ctrl)
+	mockEntryHistoryRepository.EXPECT().FindNotLeave("notEntryUserID").Return(nil, nil)
+	mockEntryHistoryRepository.EXPECT().FindNotLeave("alreadyEntryUserID").Return(&models.EntryHistory{RoomID: "testRoomID"}, nil)
+	mockEntryHistoryRepository.EXPECT().FindNotLeaveListByRoomID("testRoomID").Return([]*output.JoinUserRes{}, nil)
+
+	mockRoomService := mock_service.NewMockIRoomService(ctrl)
+	mockEntryHistoryService := mock_service.NewMockIEntryHistoryService(ctrl)
+
+	test := NewRoomUsecase(mockRoomRepository, mockEntryHistoryRepository, mockRoomService, mockEntryHistoryService)
+
+	notEntryUserToken := auth.GenerateAccessToken("notEntryUserID", false)
+	alreadyEntryUserToken := auth.GenerateAccessToken("alreadyEntryUserID", false)
+	invalidToken := notEntryUserToken + "foo"
+	// 正常処理テスト
+	// 未入室ユーザー
+	req, _ := http.NewRequest("GET", "", nil)
+	req.Header.Add("Authorization", notEntryUserToken)
+	context := &gin.Context{Request: req}
+	ok, room, err := test.CheckEntry(context)
+
+	assert.False(t, ok)
+	assert.Nil(t, room)
+	assert.NoError(t, err)
+
+	//既入室ユーザー
+	req, _ = http.NewRequest("GET", "", nil)
+	req.Header.Add("Authorization", alreadyEntryUserToken)
+	context = &gin.Context{Request: req}
+	ok, room, err = test.CheckEntry(context)
+
+	assert.True(t, ok)
+	assert.NotNil(t, room)
+	assert.NoError(t, err)
+
+	// 異常処理テスト
+	// 1. トークン無し
+	req, _ = http.NewRequest("GET", "", nil)
+	context = &gin.Context{Request: req}
+	ok, room, err = test.CheckEntry(context)
+
+	assert.False(t, ok)
+	assert.Nil(t, room)
+	assert.Error(t, err)
+
+	// 2. 異常なトークン
+	req, _ = http.NewRequest("GET", "", nil)
+	req.Header.Add("Authorization", invalidToken)
+	context = &gin.Context{Request: req}
+	ok, room, err = test.CheckEntry(context)
+
+	assert.False(t, ok)
+	assert.Nil(t, room)
+	assert.Error(t, err)
+}

@@ -133,3 +133,19 @@ func (mr *MockIRoomUseCaseMockRecorder) Leave(c interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Leave", reflect.TypeOf((*MockIRoomUseCase)(nil).Leave), c)
 }
+
+// CheckEntry mocks base method
+func (m *MockIRoomUseCase) CheckEntry(c *gin.Context) (bool, *output.RoomDetailResBody, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CheckEntry", c)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(*output.RoomDetailResBody)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// CheckEntry indicates an expected call of CheckEntry
+func (mr *MockIRoomUseCaseMockRecorder) CheckEntry(c interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckEntry", reflect.TypeOf((*MockIRoomUseCase)(nil).CheckEntry), c)
+}

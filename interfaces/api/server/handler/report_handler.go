@@ -32,15 +32,19 @@ func (rH *reportHandler) Create(c *gin.Context) {
 		switch err := err.(type) {
 		case errors.ErrReportReqBinding:
 			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+			log.Error("StatusBadRequest")
 			return
 		case errors.ErrGetTokenClaims:
 			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+			log.Error("StatusBadRequest")
 			return
 		case errors.ErrGenerateID:
 			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			log.Error("StatusInternalServerError")
 			return
 		case errors.ErrDataBase:
 			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			log.Error("StatusInternalServerError")
 			return
 		default:
 			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})

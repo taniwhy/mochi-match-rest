@@ -35,6 +35,7 @@ func (gH gameHardHandler) GetAll(c *gin.Context) {
 		switch err := err.(type) {
 		case errors.ErrDataBase:
 			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			log.Error("StatusInternalServerError")
 			return
 		default:
 			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
@@ -51,12 +52,15 @@ func (gH gameHardHandler) Create(c *gin.Context) {
 		switch err := err.(type) {
 		case errors.ErrGameHardCreateReqBinding:
 			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+			log.Error("StatusBadRequest")
 			return
 		case errors.ErrGenerateID:
 			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			log.Error("StatusInternalServerError")
 			return
 		case errors.ErrDataBase:
 			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			log.Error("StatusInternalServerError")
 			return
 		default:
 			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
@@ -73,12 +77,15 @@ func (gH gameHardHandler) Update(c *gin.Context) {
 		switch err := err.(type) {
 		case errors.ErrGameHardUpdateReqBinding:
 			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+			log.Error("StatusBadRequest")
 			return
 		case errors.ErrRecordNotFound:
 			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+			log.Error("StatusBadRequest")
 			return
 		case errors.ErrDataBase:
 			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			log.Error("StatusInternalServerError")
 			return
 		default:
 			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
@@ -95,9 +102,11 @@ func (gH gameHardHandler) Delete(c *gin.Context) {
 		switch err := err.(type) {
 		case errors.ErrRecordNotFound:
 			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+			log.Error("StatusBadRequest")
 			return
 		case errors.ErrDataBase:
 			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			log.Error("StatusInternalServerError")
 			return
 		default:
 			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})

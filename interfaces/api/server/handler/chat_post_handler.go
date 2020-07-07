@@ -48,6 +48,7 @@ func (cH chatPostHandler) GetChatPostByRoomID(c *gin.Context) {
 	}
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": err})
+		log.Error("StatusBadRequest")
 	}
 	c.JSON(http.StatusOK, messages)
 }
@@ -58,15 +59,19 @@ func (cH chatPostHandler) CreateChatPost(c *gin.Context) {
 		switch err := err.(type) {
 		case errors.ErrChatPostCreateReqBinding:
 			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+			log.Error("StatusBadRequest")
 			return
 		case errors.ErrGetTokenClaims:
 			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+			log.Error("StatusBadRequest")
 			return
 		case errors.ErrGenerateID:
 			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			log.Error("StatusInternalServerError")
 			return
 		case errors.ErrDataBase:
 			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			log.Error("StatusInternalServerError")
 			return
 		default:
 			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})

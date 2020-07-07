@@ -57,6 +57,7 @@ func (gA *googleOAuthHandler) Callback(c *gin.Context) {
 	ok, gU, err := gA.googleOAuthUsecase.Callback(c)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err)
+		log.Error("StatusBadRequest")
 		return
 	}
 	if ok {
@@ -71,21 +72,27 @@ func (gA *googleOAuthHandler) Callback(c *gin.Context) {
 			switch err := err.(type) {
 			case errors.ErrUserCreateReqBinding:
 				c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+				log.Error("StatusBadRequest")
 				return
 			case errors.ErrCoockie:
 				c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+				log.Error("StatusBadRequest")
 				return
 			case errors.ErrUnexpectedQueryProvider:
 				c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+				log.Error("StatusBadRequest")
 				return
 			case errors.ErrIDAlreadyExists:
 				c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+				log.Error("StatusBadRequest")
 				return
 			case errors.ErrDataBase:
 				c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+				log.Error("StatusInternalServerError")
 				return
 			case errors.ErrGenerateID:
 				c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+				log.Error("StatusInternalServerError")
 				return
 			default:
 				c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
@@ -99,9 +106,11 @@ func (gA *googleOAuthHandler) Callback(c *gin.Context) {
 			switch err := err.(type) {
 			case errors.ErrUnexpectedQueryProvider:
 				c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+				log.Error("StatusBadRequest")
 				return
 			case errors.ErrDataBase:
 				c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+				log.Error("StatusInternalServerError")
 				return
 			default:
 				c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})

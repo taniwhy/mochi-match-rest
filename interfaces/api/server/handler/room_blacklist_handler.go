@@ -5,6 +5,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/taniwhy/mochi-match-rest/application/usecase"
+
+	log "github.com/sirupsen/logrus"
 )
 
 // IRoomBlacklistHandler : インターフェース
@@ -29,6 +31,7 @@ func (rH roomBlacklistHandler) GetByRoomID(c *gin.Context) {
 	rB, err := rH.roomBlacklistUsecase.GetByRoomID(c)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err.Error())
+		log.Error("StatusBadRequest")
 		return
 	}
 	c.JSON(http.StatusOK, rB)
@@ -38,6 +41,7 @@ func (rH roomBlacklistHandler) Create(c *gin.Context) {
 	err := rH.roomBlacklistUsecase.Create(c)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err.Error())
+		log.Error("StatusBadRequest")
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Create blacklist"})
@@ -47,6 +51,7 @@ func (rH roomBlacklistHandler) Delete(c *gin.Context) {
 	err := rH.roomBlacklistUsecase.Delete(c)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err.Error())
+		log.Error("StatusBadRequest")
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Delete blacklist"})

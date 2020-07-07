@@ -34,6 +34,7 @@ func TestCreateReport(t *testing.T) {
 	test := NewReportUsecase(mockReportRepository)
 
 	existToken := auth.GenerateAccessToken("existID", false)
+	invalidToken := existToken + "foo"
 
 	// 正常処理テスト
 	bodyReader := strings.NewReader(`
@@ -51,10 +52,35 @@ func TestCreateReport(t *testing.T) {
 
 	assert.NoError(t, err)
 
-	// TODO
 	// 異常処理テスト
 	// 1. トークン無し
+	bodyReader = strings.NewReader(`
+		{
+			"vaiolator_id": "VaiolatorID",
+			"detail": "VaiolationDetail"
+		}
+		`)
+	req, _ = http.NewRequest("GET", "", bodyReader)
+	param = gin.Param{Key: "id", Value: "existRoomID"}
+	params = gin.Params{param}
+	context = &gin.Context{Request: req, Params: params}
+	err = test.Create(context)
+
+	assert.Error(t, err)
 
 	// 2. 異常なトークン
+	bodyReader = strings.NewReader(`
+	{
+		"vaiolator_id": "VaiolatorID",
+		"detail": "VaiolationDetail"
+	}
+	`)
+	req, _ = http.NewRequest("GET", "", bodyReader)
+	req.Header.Add("Authorization", invalidToken)
+	param = gin.Param{Key: "id", Value: "existRoomID"}
+	params = gin.Params{param}
+	context = &gin.Context{Request: req, Params: params}
+	err = test.Create(context)
 
+	assert.Error(t, err)
 }

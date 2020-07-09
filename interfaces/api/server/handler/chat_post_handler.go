@@ -4,10 +4,12 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	log "github.com/sirupsen/logrus"
+
 	"github.com/taniwhy/mochi-match-rest/application/usecase"
 	"github.com/taniwhy/mochi-match-rest/domain/errors"
-	"github.com/taniwhy/mochi-match-rest/domain/models"
+	"github.com/taniwhy/mochi-match-rest/domain/models/output"
+
+	log "github.com/sirupsen/logrus"
 )
 
 // IChatPostHandler : インターフェース
@@ -28,23 +30,23 @@ func NewChatPostHandler(cU usecase.IChatPostUseCase) IChatPostHandler {
 }
 
 var (
-	messages []*models.ChatPost
+	messages []*output.ChatPostResBody
 	err      error
 )
 
-func (cH chatPostHandler) GetChatPostByRoomID(c *gin.Context) {
+func (h *chatPostHandler) GetChatPostByRoomID(c *gin.Context) {
 	roomID := c.Params.ByName("id")
 	limitStr := c.Query("limit")
 	offset := c.Query("offset")
 	switch {
 	case limitStr == "" && offset == "":
-		messages, err = cH.chatPostUsecase.FindByRoomID(roomID)
+		messages, err = h.chatPostUsecase.FindByRoomID(roomID)
 	case limitStr != "" && offset == "":
-		messages, err = cH.chatPostUsecase.FindByRoomIDAndLimit(roomID, limitStr)
+		messages, err = h.chatPostUsecase.FindByRoomIDAndLimit(roomID, limitStr)
 	case limitStr == "" && offset != "":
-		messages, err = cH.chatPostUsecase.FindByRoomIDAndOffset(roomID, offset)
+		messages, err = h.chatPostUsecase.FindByRoomIDAndOffset(roomID, offset)
 	case limitStr != "" && offset != "":
-		messages, err = cH.chatPostUsecase.FindByRoomIDAndLimitAndOffset(roomID, limitStr, offset)
+		messages, err = h.chatPostUsecase.FindByRoomIDAndLimitAndOffset(roomID, limitStr, offset)
 	}
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": err})
@@ -52,8 +54,8 @@ func (cH chatPostHandler) GetChatPostByRoomID(c *gin.Context) {
 	c.JSON(http.StatusOK, messages)
 }
 
-func (cH chatPostHandler) CreateChatPost(c *gin.Context) {
-	err := cH.chatPostUsecase.Insert(c)
+func (h *chatPostHandler) CreateChatPost(c *gin.Context) {
+	err := h.chatPostUsecase.Insert(c)
 	if err != nil {
 		switch err := err.(type) {
 		case errors.ErrChatPostCreateReqBinding:

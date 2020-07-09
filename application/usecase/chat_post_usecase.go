@@ -4,6 +4,7 @@ package usecase
 
 import (
 	"encoding/json"
+	"fmt"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -18,11 +19,11 @@ import (
 
 // IChatPostUseCase : インターフェース
 type IChatPostUseCase interface {
-	FindByRoomID(id string) ([]*models.ChatPost, error)
-	FindByRoomIDAndLimit(id, limit string) ([]*models.ChatPost, error)
-	FindByRoomIDAndOffset(id, offset string) ([]*models.ChatPost, error)
-	FindByRoomIDAndLimitAndOffset(id, offset, limit string) ([]*models.ChatPost, error)
-	Insert(*gin.Context) error
+	FindByRoomID(roomID string) ([]*models.ChatPost, error)
+	FindByRoomIDAndLimit(roomID, limit string) ([]*models.ChatPost, error)
+	FindByRoomIDAndOffset(roomID, offset string) ([]*models.ChatPost, error)
+	FindByRoomIDAndLimitAndOffset(roomID, offset, limit string) ([]*models.ChatPost, error)
+	Insert(c *gin.Context) error
 }
 
 type chatPostUsecase struct {
@@ -92,12 +93,14 @@ func (u *chatPostUsecase) Insert(c *gin.Context) error {
 	}
 	userID := claims["sub"].(string)
 	chatpost, err := models.NewChatPost(roomID, userID, body.Message)
-	if err := u.chatPostRepository.Insert(chatpost); err != nil {
+	chatpostRes, err := u.chatPostRepository.Insert(chatpost)
+	if err != nil {
 		return err
 	}
-	res, _ := json.Marshal(chatpost)
+	res, _ := json.Marshal(chatpostRes)
+	fmt.Println(string(res))
 	// todo : publishのチャンネル名がハードコーディングされているため要修正
-	_, err = u.redis.Do("PUBLISH", "channel_1", string(res))
+	_, err = u.redis.Do("PUBLISH", "create_message", string(res))
 	if err != nil {
 		panic(err)
 	}

@@ -17,9 +17,9 @@ func NewRoomDatastore(db *gorm.DB) repository.IRoomRepository {
 	return &roomDatastore{db}
 }
 
-func (rD roomDatastore) FindList() ([]*output.RoomResBody, error) {
+func (d *roomDatastore) FindList() ([]*output.RoomResBody, error) {
 	rooms := []*output.RoomResBody{}
-	err := rD.db.
+	err := d.db.
 		Table("rooms").
 		Select(`rooms.room_id,
 			rooms.user_id,
@@ -48,9 +48,9 @@ func (rD roomDatastore) FindList() ([]*output.RoomResBody, error) {
 	return rooms, nil
 }
 
-func (rD roomDatastore) FindByLimitAndOffset(limit, offset int) ([]*output.RoomResBody, error) {
+func (d *roomDatastore) FindByLimitAndOffset(limit, offset int) ([]*output.RoomResBody, error) {
 	rooms := []*output.RoomResBody{}
-	err := rD.db.
+	err := d.db.
 		Table("rooms").
 		Select(`rooms.room_id,
 				rooms.user_id,
@@ -80,9 +80,9 @@ func (rD roomDatastore) FindByLimitAndOffset(limit, offset int) ([]*output.RoomR
 	return rooms, nil
 }
 
-func (rD roomDatastore) FindByID(id string) (*output.RoomResBody, error) {
+func (d *roomDatastore) FindByID(id string) (*output.RoomResBody, error) {
 	room := &output.RoomResBody{}
-	err := rD.db.
+	err := d.db.
 		Table("rooms").
 		Select(`rooms.room_id,
 				rooms.user_id,
@@ -111,18 +111,18 @@ func (rD roomDatastore) FindByID(id string) (*output.RoomResBody, error) {
 	return room, nil
 }
 
-func (rD roomDatastore) FindByUserID(uid string) ([]*models.Room, error) {
+func (d *roomDatastore) FindByUserID(userID string) ([]*models.Room, error) {
 	rooms := []*models.Room{}
-	err := rD.db.Where("user_id = ?", uid).Find(&rooms).Error
+	err := d.db.Where("user_id = ?", userID).Find(&rooms).Error
 	if err != nil {
 		return nil, err
 	}
 	return rooms, nil
 }
 
-func (rD roomDatastore) FindUnlockByID(id string) (*models.Room, error) {
+func (d *roomDatastore) FindUnlockByID(userID string) (*models.Room, error) {
 	rooms := &models.Room{}
-	err := rD.db.Where("user_id = ? AND is_lock = ?", id, false).First(&rooms).Error
+	err := d.db.Where("user_id = ? AND is_lock = ?", userID, false).First(&rooms).Error
 	if gorm.IsRecordNotFoundError(err) {
 		return nil, nil
 	}
@@ -132,30 +132,30 @@ func (rD roomDatastore) FindUnlockByID(id string) (*models.Room, error) {
 	return rooms, nil
 }
 
-func (rD roomDatastore) Insert(room *models.Room) error {
-	err := rD.db.Create(room).Error
+func (d *roomDatastore) Insert(room *models.Room) error {
+	err := d.db.Create(room).Error
 	if err != nil {
 		return errors.ErrDataBase{Detail: err.Error()}
 	}
 	return nil
 }
 
-func (rD roomDatastore) Update(room *models.Room) error {
-	return rD.db.Updates(room).Error
+func (d *roomDatastore) Update(room *models.Room) error {
+	return d.db.Updates(room).Error
 }
 
-func (rD roomDatastore) Delete(room *models.Room) error {
-	err := rD.db.Take(&room).Error
+func (d *roomDatastore) Delete(room *models.Room) error {
+	err := d.db.Take(&room).Error
 	if err != nil {
 		return err
 	}
-	return rD.db.Delete(room).Error
+	return d.db.Delete(room).Error
 }
 
 // todo ロック時間は保存する？
-func (rD roomDatastore) LockFlg(uid, rid string) error {
+func (d *roomDatastore) LockFlg(uid, rid string) error {
 	h := &models.Room{}
-	err := rD.db.Model(&h).
+	err := d.db.Model(&h).
 		Where("room_id = ? AND user_id = ? AND is_lock = ?", rid, uid, false).
 		Updates(models.Room{IsLock: true}).Error
 	if gorm.IsRecordNotFoundError(err) {

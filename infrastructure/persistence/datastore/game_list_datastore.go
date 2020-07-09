@@ -2,6 +2,7 @@ package datastore
 
 import (
 	"github.com/jinzhu/gorm"
+
 	"github.com/taniwhy/mochi-match-rest/domain/errors"
 	"github.com/taniwhy/mochi-match-rest/domain/models"
 	"github.com/taniwhy/mochi-match-rest/domain/repository"
@@ -16,27 +17,27 @@ func NewGameListDatastore(db *gorm.DB) repository.IGameListRepository {
 	return &gameListDatastore{db}
 }
 
-func (gD gameListDatastore) FindAll() ([]*models.GameList, error) {
-	gameTitle := []*models.GameList{}
-	err := gD.db.Find(&gameTitle).Error
+func (d *gameListDatastore) FindAll() ([]*models.GameList, error) {
+	gamelists := []*models.GameList{}
+	err := d.db.Find(&gamelists).Error
 	if err != nil {
 		return nil, errors.ErrDataBase{Detail: err.Error()}
 	}
-	return gameTitle, nil
+	return gamelists, nil
 }
 
-func (gD gameListDatastore) Insert(gT *models.GameList) error {
-	err := gD.db.Create(gT).Error
+func (d *gameListDatastore) Insert(gamelist *models.GameList) error {
+	err := d.db.Create(gamelist).Error
 	if err != nil {
 		return errors.ErrDataBase{Detail: err.Error()}
 	}
 	return nil
 }
 
-func (gD gameListDatastore) Update(gT *models.GameList) error {
-	err := gD.db.Model(gT).
-		Where("game_list_id = ?", gT.GameListID).
-		Updates(models.GameList{GameTitle: gT.GameTitle, UpdateAt: gT.UpdateAt}).Error
+func (d *gameListDatastore) Update(gamelist *models.GameList) error {
+	err := d.db.Model(gamelist).
+		Where("game_list_id = ?", gamelist.GameListID).
+		Updates(models.GameList{GameTitle: gamelist.GameTitle, UpdateAt: gamelist.UpdateAt}).Error
 	if gorm.IsRecordNotFoundError(err) {
 		return errors.ErrNotFound{Detail: err.Error()}
 	}
@@ -46,8 +47,8 @@ func (gD gameListDatastore) Update(gT *models.GameList) error {
 	return nil
 }
 
-func (gD gameListDatastore) Delete(gT *models.GameList) error {
-	err := gD.db.Where("game_list_id = ?", gT.GameListID).Delete(gT).Error
+func (d *gameListDatastore) Delete(gamelist *models.GameList) error {
+	err := d.db.Where("game_list_id = ?", gamelist.GameListID).Delete(gamelist).Error
 	if gorm.IsRecordNotFoundError(err) {
 		return errors.ErrNotFound{Detail: err.Error()}
 	}

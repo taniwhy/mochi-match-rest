@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/jinzhu/gorm"
+
 	"github.com/taniwhy/mochi-match-rest/domain/errors"
 	"github.com/taniwhy/mochi-match-rest/domain/models"
 	"github.com/taniwhy/mochi-match-rest/domain/models/output"
@@ -20,18 +21,18 @@ func NewEntryHistoryDatastore(db *gorm.DB) repository.IEntryHistoryRepository {
 	return &entryHistoryDatastore{db}
 }
 
-func (eD entryHistoryDatastore) FindAll() ([]*models.EntryHistory, error) {
-	entryHistorys := []*models.EntryHistory{}
-	err := eD.db.Find(&entryHistorys).Error
+func (d *entryHistoryDatastore) FindAll() ([]*models.EntryHistory, error) {
+	historys := []*models.EntryHistory{}
+	err := d.db.Find(&historys).Error
 	if err != nil {
 		return nil, err
 	}
-	return entryHistorys, nil
+	return historys, nil
 }
 
-func (eD entryHistoryDatastore) FindNotLeave(userID string) (*models.EntryHistory, error) {
+func (d *entryHistoryDatastore) FindNotLeave(userID string) (*models.EntryHistory, error) {
 	history := &models.EntryHistory{}
-	err := eD.db.Where("user_id = ? AND is_leave = ?", userID, false).First(&history).Error
+	err := d.db.Where("user_id = ? AND is_leave = ?", userID, false).First(&history).Error
 	if gorm.IsRecordNotFoundError(err) {
 		return nil, nil
 	}
@@ -41,9 +42,9 @@ func (eD entryHistoryDatastore) FindNotLeave(userID string) (*models.EntryHistor
 	return history, nil
 }
 
-func (eD entryHistoryDatastore) FindNotLeaveByRoomID(userID, roomID string) (*models.EntryHistory, error) {
+func (d *entryHistoryDatastore) FindNotLeaveByRoomID(userID, roomID string) (*models.EntryHistory, error) {
 	history := &models.EntryHistory{}
-	err := eD.db.Where("user_id = ? AND room_id = ? AND is_leave = ?", userID, roomID, false).First(&history).Error
+	err := d.db.Where("user_id = ? AND room_id = ? AND is_leave = ?", userID, roomID, false).First(&history).Error
 	if gorm.IsRecordNotFoundError(err) {
 		return nil, nil
 	}
@@ -53,9 +54,9 @@ func (eD entryHistoryDatastore) FindNotLeaveByRoomID(userID, roomID string) (*mo
 	return history, nil
 }
 
-func (eD entryHistoryDatastore) FindNotLeaveListByRoomID(roomID string) ([]*output.JoinUserRes, error) {
+func (d *entryHistoryDatastore) FindNotLeaveListByRoomID(roomID string) ([]*output.JoinUserRes, error) {
 	users := []*output.JoinUserRes{}
-	err := eD.db.
+	err := d.db.
 		Table("entry_histories").
 		Select(`
 			entry_histories.user_id,
@@ -73,26 +74,26 @@ func (eD entryHistoryDatastore) FindNotLeaveListByRoomID(roomID string) ([]*outp
 	return users, nil
 }
 
-func (eD entryHistoryDatastore) Insert(entryHistory *models.EntryHistory) error {
-	return eD.db.Create(entryHistory).Error
+func (d *entryHistoryDatastore) Insert(histroy *models.EntryHistory) error {
+	return d.db.Create(histroy).Error
 }
 
-func (eD entryHistoryDatastore) Update(entryHistory *models.EntryHistory) error {
-	return eD.db.Update(entryHistory).Error
+func (d *entryHistoryDatastore) Update(histroy *models.EntryHistory) error {
+	return d.db.Update(histroy).Error
 }
 
-func (eD entryHistoryDatastore) Delete(entryHistory *models.EntryHistory) error {
-	err := eD.db.Take(&entryHistory).Error
+func (d *entryHistoryDatastore) Delete(histroy *models.EntryHistory) error {
+	err := d.db.Take(&histroy).Error
 	if err != nil {
 		return err
 	}
-	return eD.db.Delete(entryHistory).Error
+	return d.db.Delete(histroy).Error
 }
 
-func (eD entryHistoryDatastore) CountEntryUser(rid string) (int, error) {
+func (d *entryHistoryDatastore) CountEntryUser(roomID string) (int, error) {
 	var count int
 	h := models.EntryHistory{}
-	err := eD.db.Model(&h).Where("room_id = ? AND is_leave = ?", rid, false).Count(&count).Error
+	err := d.db.Model(&h).Where("room_id = ? AND is_leave = ?", roomID, false).Count(&count).Error
 	if gorm.IsRecordNotFoundError(err) {
 		return 0, nil
 	}
@@ -102,10 +103,10 @@ func (eD entryHistoryDatastore) CountEntryUser(rid string) (int, error) {
 	return count, nil
 }
 
-func (eD entryHistoryDatastore) LeaveFlg(rid, uid string) error {
+func (d *entryHistoryDatastore) LeaveFlg(roomID, userID string) error {
 	h := &models.EntryHistory{}
-	err := eD.db.Model(&h).
-		Where("room_id = ? AND user_id = ? AND is_leave = ?", rid, uid, false).
+	err := d.db.Model(&h).
+		Where("room_id = ? AND user_id = ? AND is_leave = ?", roomID, userID, false).
 		Updates(models.EntryHistory{IsLeave: true, LeavedAt: sql.NullTime{Time: time.Now(), Valid: true}}).Error
 	if gorm.IsRecordNotFoundError(err) {
 		return errors.ErrRecordNotFound{Detail: err.Error()}

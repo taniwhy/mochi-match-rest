@@ -55,3 +55,14 @@ type RoomDetailResBody struct {
 	RoomText  string        `json:"text" binding:"required"`
 	JoinUsers []JoinUserRes `json:"join_users" binding:"required"`
 }
+
+// ChatPostResBody :
+type ChatPostResBody struct {
+	ChatPostID string    `json:"id"`
+	RoomID     string    `json:"room"`
+	UserID     string    `json:"user_id"`
+	UserName   string    `json:"name"`
+	Icon       string    `json:"icon"`
+	Message    string    `json:"message" binding:"required"`
+	CreatedAt  time.Time `json:"created_at"`
+}

@@ -16,26 +16,26 @@ func NewRoomBlacklistDatastore(db *gorm.DB) repository.IRoomBlacklistRepository 
 	return &roomBlacklistDatastore{db}
 }
 
-func (rD roomBlacklistDatastore) FindByRoomID(rid string) ([]*models.RoomBlacklist, error) {
-	rB := []*models.RoomBlacklist{}
-	err := rD.db.Where("room_id = ?", rid).Find(&rB).Error
+func (d *roomBlacklistDatastore) FindByRoomID(roomID string) ([]*models.RoomBlacklist, error) {
+	blacklists := []*models.RoomBlacklist{}
+	err := d.db.Where("room_id = ?", roomID).Find(&blacklists).Error
 	if err != nil {
 		return nil, errors.ErrDataBase{Detail: err.Error()}
 	}
-	return rB, nil
+	return blacklists, nil
 }
 
-func (rD roomBlacklistDatastore) Insert(rB *models.RoomBlacklist) error {
-	err := rD.db.Create(rB).Error
+func (d *roomBlacklistDatastore) Insert(blacklist *models.RoomBlacklist) error {
+	err := d.db.Create(blacklist).Error
 	if err != nil {
 		return errors.ErrDataBase{Detail: err.Error()}
 	}
 	return nil
 }
 
-func (rD roomBlacklistDatastore) Delete(roomID, userID string) error {
+func (d *roomBlacklistDatastore) Delete(roomID, userID string) error {
 	rB := models.RoomBlacklist{}
-	err := rD.db.Where("room_id = ? AND user_id = ?", roomID, userID).Delete(rB).Error
+	err := d.db.Where("room_id = ? AND user_id = ?", roomID, userID).Delete(rB).Error
 	if err != nil {
 		return errors.ErrDataBase{Detail: err.Error()}
 	}

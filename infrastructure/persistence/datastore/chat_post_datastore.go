@@ -2,7 +2,9 @@ package datastore
 
 import (
 	"github.com/jinzhu/gorm"
+
 	"github.com/taniwhy/mochi-match-rest/domain/models"
+	"github.com/taniwhy/mochi-match-rest/domain/models/output"
 	"github.com/taniwhy/mochi-match-rest/domain/repository"
 )
 
@@ -15,50 +17,124 @@ func NewChatPostDatastore(db *gorm.DB) repository.IChatPostRepository {
 	return &chatPostDatastore{db}
 }
 
-func (cD chatPostDatastore) FindByRoomID(roomID string) ([]*models.ChatPost, error) {
-	chatposts := []*models.ChatPost{}
-	err := cD.db.Order("created_at desc").Find(&chatposts, "room_id=?", roomID).Error
+func (d *chatPostDatastore) FindByRoomID(roomID string) ([]*output.ChatPostResBody, error) {
+	chatposts := []*output.ChatPostResBody{}
+	err := d.db.
+		Table("chat_posts").
+		Select(`
+		chat_posts.chat_post_id,
+		chat_posts.room_id,
+		chat_posts.user_id,
+		user_details.user_name,
+		user_details.icon,
+		chat_posts.message,
+		chat_posts.created_at
+		`).
+		Joins("LEFT JOIN user_details ON chat_posts.user_id = user_details.user_id").
+		Order("created_at desc").
+		Find(&chatposts, "room_id=?", roomID).Error
 	if err != nil {
 		return nil, err
 	}
 	return chatposts, nil
 }
 
-func (cD chatPostDatastore) FindByRoomIDAndLimit(roomID string, limit int) ([]*models.ChatPost, error) {
-	chatposts := []*models.ChatPost{}
-	err := cD.db.Order("created_at desc").Limit(limit).Find(&chatposts, "room_id=?", roomID).Error
+func (d *chatPostDatastore) FindByRoomIDAndLimit(roomID string, limit int) ([]*output.ChatPostResBody, error) {
+	chatposts := []*output.ChatPostResBody{}
+	err := d.db.
+		Table("chat_posts").
+		Select(`
+		chat_posts.chat_post_id,
+		chat_posts.room_id,
+		chat_posts.user_id,
+		user_details.user_name,
+		user_details.icon,
+		chat_posts.message,
+		chat_posts.created_at
+		`).
+		Joins("LEFT JOIN user_details ON chat_posts.user_id = user_details.user_id").
+		Order("created_at desc").
+		Limit(limit).
+		Find(&chatposts, "room_id=?", roomID).Error
 	if err != nil {
 		return nil, err
 	}
 	return chatposts, nil
 }
 
-func (cD chatPostDatastore) FindByRoomIDAndOffset(roomID, offset string) ([]*models.ChatPost, error) {
-	chatposts := []*models.ChatPost{}
-	err := cD.db.Order("created_at desc").Where("created_at < ?", offset).Find(&chatposts, "room_id=?", roomID).Error
+func (d *chatPostDatastore) FindByRoomIDAndOffset(roomID, offset string) ([]*output.ChatPostResBody, error) {
+	chatposts := []*output.ChatPostResBody{}
+	err := d.db.
+		Table("chat_posts").
+		Select(`
+		chat_posts.chat_post_id,
+		chat_posts.room_id,
+		chat_posts.user_id,
+		user_details.user_name,
+		user_details.icon,
+		chat_posts.message,
+		chat_posts.created_at
+		`).
+		Joins("LEFT JOIN user_details ON chat_posts.user_id = user_details.user_id").
+		Order("created_at desc").
+		Where("created_at < ?", offset).
+		Find(&chatposts, "room_id=?", roomID).Error
 	if err != nil {
 		return nil, err
 	}
 	return chatposts, nil
 }
 
-func (cD chatPostDatastore) FindByRoomIDAndLimitAndOffset(roomID, offset string, limit int) ([]*models.ChatPost, error) {
-	chatposts := []*models.ChatPost{}
-	err := cD.db.Order("created_at desc").Limit(limit).Where("created_at < ?", offset).Find(&chatposts, "room_id=?", roomID).Error
+func (d *chatPostDatastore) FindByRoomIDAndLimitAndOffset(roomID, offset string, limit int) ([]*output.ChatPostResBody, error) {
+	chatposts := []*output.ChatPostResBody{}
+	err := d.db.
+		Table("chat_posts").
+		Select(`
+		chat_posts.chat_post_id,
+		chat_posts.room_id,
+		chat_posts.user_id,
+		user_details.user_name,
+		user_details.icon,
+		chat_posts.message,
+		chat_posts.created_at
+		`).
+		Joins("LEFT JOIN user_details ON chat_posts.user_id = user_details.user_id").
+		Order("created_at desc").
+		Limit(limit).
+		Where("created_at < ?", offset).
+		Find(&chatposts, "room_id=?", roomID).Error
 	if err != nil {
 		return nil, err
 	}
 	return chatposts, nil
 }
 
-func (cD chatPostDatastore) Insert(chatpost *models.ChatPost) error {
-	return cD.db.Create(chatpost).Error
+func (d *chatPostDatastore) Insert(chatpost *models.ChatPost) (*output.ChatPostResBody, error) {
+	err := d.db.Create(chatpost).Error
+	if err != nil {
+		return nil, err
+	}
+	chatpostRes := &output.ChatPostResBody{}
+	err = d.db.
+		Table("chat_posts").
+		Select(`
+			chat_posts.chat_post_id,
+			chat_posts.room_id,
+			chat_posts.user_id,
+			user_details.user_name,
+			user_details.icon,
+			chat_posts.message,
+			chat_posts.created_at
+			`).
+		Joins("LEFT JOIN user_details ON chat_posts.user_id = user_details.user_id").
+		Where("chat_posts.chat_post_id = ?", chatpost.ChatPostID).Scan(&chatpostRes).Error
+	return chatpostRes, nil
 }
 
-func (cD chatPostDatastore) Delete(chatpost *models.ChatPost) error {
-	err := cD.db.Take(&chatpost).Error
+func (d *chatPostDatastore) Delete(chatpost *models.ChatPost) error {
+	err := d.db.Take(&chatpost).Error
 	if err != nil {
 		return err
 	}
-	return cD.db.Delete(chatpost).Error
+	return d.db.Delete(chatpost).Error
 }

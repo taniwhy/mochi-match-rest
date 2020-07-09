@@ -2,6 +2,7 @@ package datastore
 
 import (
 	"github.com/jinzhu/gorm"
+
 	"github.com/taniwhy/mochi-match-rest/domain/errors"
 	"github.com/taniwhy/mochi-match-rest/domain/models"
 	"github.com/taniwhy/mochi-match-rest/domain/repository"
@@ -16,27 +17,27 @@ func NewGameHardDatastore(db *gorm.DB) repository.IGameHardRepository {
 	return &gameHardDatastore{db}
 }
 
-func (gD gameHardDatastore) FindAll() ([]*models.GameHard, error) {
-	gameHards := []*models.GameHard{}
-	err := gD.db.Find(&gameHards).Error
+func (d *gameHardDatastore) FindAll() ([]*models.GameHard, error) {
+	hards := []*models.GameHard{}
+	err := d.db.Find(&hards).Error
 	if err != nil {
 		return nil, errors.ErrDataBase{Detail: err.Error()}
 	}
-	return gameHards, nil
+	return hards, nil
 }
 
-func (gD gameHardDatastore) Insert(gH *models.GameHard) error {
-	err := gD.db.Create(gH).Error
+func (d *gameHardDatastore) Insert(hard *models.GameHard) error {
+	err := d.db.Create(hard).Error
 	if err != nil {
 		return errors.ErrDataBase{Detail: err.Error()}
 	}
 	return nil
 }
 
-func (gD gameHardDatastore) Update(gH *models.GameHard) error {
-	err := gD.db.Model(gH).
-		Where("game_hard_id = ?", gH.GameHardID).
-		Updates(models.GameHard{HardName: gH.HardName, UpdateAt: gH.UpdateAt}).Error
+func (d *gameHardDatastore) Update(hard *models.GameHard) error {
+	err := d.db.Model(hard).
+		Where("game_hard_id = ?", hard.GameHardID).
+		Updates(models.GameHard{HardName: hard.HardName, UpdateAt: hard.UpdateAt}).Error
 	if gorm.IsRecordNotFoundError(err) {
 		return errors.ErrRecordNotFound{Detail: err.Error()}
 	}
@@ -46,8 +47,8 @@ func (gD gameHardDatastore) Update(gH *models.GameHard) error {
 	return nil
 }
 
-func (gD gameHardDatastore) Delete(gH *models.GameHard) error {
-	err := gD.db.Where("game_hard_id = ?", gH.GameHardID).Delete(gH).Error
+func (d *gameHardDatastore) Delete(hard *models.GameHard) error {
+	err := d.db.Where("game_hard_id = ?", hard.GameHardID).Delete(hard).Error
 	if gorm.IsRecordNotFoundError(err) {
 		return errors.ErrRecordNotFound{Detail: err.Error()}
 	}

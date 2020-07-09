@@ -2,6 +2,7 @@ package datastore
 
 import (
 	"github.com/jinzhu/gorm"
+
 	"github.com/taniwhy/mochi-match-rest/domain/models"
 	"github.com/taniwhy/mochi-match-rest/domain/repository"
 )
@@ -15,24 +16,24 @@ func NewReportDatastore(db *gorm.DB) repository.IReportRepository {
 	return &reportDatastore{db}
 }
 
-func (rD reportDatastore) FindAllReport() ([]*models.Report, error) {
+func (d *reportDatastore) FindAll() ([]*models.Report, error) {
 	reports := []*models.Report{}
 
-	err := rD.db.Find(&reports).Error
+	err := d.db.Find(&reports).Error
 	if err != nil {
 		return nil, err
 	}
 	return reports, nil
 }
 
-func (rD reportDatastore) InsertReport(report *models.Report) error {
-	return rD.db.Create(report).Error
+func (d *reportDatastore) Insert(report *models.Report) error {
+	return d.db.Create(report).Error
 }
 
-func (rD reportDatastore) DeleteReport(report *models.Report) error {
-	err := rD.db.Take(&report).Error
+func (d *reportDatastore) Delete(report *models.Report) error {
+	err := d.db.Take(&report).Error
 	if err != nil {
 		return err
 	}
-	return rD.db.Delete(report).Error
+	return d.db.Delete(report).Error
 }

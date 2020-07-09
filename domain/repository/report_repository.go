@@ -8,7 +8,7 @@ import (
 
 // IReportRepository : レポートのリポジトリ
 type IReportRepository interface {
-	FindAllReport() ([]*models.Report, error)
-	InsertReport(report *models.Report) error
-	DeleteReport(report *models.Report) error
+	FindAll() ([]*models.Report, error)
+	Insert(report *models.Report) error
+	Delete(report *models.Report) error
 }

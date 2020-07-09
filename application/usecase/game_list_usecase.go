@@ -54,6 +54,9 @@ func (u *gameListUsecase) Insert(c *gin.Context) error {
 
 func (u *gameListUsecase) Update(c *gin.Context) error {
 	gamelistID := c.Params.ByName("id")
+	if gamelistID == "" {
+		return errors.ErrParams{Need: "id", Got: gamelistID}
+	}
 	body := input.GameListUpdateReqBody{}
 	if err := c.BindJSON(&body); err != nil {
 		return errors.ErrGameListUpdateReqBinding{GameTitle: body.GameTitle}

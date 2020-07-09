@@ -19,6 +19,7 @@ type IRoomHandler interface {
 	Delete(*gin.Context)
 	Join(*gin.Context)
 	Leave(*gin.Context)
+	CheckEntry(*gin.Context)
 }
 
 type roomHandler struct {
@@ -36,8 +37,8 @@ func NewRoomHandler(
 	}
 }
 
-func (rH roomHandler) GetList(c *gin.Context) {
-	r, err := rH.roomUsecase.GetList(c)
+func (h *roomHandler) GetList(c *gin.Context) {
+	r, err := h.roomUsecase.GetList(c)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err.Error())
 		return
@@ -45,8 +46,8 @@ func (rH roomHandler) GetList(c *gin.Context) {
 	c.JSON(http.StatusOK, r)
 }
 
-func (rH roomHandler) GetByID(c *gin.Context) {
-	roomDetail, err := rH.roomUsecase.GetByID(c)
+func (h *roomHandler) GetByID(c *gin.Context) {
+	roomDetail, err := h.roomUsecase.GetByID(c)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err.Error())
 		return
@@ -54,8 +55,8 @@ func (rH roomHandler) GetByID(c *gin.Context) {
 	c.JSON(http.StatusOK, roomDetail)
 }
 
-func (rH roomHandler) Create(c *gin.Context) {
-	err := rH.roomUsecase.Create(c)
+func (h *roomHandler) Create(c *gin.Context) {
+	err := h.roomUsecase.Create(c)
 	if err != nil {
 		switch err := err.(type) {
 		case errors.ErrRoomCreateReqBinding:
@@ -82,12 +83,12 @@ func (rH roomHandler) Create(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Create room"})
 }
 
-func (rH roomHandler) Update(c *gin.Context) {
+func (h *roomHandler) Update(c *gin.Context) {
 
 }
 
-func (rH roomHandler) Delete(c *gin.Context) {
-	err := rH.roomUsecase.Delete(c)
+func (h *roomHandler) Delete(c *gin.Context) {
+	err := h.roomUsecase.Delete(c)
 	if err != nil {
 		switch err := err.(type) {
 		case errors.ErrGetTokenClaims:
@@ -114,8 +115,8 @@ func (rH roomHandler) Delete(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Delete room"})
 }
 
-func (rH roomHandler) Join(c *gin.Context) {
-	err := rH.roomUsecase.Join(c)
+func (h *roomHandler) Join(c *gin.Context) {
+	err := h.roomUsecase.Join(c)
 	if err != nil {
 		switch err := err.(type) {
 		case errors.ErrGetTokenClaims:
@@ -145,8 +146,8 @@ func (rH roomHandler) Join(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Join room"})
 }
 
-func (rH roomHandler) Leave(c *gin.Context) {
-	err := rH.roomUsecase.Leave(c)
+func (h *roomHandler) Leave(c *gin.Context) {
+	err := h.roomUsecase.Leave(c)
 	if err != nil {
 		switch err := err.(type) {
 		case errors.ErrGetTokenClaims:
@@ -168,4 +169,33 @@ func (rH roomHandler) Leave(c *gin.Context) {
 		}
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Leave room"})
+}
+
+func (h *roomHandler) CheckEntry(c *gin.Context) {
+	isEntry, room, err := h.roomUsecase.CheckEntry(c)
+	if err != nil {
+		switch err := err.(type) {
+		case errors.ErrGetTokenClaims:
+			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+			return
+		case errors.ErrNotEntryRoom:
+			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+			return
+		case errors.ErrRecordNotFound:
+			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+			return
+		case errors.ErrDataBase:
+			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			return
+		default:
+			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			log.Warn("Unexpected error")
+			panic(err)
+		}
+	}
+	if isEntry {
+		c.JSON(http.StatusOK, gin.H{"message": "Already entry", "room": room})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Not entry"})
 }

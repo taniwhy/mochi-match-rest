@@ -3,8 +3,8 @@ package models
 import (
 	"time"
 
-	"github.com/google/uuid"
-	"github.com/taniwhy/mochi-match-rest/domain/errors"
+	"github.com/taniwhy/mochi-match-rest/util/clock"
+	"github.com/taniwhy/mochi-match-rest/util/uuid"
 )
 
 // GameHard : game_hardsテーブルモデル
@@ -17,14 +17,10 @@ type GameHard struct {
 
 // NewGameHard : game_hardsテーブルのレコードモデル生成
 func NewGameHard(hN string) (*GameHard, error) {
-	id, err := uuid.NewRandom()
-	if err != nil {
-		return nil, errors.ErrGenerateID{}
-	}
 	return &GameHard{
-		GameHardID: id.String(),
+		GameHardID: uuid.UuID(),
 		HardName:   hN,
-		CreatedAt:  time.Now(),
-		UpdateAt:   time.Now(),
+		CreatedAt:  clock.Now(),
+		UpdateAt:   clock.Now(),
 	}, nil
 }

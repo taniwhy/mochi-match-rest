@@ -44,7 +44,7 @@ func (u *reportUsecase) Create(c *gin.Context) error {
 	if err != nil {
 		return err
 	}
-	if err := u.reportRepository.InsertReport(report); err != nil {
+	if err := u.reportRepository.Insert(report); err != nil {
 		return err
 	}
 	return nil

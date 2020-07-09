@@ -3,14 +3,13 @@
 package usecase
 
 import (
-	"time"
-
 	"github.com/gin-gonic/gin"
 
 	"github.com/taniwhy/mochi-match-rest/domain/errors"
 	"github.com/taniwhy/mochi-match-rest/domain/models"
 	"github.com/taniwhy/mochi-match-rest/domain/models/input"
 	"github.com/taniwhy/mochi-match-rest/domain/repository"
+	"github.com/taniwhy/mochi-match-rest/util/clock"
 )
 
 // IGameHardUseCase : インターフェース
@@ -55,6 +54,9 @@ func (u *gameHardUsecase) Insert(c *gin.Context) error {
 
 func (u *gameHardUsecase) Update(c *gin.Context) error {
 	gamehardID := c.Params.ByName("id")
+	if gamehardID == "" {
+		return errors.ErrParams{Need: "id", Got: gamehardID}
+	}
 	body := input.GameHardUpdateReqBody{}
 	if err := c.BindJSON(&body); err != nil {
 		return errors.ErrGameHardUpdateReqBinding{HardName: body.HardName}
@@ -62,7 +64,7 @@ func (u *gameHardUsecase) Update(c *gin.Context) error {
 	gamehard := &models.GameHard{
 		GameHardID: gamehardID,
 		HardName:   body.HardName,
-		UpdateAt:   time.Now(),
+		UpdateAt:   clock.Now(),
 	}
 	if err := u.gameHardRepository.Update(gamehard); err != nil {
 		return err

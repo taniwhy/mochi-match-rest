@@ -71,6 +71,10 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 		google.GET("/login", googleAuthHandler.Login)
 		google.GET("/callback", googleAuthHandler.Callback)
 	}
+	check := v1.Group("/check")
+	{
+		check.GET("/entry", roomHandler.CheckEntry)
+	}
 	users := v1.Group("/users")
 	users.Use(auth.TokenAuth())
 	{

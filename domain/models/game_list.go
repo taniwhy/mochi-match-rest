@@ -3,8 +3,8 @@ package models
 import (
 	"time"
 
-	"github.com/google/uuid"
-	"github.com/taniwhy/mochi-match-rest/domain/errors"
+	"github.com/taniwhy/mochi-match-rest/util/clock"
+	"github.com/taniwhy/mochi-match-rest/util/uuid"
 )
 
 // GameList : game_titleテーブルモデル
@@ -16,15 +16,11 @@ type GameList struct {
 }
 
 // NewGameList : game_listsテーブルのレコードモデル生成
-func NewGameList(gT string) (*GameList, error) {
-	id, err := uuid.NewRandom()
-	if err != nil {
-		return nil, errors.ErrGenerateID{}
-	}
+func NewGameList(gameTitle string) (*GameList, error) {
 	return &GameList{
-		GameListID: id.String(),
-		GameTitle:  gT,
-		CreatedAt:  time.Now(),
-		UpdateAt:   time.Now(),
+		GameListID: uuid.UuID(),
+		GameTitle:  gameTitle,
+		CreatedAt:  clock.Now(),
+		UpdateAt:   clock.Now(),
 	}, nil
 }

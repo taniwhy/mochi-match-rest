@@ -3,8 +3,8 @@ package models
 import (
 	"time"
 
-	"github.com/google/uuid"
-	"github.com/taniwhy/mochi-match-rest/domain/errors"
+	"github.com/taniwhy/mochi-match-rest/util/clock"
+	"github.com/taniwhy/mochi-match-rest/util/uuid"
 )
 
 // Report : reportテーブルモデル
@@ -18,17 +18,13 @@ type Report struct {
 }
 
 // NewReport :
-func NewReport(cID, vID, rID, vD string) (*Report, error) {
-	id, err := uuid.NewRandom()
-	if err != nil {
-		return nil, errors.ErrGenerateID{}
-	}
+func NewReport(callerID, violatorID, roomID, detail string) (*Report, error) {
 	return &Report{
-		ReportID:         id.String(),
-		CallerID:         cID,
-		VaiolatorID:      vID,
-		ReportedRoomID:   rID,
-		VaiolationDetail: vD,
-		CreatedAt:        time.Now(),
+		ReportID:         uuid.UuID(),
+		CallerID:         callerID,
+		VaiolatorID:      violatorID,
+		ReportedRoomID:   roomID,
+		VaiolationDetail: detail,
+		CreatedAt:        clock.Now(),
 	}, nil
 }

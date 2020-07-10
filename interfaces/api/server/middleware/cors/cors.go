@@ -15,7 +15,7 @@ func Write() gin.HandlerFunc {
 		case "prod":
 			c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:4000")
 		default:
-			c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:5500")
+			c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:4000")
 		}
 		c.Writer.Header().Set("Access-Control-Max-Age", "86400")
 		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, UPDATE")

@@ -29,11 +29,13 @@ func NewAuthHandler() IAuthHandler {
 
 func (aH *authHandler) GetToken(c *gin.Context) {
 	token, err := c.Cookie("token")
+	fmt.Println("token", token)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
 	expStr, err := c.Cookie("token_exp")
+	fmt.Println("expStr", expStr)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err.Error())
 		return
@@ -54,13 +56,17 @@ func (aH *authHandler) GetToken(c *gin.Context) {
 	}
 	claimsID := claims["sub"].(string)
 	fmt.Println("id", claimsID)
-	isAdmin, err := aH.userService.IsAdmin(claimsID)
+	// TODO
+	isAdmin := true
+	fmt.Println("isAdmin", isAdmin)
 	if err != nil {
+		fmt.Println("err", err)
 		c.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
 	accessToken, refreshToken, exp, err := auth.TokenRefresh(token, isAdmin)
 	if err != nil {
+		fmt.Println("err", err)
 		c.JSON(http.StatusBadRequest, err.Error())
 		return
 	}

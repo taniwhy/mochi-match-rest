@@ -60,13 +60,11 @@ func (aH *authHandler) GetToken(c *gin.Context) {
 	isAdmin := true
 	fmt.Println("isAdmin", isAdmin)
 	if err != nil {
-		fmt.Println("err", err)
 		c.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
 	accessToken, refreshToken, exp, err := auth.TokenRefresh(token, isAdmin)
 	if err != nil {
-		fmt.Println("err", err)
 		c.JSON(http.StatusBadRequest, err.Error())
 		return
 	}

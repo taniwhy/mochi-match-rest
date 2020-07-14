@@ -47,7 +47,7 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 	gameListHandler := handler.NewGameListHandler(gameListUsecase)
 	gameHardHandler := handler.NewGameHardHandler(gameHardUsecase)
 	googleAuthHandler := handler.NewGoogleOAuthHandler(googleAuthUsecase, userUsecase, userService)
-	authHandler := handler.NewAuthHandler()
+	authHandler := handler.NewAuthHandler(userService)
 
 	r := gin.Default()
 	r.Use(cors.Write())

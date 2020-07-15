@@ -79,7 +79,7 @@ func (d *entryHistoryDatastore) FindNotLeaveListByRoomID(roomID string) ([]*outp
 			user_details.icon
 			`).
 		Joins("LEFT JOIN user_details ON entry_histories.user_id = user_details.user_id").
-		Where("entry_histories.is_leave = ?", false).Order("created_at asc").Scan(&users).Error
+		Where("entry_histories.room_id AND entry_histories.is_leave = ?", roomID, false).Order("created_at asc").Scan(&users).Error
 	if gorm.IsRecordNotFoundError(err) {
 		return nil, nil
 	}

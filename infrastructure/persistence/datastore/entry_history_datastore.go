@@ -44,7 +44,22 @@ func (d *entryHistoryDatastore) FindNotLeave(userID string) (*models.EntryHistor
 
 func (d *entryHistoryDatastore) FindNotLeaveByRoomID(userID, roomID string) (*models.EntryHistory, error) {
 	history := &models.EntryHistory{}
-	err := d.db.Where("user_id = ? AND room_id = ? AND is_leave = ?", userID, roomID, false).First(&history).Error
+	err := d.db.
+		Table("entry_histories").
+		Select(`
+		entry_histories.entry_history_id,
+		entry_histories.user_id,
+		entry_histories.room_id,
+		entry_histories.is_leave,
+		entry_histories.created_at,
+		entry_histories.leaved_at
+		`).
+		Joins("LEFT JOIN rooms ON entry_histories.room_id = rooms.room_id").
+		Where(`
+			entry_histories.user_id = ? AND
+			entry_histories.room_id = ? AND
+			entry_histories.is_leave = ? AND
+			rooms.is_lock = ?`, userID, roomID, false, false).First(&history).Error
 	if gorm.IsRecordNotFoundError(err) {
 		return nil, nil
 	}

@@ -47,7 +47,7 @@ func (d *entryHistoryDatastore) FindNotLeaveByRoomID(userID, roomID string) (*mo
 	err := d.db.
 		Table("entry_histories").
 		Select(`
-		entry_histories.game_title,
+		entry_histories.entry_history_id,
 		entry_histories.user_id,
 		entry_histories.room_id,
 		entry_histories.is_leave,

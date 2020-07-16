@@ -47,7 +47,7 @@ func (d *entryHistoryDatastore) FindNotLeaveByRoomID(userID, roomID string) (*mo
 	err := d.db.
 		Table("entry_histories").
 		Select(`
-		entry_histories.entry_history_id,
+		entry_histories.game_title,
 		entry_histories.user_id,
 		entry_histories.room_id,
 		entry_histories.is_leave,
@@ -59,7 +59,9 @@ func (d *entryHistoryDatastore) FindNotLeaveByRoomID(userID, roomID string) (*mo
 			entry_histories.user_id = ? AND
 			entry_histories.room_id = ? AND
 			entry_histories.is_leave = ? AND
-			rooms.is_lock = ?`, userID, roomID, false, false).First(&history).Error
+			rooms.is_lock = ?`,
+			userID, roomID, false, false).
+		First(&history).Error
 	if gorm.IsRecordNotFoundError(err) {
 		return nil, nil
 	}

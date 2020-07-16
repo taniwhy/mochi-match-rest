@@ -7,6 +7,7 @@ package mock_repository
 import (
 	gomock "github.com/golang/mock/gomock"
 	models "github.com/taniwhy/mochi-match-rest/domain/models"
+	output "github.com/taniwhy/mochi-match-rest/domain/models/output"
 	reflect "reflect"
 )
 
@@ -34,10 +35,10 @@ func (m *MockIChatPostRepository) EXPECT() *MockIChatPostRepositoryMockRecorder 
 }
 
 // FindByRoomID mocks base method
-func (m *MockIChatPostRepository) FindByRoomID(id string) ([]*models.ChatPost, error) {
+func (m *MockIChatPostRepository) FindByRoomID(id string) ([]*output.ChatPostResBody, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindByRoomID", id)
-	ret0, _ := ret[0].([]*models.ChatPost)
+	ret0, _ := ret[0].([]*output.ChatPostResBody)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -49,10 +50,10 @@ func (mr *MockIChatPostRepositoryMockRecorder) FindByRoomID(id interface{}) *gom
 }
 
 // FindByRoomIDAndLimit mocks base method
-func (m *MockIChatPostRepository) FindByRoomIDAndLimit(id string, limit int) ([]*models.ChatPost, error) {
+func (m *MockIChatPostRepository) FindByRoomIDAndLimit(id string, limit int) ([]*output.ChatPostResBody, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindByRoomIDAndLimit", id, limit)
-	ret0, _ := ret[0].([]*models.ChatPost)
+	ret0, _ := ret[0].([]*output.ChatPostResBody)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -64,10 +65,10 @@ func (mr *MockIChatPostRepositoryMockRecorder) FindByRoomIDAndLimit(id, limit in
 }
 
 // FindByRoomIDAndOffset mocks base method
-func (m *MockIChatPostRepository) FindByRoomIDAndOffset(id, offset string) ([]*models.ChatPost, error) {
+func (m *MockIChatPostRepository) FindByRoomIDAndOffset(id, offset string) ([]*output.ChatPostResBody, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindByRoomIDAndOffset", id, offset)
-	ret0, _ := ret[0].([]*models.ChatPost)
+	ret0, _ := ret[0].([]*output.ChatPostResBody)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -79,10 +80,10 @@ func (mr *MockIChatPostRepositoryMockRecorder) FindByRoomIDAndOffset(id, offset 
 }
 
 // FindByRoomIDAndLimitAndOffset mocks base method
-func (m *MockIChatPostRepository) FindByRoomIDAndLimitAndOffset(id, offset string, limit int) ([]*models.ChatPost, error) {
+func (m *MockIChatPostRepository) FindByRoomIDAndLimitAndOffset(id, offset string, limit int) ([]*output.ChatPostResBody, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindByRoomIDAndLimitAndOffset", id, offset, limit)
-	ret0, _ := ret[0].([]*models.ChatPost)
+	ret0, _ := ret[0].([]*output.ChatPostResBody)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -94,11 +95,12 @@ func (mr *MockIChatPostRepositoryMockRecorder) FindByRoomIDAndLimitAndOffset(id,
 }
 
 // Insert mocks base method
-func (m *MockIChatPostRepository) Insert(room *models.ChatPost) error {
+func (m *MockIChatPostRepository) Insert(room *models.ChatPost) (*output.ChatPostResBody, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Insert", room)
-	ret0, _ := ret[0].(error)
-	return ret0
+	ret0, _ := ret[0].(*output.ChatPostResBody)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // Insert indicates an expected call of Insert

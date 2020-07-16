@@ -7,6 +7,7 @@ package mock_repository
 import (
 	gomock "github.com/golang/mock/gomock"
 	models "github.com/taniwhy/mochi-match-rest/domain/models"
+	output "github.com/taniwhy/mochi-match-rest/domain/models/output"
 	reflect "reflect"
 )
 
@@ -34,10 +35,10 @@ func (m *MockIFavoriteGameRepository) EXPECT() *MockIFavoriteGameRepositoryMockR
 }
 
 // FindByID mocks base method
-func (m *MockIFavoriteGameRepository) FindByID(id string) ([]*models.FavoriteGame, error) {
+func (m *MockIFavoriteGameRepository) FindByID(id string) ([]*output.FavoriteGamesRes, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindByID", id)
-	ret0, _ := ret[0].([]*models.FavoriteGame)
+	ret0, _ := ret[0].([]*output.FavoriteGamesRes)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

@@ -4,11 +4,12 @@ package repository
 
 import (
 	"github.com/taniwhy/mochi-match-rest/domain/models"
+	"github.com/taniwhy/mochi-match-rest/domain/models/output"
 )
 
 // IFavoriteGameRepository : お気に入りゲームのリポジトリ
 type IFavoriteGameRepository interface {
-	FindByID(id string) ([]*models.FavoriteGame, error)
+	FindByID(id string) ([]*output.FavoriteGamesRes, error)
 	Insert(room *models.FavoriteGame) error
 	Delete(uID, fID string) error
 }

@@ -79,6 +79,7 @@ func (u *userUsecase) GetMe(c *gin.Context) (*output.UserResBody, error) {
 	}
 	for _, g := range favoriteGames {
 		r := output.FavoriteGamesRes{
+			GameID:    g.GameID,
 			GameTitle: g.GameTitle,
 			CreatedAt: g.CreatedAt,
 		}
@@ -112,6 +113,7 @@ func (u *userUsecase) GetByID(c *gin.Context) (*output.UserResBody, error) {
 	}
 	for _, g := range favorateGames {
 		r := output.FavoriteGamesRes{
+			GameID:    g.GameTitle,
 			GameTitle: g.GameTitle,
 			CreatedAt: g.CreatedAt,
 		}

@@ -23,7 +23,7 @@ func (d *favoriteGameDatastore) FindByID(userID string) ([]*output.FavoriteGames
 	err := d.db.
 		Table("favorite_games").
 		Select(`
-		favorite_games.game_title,,
+		favorite_games.game_title,
 		game_lists.game_list_id,
 		favorite_games.created_at
 		`).

@@ -20,7 +20,7 @@ func AdminAuth() gin.HandlerFunc {
 		}
 		claims := token.Claims.(jwt.MapClaims)
 		if claims["is_admin"].(bool) == false {
-			c.JSON(http.StatusBadRequest, gin.H{"message": "not admin user"})
+			c.JSON(http.StatusForbidden, gin.H{"message": "not admin user"})
 			c.Abort()
 		}
 	}

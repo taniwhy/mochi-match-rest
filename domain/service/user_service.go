@@ -3,8 +3,6 @@
 package service
 
 import (
-	"fmt"
-
 	"github.com/taniwhy/mochi-match-rest/domain/repository"
 )
 
@@ -26,20 +24,19 @@ func NewUserService(uR repository.IUserRepository) IUserService {
 	}
 }
 
-func (uS userService) IsAdmin(id string) (bool, error) {
-	res, err := uS.userRepository.FindByID(id)
+func (s *userService) IsAdmin(id string) (bool, error) {
+	res, err := s.userRepository.FindByID(id)
 	if err != nil {
 		return false, err
 	}
 	if res == nil {
 		return false, nil
 	}
-	fmt.Println("んあああああ", res.IsAdmin)
 	return res.IsAdmin, nil
 }
 
-func (uS userService) IsDelete(id string) (bool, error) {
-	res, err := uS.userRepository.FindByID(id)
+func (s *userService) IsDelete(id string) (bool, error) {
+	res, err := s.userRepository.FindByID(id)
 	if err != nil {
 		return false, err
 	}
@@ -50,8 +47,8 @@ func (uS userService) IsDelete(id string) (bool, error) {
 }
 
 // ユーザーが存在しなければ真を返却
-func (uS userService) IsExist(id, provider string) (bool, error) {
-	res, err := uS.userRepository.FindByProviderID(id, provider)
+func (s *userService) IsExist(id, provider string) (bool, error) {
+	res, err := s.userRepository.FindByProviderID(id, provider)
 	if err != nil {
 		return false, err
 	}

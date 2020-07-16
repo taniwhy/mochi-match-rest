@@ -23,11 +23,13 @@ type authHandler struct {
 }
 
 // NewAuthHandler : 認証ハンドラの生成
-func NewAuthHandler() IAuthHandler {
-	return &authHandler{}
+func NewAuthHandler(uS service.IUserService) IAuthHandler {
+	return &authHandler{
+		userService: uS,
+	}
 }
 
-func (aH *authHandler) GetToken(c *gin.Context) {
+func (h *authHandler) GetToken(c *gin.Context) {
 	token, err := c.Cookie("token")
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err.Error())
@@ -54,7 +56,9 @@ func (aH *authHandler) GetToken(c *gin.Context) {
 	}
 	claimsID := claims["sub"].(string)
 	fmt.Println("id", claimsID)
-	isAdmin, err := aH.userService.IsAdmin(claimsID)
+	// TODO
+	isAdmin := true
+	fmt.Println("isAdmin", isAdmin)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err.Error())
 		return
@@ -71,7 +75,7 @@ func (aH *authHandler) GetToken(c *gin.Context) {
 	})
 }
 
-func (aH *authHandler) Refresh(c *gin.Context) {
+func (h *authHandler) Refresh(c *gin.Context) {
 	tokenReq := input.TokenReqBody{}
 	c.Bind(&tokenReq)
 	claims, err := auth.GetTokenClaimsFromToken(tokenReq.RefreshToken)
@@ -80,7 +84,7 @@ func (aH *authHandler) Refresh(c *gin.Context) {
 		return
 	}
 	claimsID := claims["sub"].(string)
-	isAdmin, err := aH.userService.IsAdmin(claimsID)
+	isAdmin, err := h.userService.IsAdmin(claimsID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err.Error())
 		return

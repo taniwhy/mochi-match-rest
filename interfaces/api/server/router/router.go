@@ -47,7 +47,7 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 	gameListHandler := handler.NewGameListHandler(gameListUsecase)
 	gameHardHandler := handler.NewGameHardHandler(gameHardUsecase)
 	googleAuthHandler := handler.NewGoogleOAuthHandler(googleAuthUsecase, userUsecase, userService)
-	authHandler := handler.NewAuthHandler()
+	authHandler := handler.NewAuthHandler(userService)
 
 	r := gin.Default()
 	r.Use(cors.Write())
@@ -75,6 +75,10 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 	{
 		check.GET("/entry", roomHandler.CheckEntry)
 	}
+	hot := v1.Group("/hot")
+	{
+		hot.GET("/games")
+	}
 	users := v1.Group("/users")
 	users.Use(auth.TokenAuth())
 	{
@@ -84,9 +88,9 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 		users.DELETE("", userHandler.Delete)
 	}
 	room := v1.Group("/rooms")
+	room.GET("", roomHandler.GetList)
 	room.Use(auth.TokenAuth())
 	{
-		room.GET("", roomHandler.GetList)
 		room.GET("/:id", roomHandler.GetByID)
 		room.POST("", roomHandler.Create)
 		room.PUT("/:id", roomHandler.Update)

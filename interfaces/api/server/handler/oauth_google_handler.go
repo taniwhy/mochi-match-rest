@@ -4,6 +4,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"golang.org/x/oauth2"
+
 	"github.com/taniwhy/mochi-match-rest/application/usecase"
 	"github.com/taniwhy/mochi-match-rest/config"
 	"github.com/taniwhy/mochi-match-rest/domain/errors"
@@ -11,7 +13,6 @@ import (
 	"github.com/taniwhy/mochi-match-rest/domain/models/input"
 	"github.com/taniwhy/mochi-match-rest/domain/service"
 	"github.com/taniwhy/mochi-match-rest/interfaces/api/server/middleware/auth"
-	"golang.org/x/oauth2"
 
 	log "github.com/sirupsen/logrus"
 )

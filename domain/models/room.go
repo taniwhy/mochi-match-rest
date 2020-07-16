@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/taniwhy/mochi-match-rest/util/clock"
@@ -35,6 +36,7 @@ func NewRoom(uid, text, glid, ghid string, cap int, s time.Time) (*Room, error) 
 		CreatedAt:  clock.Now(),
 		UpdateAt:   clock.Now(),
 	}
+	fmt.Println(clock.Now())
 	if s.IsZero() == true {
 		r.Start = null.NewTime(s, false)
 	} else {

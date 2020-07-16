@@ -16,7 +16,7 @@ func TokenAuth() gin.HandlerFunc {
 			return b, nil
 		})
 		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+			c.JSON(http.StatusUnauthorized, gin.H{"message": err.Error()})
 			c.Abort()
 		}
 	}

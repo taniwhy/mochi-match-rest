@@ -76,12 +76,13 @@ func (d *entryHistoryDatastore) FindListByRoomID(roomID string) ([]*output.JoinU
 	err := d.db.
 		Table("entry_histories").
 		Select(`
-			DISTINCT(entry_histories.user_id),
+			DISTINCT ON(entry_histories.user_id) entry_histories.user_id,
 			user_details.user_name,
 			user_details.icon
 			`).
 		Joins("LEFT JOIN user_details ON entry_histories.user_id = user_details.user_id").
 		Where("entry_histories.room_id = ?", roomID).
+		Order("entry_histories.user_id, entry_histories.created_at asc").
 		Scan(&users).Error
 	if gorm.IsRecordNotFoundError(err) {
 		return nil, nil

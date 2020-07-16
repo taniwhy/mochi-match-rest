@@ -35,6 +35,7 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 	userUsecase := usecase.NewUserUsecase(userDatastore, userDetailDatastore, userService, favorateGameDatastore)
 	roomUsecase := usecase.NewRoomUsecase(roomDatastore, entryHistoryDatastore, roomService, entryHistoryService)
 	roomBlacklistUsecase := usecase.NewRoomBlacklistUsecase(roomBalacklistDatastore, roomService)
+	entryHistoryUsecase := usecase.NewEntryHistoryUsecase(roomDatastore, entryHistoryDatastore)
 	chatPostUsecase := usecase.NewChatPostUsecase(chatPostDatastore, redisConn)
 	gameListUsecase := usecase.NewGameListUsecase(gameListDatastore)
 	gameHardUsecase := usecase.NewGameHardUsecase(gameHardDatastore)
@@ -43,6 +44,7 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 	userHandler := handler.NewUserHandler(userUsecase)
 	roomHandler := handler.NewRoomHandler(userUsecase, roomUsecase)
 	roomBlacklistHandler := handler.NewRoomBlacklistHandler(roomBlacklistUsecase)
+	entryHistoryHandler := handler.NewEntryHistoryHandler(entryHistoryUsecase)
 	chatPostHandler := handler.NewChatPostHandler(chatPostUsecase)
 	gameListHandler := handler.NewGameListHandler(gameListUsecase)
 	gameHardHandler := handler.NewGameHardHandler(gameHardUsecase)
@@ -78,6 +80,10 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 	hot := v1.Group("/hot")
 	{
 		hot.GET("/games")
+	}
+	history := v1.Group("/history")
+	{
+		history.GET("", entryHistoryHandler.GetByID)
 	}
 	users := v1.Group("/users")
 	users.Use(auth.TokenAuth())

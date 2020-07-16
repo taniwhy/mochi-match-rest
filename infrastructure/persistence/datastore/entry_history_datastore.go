@@ -71,6 +71,38 @@ func (d *entryHistoryDatastore) FindNotLeaveByRoomID(userID, roomID string) (*mo
 	return history, nil
 }
 
+func (d *entryHistoryDatastore) FindListByRoomID(roomID string) ([]*output.JoinUserRes, error) {
+	users := []*output.JoinUserRes{}
+	err := d.db.
+		Table("entry_histories").
+		Select(`
+			entry_histories.user_id,
+			user_details.user_name,
+			user_details.icon
+			`).
+		Joins("LEFT JOIN user_details ON entry_histories.user_id = user_details.user_id").
+		Where("entry_histories.room_id = ?", roomID).Order("created_at asc").Scan(&users).Error
+	if gorm.IsRecordNotFoundError(err) {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, errors.ErrDataBase{Detail: err}
+	}
+	return users, nil
+}
+
+func (d *entryHistoryDatastore) FindListByUserID(userID string) ([]*models.EntryHistory, error) {
+	historys := []*models.EntryHistory{}
+	err := d.db.Where("user_id = ?", userID).Find(&historys).Error
+	if gorm.IsRecordNotFoundError(err) {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, errors.ErrDataBase{Detail: err}
+	}
+	return historys, nil
+}
+
 func (d *entryHistoryDatastore) FindNotLeaveListByRoomID(roomID string) ([]*output.JoinUserRes, error) {
 	users := []*output.JoinUserRes{}
 	err := d.db.

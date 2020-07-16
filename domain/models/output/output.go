@@ -77,7 +77,7 @@ type EntryHistoryRes struct {
 
 // EntryHistoryResBody :
 type EntryHistoryResBody struct {
-	PlaydedDate time.Time     `json:"playded_date"`
+	PlaydedDate time.Time     `json:"played_date"`
 	HostName    string        `json:"host_name"`
 	GameName    string        `json:"game_title"`
 	JoinUsers   []JoinUserRes `json:"join_users" binding:"required"`

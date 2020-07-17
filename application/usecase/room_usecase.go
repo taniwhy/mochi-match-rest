@@ -118,6 +118,13 @@ func (u *roomUsecase) Create(c *gin.Context) error {
 	if !ok {
 		return errors.ErrRoomAlreadyExists{}
 	}
+	ok, err = u.entryHistoryService.CanJoin(userID)
+	if err != nil {
+		return err
+	}
+	if ok {
+		return errors.ErrRoomAlreadyEntry{}
+	}
 	room, err := models.NewRoom(userID, body.RoomText, body.GameListID, body.GameHardID, body.Capacity, body.Start.Time)
 	if err != nil {
 		return err

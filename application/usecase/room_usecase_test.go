@@ -3,7 +3,6 @@ package usecase
 import (
 	"errors"
 	"net/http"
-	"strings"
 	"testing"
 	"time"
 
@@ -77,87 +76,6 @@ func TestGetRoomList(t *testing.T) {
 	user, err = test.GetList(context)
 
 	assert.Empty(t, user)
-	assert.Error(t, err)
-}
-
-func TestCreateRoom(t *testing.T) {
-	jst, _ := time.LoadLocation("Asia/Tokyo")
-	testDate := time.Date(2020, time.April, 1, 00, 00, 00, 00, jst)
-	testutil.SetFakeUuID("testUUID")
-	testutil.SetFakeTime(testDate)
-
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	start, _ := time.Parse(time.RFC3339, "2020-04-01T00:00:00+09:00")
-	room, _ := models.NewRoom("existID", "testText", "testID", "testID", 4, start)
-	entryHistory, _ := models.NewEntryHistory("existID", "testUUID")
-
-	mockRoomRepository := mock_repository.NewMockIRoomRepository(ctrl)
-	mockRoomRepository.EXPECT().Insert(room).Return(nil)
-
-	mockEntryHistoryRepository := mock_repository.NewMockIEntryHistoryRepository(ctrl)
-	mockEntryHistoryRepository.EXPECT().Insert(entryHistory).Return(nil)
-
-	mockRoomService := mock_service.NewMockIRoomService(ctrl)
-	mockRoomService.EXPECT().CanInsert("existID").Return(true, nil)
-
-	mockEntryHistoryService := mock_service.NewMockIEntryHistoryService(ctrl)
-
-	test := NewRoomUsecase(mockRoomRepository, mockEntryHistoryRepository, mockRoomService, mockEntryHistoryService)
-
-	existToken := auth.GenerateAccessToken("existID", false)
-	invalidToken := existToken + "foo"
-
-	// 正常処理テスト
-	bodyReader := strings.NewReader(`
-		{
-			"room_text": "testText",
-			"game_hard_id": "testID",
-			"game_list_id": "testID",
-			"capacity": 4,
-			"start": "2020-04-01T00:00:00+09:00"
-		}
-		`)
-	req, _ := http.NewRequest("GET", "", bodyReader)
-	req.Header.Add("Authorization", existToken)
-	context := &gin.Context{Request: req}
-	err := test.Create(context)
-
-	assert.NoError(t, err)
-
-	// 異常処理テスト
-	// 1. トークン無し
-	bodyReader = strings.NewReader(`
-		{
-			"room_text": "testText",
-			"game_hard_id": "testID",
-			"game_list_id": "testID",
-			"capacity": 4,
-			"start": "2020-04-01T00:00:00+09:00"
-		}
-		`)
-	req, _ = http.NewRequest("GET", "", bodyReader)
-	context = &gin.Context{Request: req}
-	err = test.Create(context)
-
-	assert.Error(t, err)
-
-	// 2. 異常なトークン
-	bodyReader = strings.NewReader(`
-		{
-			"room_text": "testText",
-			"game_hard_id": "testID",
-			"game_list_id": "testID",
-			"capacity": 4,
-			"start": "2020-04-01T00:00:00+09:00"
-		}
-		`)
-	req, _ = http.NewRequest("GET", "", bodyReader)
-	req.Header.Add("Authorization", invalidToken)
-	context = &gin.Context{Request: req}
-	err = test.Create(context)
-
 	assert.Error(t, err)
 }
 

@@ -56,7 +56,7 @@ func (h *roomHandler) GetByID(c *gin.Context) {
 }
 
 func (h *roomHandler) Create(c *gin.Context) {
-	err := h.roomUsecase.Create(c)
+	room, err := h.roomUsecase.Create(c)
 	if err != nil {
 		switch err := err.(type) {
 		case errors.ErrRoomCreateReqBinding:
@@ -83,7 +83,7 @@ func (h *roomHandler) Create(c *gin.Context) {
 			panic(err)
 		}
 	}
-	c.JSON(http.StatusOK, gin.H{"message": "Create room"})
+	c.JSON(http.StatusOK, gin.H{"room": room, "message": "Create room"})
 }
 
 func (h *roomHandler) Update(c *gin.Context) {

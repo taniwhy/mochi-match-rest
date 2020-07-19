@@ -34,10 +34,10 @@ func (gH gameHardHandler) GetAll(c *gin.Context) {
 	if err != nil {
 		switch err := err.(type) {
 		case errors.ErrDataBase:
-			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			c.JSON(http.StatusInternalServerError, gin.H{"code": 1, "message": err.Error()})
 			return
 		default:
-			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			c.JSON(http.StatusInternalServerError, gin.H{"code": 99, "message": err.Error()})
 			log.Warn("Unexpected error")
 			panic(err)
 		}
@@ -50,16 +50,16 @@ func (gH gameHardHandler) Create(c *gin.Context) {
 	if err != nil {
 		switch err := err.(type) {
 		case errors.ErrGameHardCreateReqBinding:
-			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+			c.JSON(http.StatusBadRequest, gin.H{"code": 1, "message": err.Error()})
 			return
 		case errors.ErrGenerateID:
-			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			c.JSON(http.StatusInternalServerError, gin.H{"code": 2, "message": err.Error()})
 			return
 		case errors.ErrDataBase:
-			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			c.JSON(http.StatusInternalServerError, gin.H{"code": 3, "message": err.Error()})
 			return
 		default:
-			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			c.JSON(http.StatusInternalServerError, gin.H{"code": 99, "message": err.Error()})
 			log.Warn("Unexpected error")
 			panic(err)
 		}
@@ -72,16 +72,16 @@ func (gH gameHardHandler) Update(c *gin.Context) {
 	if err != nil {
 		switch err := err.(type) {
 		case errors.ErrGameHardUpdateReqBinding:
-			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+			c.JSON(http.StatusBadRequest, gin.H{"code": 1, "message": err.Error()})
 			return
 		case errors.ErrRecordNotFound:
-			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+			c.JSON(http.StatusBadRequest, gin.H{"code": 2, "message": err.Error()})
 			return
 		case errors.ErrDataBase:
-			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			c.JSON(http.StatusInternalServerError, gin.H{"code": 3, "message": err.Error()})
 			return
 		default:
-			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			c.JSON(http.StatusInternalServerError, gin.H{"code": 99, "message": err.Error()})
 			log.Warn("Unexpected error")
 			panic(err)
 		}
@@ -94,13 +94,13 @@ func (gH gameHardHandler) Delete(c *gin.Context) {
 	if err != nil {
 		switch err := err.(type) {
 		case errors.ErrRecordNotFound:
-			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+			c.JSON(http.StatusBadRequest, gin.H{"code": 1, "message": err.Error()})
 			return
 		case errors.ErrDataBase:
-			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			c.JSON(http.StatusInternalServerError, gin.H{"code": 2, "message": err.Error()})
 			return
 		default:
-			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			c.JSON(http.StatusInternalServerError, gin.H{"code": 99, "message": err.Error()})
 			log.Warn("Unexpected error")
 			panic(err)
 		}

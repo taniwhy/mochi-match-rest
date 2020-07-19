@@ -83,7 +83,7 @@ func (h *roomHandler) Create(c *gin.Context) {
 			panic(err)
 		}
 	}
-	c.JSON(http.StatusOK, gin.H{"room": room, "message": "Create room"})
+	c.JSON(http.StatusOK, gin.H{"data": room, "message": "Create room"})
 }
 
 func (h *roomHandler) Update(c *gin.Context) {

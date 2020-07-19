@@ -24,7 +24,7 @@ func TestGetRoomList(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockRoomRepository := mock_repository.NewMockIRoomRepository(ctrl)
-	mockRoomRepository.EXPECT().FindByLimitAndOffset(8, 0).Return([]*output.RoomResBody{}, nil)
+	mockRoomRepository.EXPECT().FindByLimitAndOffset(12, 0).Return([]*output.RoomResBody{}, nil)
 
 	mockEntryHistoryRepository := mock_repository.NewMockIEntryHistoryRepository(ctrl)
 	mockRoomService := mock_service.NewMockIRoomService(ctrl)

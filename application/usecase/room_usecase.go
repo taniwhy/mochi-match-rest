@@ -58,8 +58,8 @@ func (u *roomUsecase) GetList(c *gin.Context) ([]*output.RoomResBody, error) {
 	if page < 1 {
 		return nil, errors.ErrParams{Need: "page=`int`", Got: pageStr}
 	}
-	limit := 8
-	offset := 8 * (page - 1)
+	limit := 12
+	offset := 12 * (page - 1)
 	if page == 1 {
 		offset = 0
 	}

@@ -138,8 +138,8 @@ func (d *roomDatastore) FindUnlockCountByID() (*int, error) {
 	var count int
 
 	err := d.db.
-		Table("rooms").Count(&count).
-		Where("is_lock = ?", false).Error
+		Table("rooms").Where("is_lock = ?", false).Count(&count).
+		Error
 	if err != nil {
 		return nil, errors.ErrDataBase{Detail: err.Error()}
 	}

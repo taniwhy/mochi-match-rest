@@ -1,6 +1,8 @@
 package datastore
 
 import (
+	"fmt"
+
 	"github.com/jinzhu/gorm"
 	"github.com/taniwhy/mochi-match-rest/domain/errors"
 	"github.com/taniwhy/mochi-match-rest/domain/models"
@@ -121,6 +123,31 @@ func (d *roomDatastore) FindByUserID(userID string) ([]*models.Room, error) {
 }
 
 func (d *roomDatastore) FindUnlockByID(userID string) (*models.Room, error) {
+	rooms := &models.Room{}
+	err := d.db.Where("user_id = ? AND is_lock = ?", userID, false).First(&rooms).Error
+	if gorm.IsRecordNotFoundError(err) {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, errors.ErrDataBase{Detail: err.Error()}
+	}
+	return rooms, nil
+}
+
+func (d *roomDatastore) FindUnlockCountByID() (*int, error) {
+	var count int
+
+	err := d.db.
+		Table("rooms").Count(&count).
+		Where("is_lock = ?", false).Error
+	if err != nil {
+		return nil, errors.ErrDataBase{Detail: err.Error()}
+	}
+	fmt.Println("roomCnt", count)
+	return &count, nil
+}
+
+func (d *roomDatastore) FindHotGame(userID string) (*models.Room, error) {
 	rooms := &models.Room{}
 	err := d.db.Where("user_id = ? AND is_lock = ?", userID, false).First(&rooms).Error
 	if gorm.IsRecordNotFoundError(err) {

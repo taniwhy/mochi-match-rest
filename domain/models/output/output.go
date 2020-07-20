@@ -82,3 +82,10 @@ type EntryHistoryResBody struct {
 	GameName    string        `json:"game_title"`
 	JoinUsers   []JoinUserRes `json:"join_users" binding:"required"`
 }
+
+// HotGameRes :
+type HotGameRes struct {
+	HotGameID   string
+	HotGameName string
+	RoomCount   int
+}

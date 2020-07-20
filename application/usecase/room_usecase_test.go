@@ -19,66 +19,6 @@ import (
 	mock_repository "github.com/taniwhy/mochi-match-rest/domain/repository/mock_repository"
 )
 
-func TestGetRoomList(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	mockRoomRepository := mock_repository.NewMockIRoomRepository(ctrl)
-	mockRoomRepository.EXPECT().FindByLimitAndOffset(12, 0).Return([]*output.RoomResBody{}, nil)
-
-	mockEntryHistoryRepository := mock_repository.NewMockIEntryHistoryRepository(ctrl)
-	mockRoomService := mock_service.NewMockIRoomService(ctrl)
-	mockEntryHistoryService := mock_service.NewMockIEntryHistoryService(ctrl)
-
-	test := NewRoomUsecase(mockRoomRepository, mockEntryHistoryRepository, mockRoomService, mockEntryHistoryService)
-
-	// 正常処理テスト
-	req, _ := http.NewRequest("GET", "?page=1", nil)
-	context := &gin.Context{Request: req}
-	user, err := test.GetList(context)
-
-	assert.NotNil(t, user)
-	assert.NoError(t, err)
-
-	// 異常処理テスト
-	// 1. query無し
-	req, _ = http.NewRequest("GET", "", nil)
-	context = &gin.Context{Request: req}
-	user, err = test.GetList(context)
-
-	assert.Empty(t, user)
-	assert.Error(t, err)
-
-	// 2. queryの異常値
-	req, _ = http.NewRequest("GET", "?page=foo", nil)
-	context = &gin.Context{Request: req}
-	user, err = test.GetList(context)
-
-	assert.Empty(t, user)
-	assert.Error(t, err)
-
-	req, _ = http.NewRequest("GET", "?page=", nil)
-	context = &gin.Context{Request: req}
-	user, err = test.GetList(context)
-
-	assert.Empty(t, user)
-	assert.Error(t, err)
-
-	req, _ = http.NewRequest("GET", "?page=-1", nil)
-	context = &gin.Context{Request: req}
-	user, err = test.GetList(context)
-
-	assert.Empty(t, user)
-	assert.Error(t, err)
-
-	req, _ = http.NewRequest("GET", "?page=0", nil)
-	context = &gin.Context{Request: req}
-	user, err = test.GetList(context)
-
-	assert.Empty(t, user)
-	assert.Error(t, err)
-}
-
 func TestUpdateRoom(t *testing.T) {}
 
 func TestDeleteRoom(t *testing.T) {

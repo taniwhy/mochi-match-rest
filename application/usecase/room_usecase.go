@@ -18,8 +18,9 @@ import (
 
 // IRoomUseCase : インターフェース
 type IRoomUseCase interface {
-	GetList(c *gin.Context) ([]*output.RoomResBody, error)
+	GetList(c *gin.Context) ([]*output.RoomResBody, *int, error)
 	GetByID(c *gin.Context) (*output.RoomDetailResBody, error)
+	GetHotGame(c *gin.Context) ([]*output.HotGameRes, error)
 	Create(c *gin.Context) (*output.RoomDetailResBody, error)
 	Update(c *gin.Context) error
 	Delete(c *gin.Context) error
@@ -49,14 +50,14 @@ func NewRoomUsecase(
 	}
 }
 
-func (u *roomUsecase) GetList(c *gin.Context) ([]*output.RoomResBody, error) {
+func (u *roomUsecase) GetList(c *gin.Context) ([]*output.RoomResBody, *int, error) {
 	pageStr := c.Query("page")
 	page, err := strconv.Atoi(pageStr)
 	if err != nil {
-		return nil, errors.ErrParams{Need: "page=`int`", Got: pageStr}
+		return nil, nil, errors.ErrParams{Need: "page=`int`", Got: pageStr}
 	}
 	if page < 1 {
-		return nil, errors.ErrParams{Need: "page=`int`", Got: pageStr}
+		return nil, nil, errors.ErrParams{Need: "page=`int`", Got: pageStr}
 	}
 	limit := 12
 	offset := 12 * (page - 1)
@@ -64,7 +65,8 @@ func (u *roomUsecase) GetList(c *gin.Context) ([]*output.RoomResBody, error) {
 		offset = 0
 	}
 	rooms, err := u.roomRepository.FindByLimitAndOffset(limit, offset)
-	return rooms, nil
+	roomCnt, err := u.roomRepository.FindUnlockCountByID()
+	return rooms, roomCnt, nil
 }
 
 func (u *roomUsecase) GetByID(c *gin.Context) (*output.RoomDetailResBody, error) {
@@ -93,6 +95,10 @@ func (u *roomUsecase) GetByID(c *gin.Context) (*output.RoomDetailResBody, error)
 		resBody.JoinUsers = append(resBody.JoinUsers, r)
 	}
 	return resBody, nil
+}
+
+func (u *roomUsecase) GetHotGame(c *gin.Context) ([]*output.HotGameRes, error) {
+	return nil, nil
 }
 
 func (u *roomUsecase) Create(c *gin.Context) (*output.RoomDetailResBody, error) {

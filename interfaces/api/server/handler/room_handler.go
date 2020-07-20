@@ -38,12 +38,12 @@ func NewRoomHandler(
 }
 
 func (h *roomHandler) GetList(c *gin.Context) {
-	r, err := h.roomUsecase.GetList(c)
+	rooms, roomCnt, err := h.roomUsecase.GetList(c)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
-	c.JSON(http.StatusOK, r)
+	c.JSON(http.StatusOK, gin.H{"rooms": rooms, "roomCnt": roomCnt})
 }
 
 func (h *roomHandler) GetByID(c *gin.Context) {

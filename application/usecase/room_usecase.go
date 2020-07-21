@@ -174,6 +174,7 @@ func (u *roomUsecase) Update(c *gin.Context) error {
 }
 
 func (u *roomUsecase) Delete(c *gin.Context) error {
+	u.Leave(c)
 	roomID := c.Params.ByName("id")
 	claims, err := auth.GetTokenClaimsFromRequest(c)
 	if err != nil {

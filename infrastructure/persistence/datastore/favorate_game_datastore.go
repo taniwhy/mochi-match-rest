@@ -1,6 +1,8 @@
 package datastore
 
 import (
+	"fmt"
+
 	"github.com/jinzhu/gorm"
 
 	"github.com/taniwhy/mochi-match-rest/domain/errors"
@@ -23,8 +25,8 @@ func (d *favoriteGameDatastore) FindByID(userID string) ([]*output.FavoriteGames
 	err := d.db.
 		Table("favorite_games").
 		Select(`
-		favorite_games.game_title,
 		game_lists.game_list_id,
+		game_lists.game_title,
 		favorite_games.created_at
 		`).
 		Joins("LEFT JOIN game_lists ON game_lists.game_title = favorite_games.game_title").
@@ -36,6 +38,7 @@ func (d *favoriteGameDatastore) FindByID(userID string) ([]*output.FavoriteGames
 	if err != nil {
 		return nil, errors.ErrDataBase{Detail: err}
 	}
+	fmt.Println(games[0].GameTitle)
 	return games, nil
 }
 

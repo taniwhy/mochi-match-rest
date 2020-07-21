@@ -8,9 +8,9 @@ import (
 
 // FavoriteGamesRes : お気に入りゲームレスポンス
 type FavoriteGamesRes struct {
-	GameID    string    `json:"game_id" binding:"required"`
-	GameTitle string    `json:"game_title" binding:"required"`
-	CreatedAt time.Time `json:"created_at" binding:"required"`
+	GameListID string    `json:"game_id" binding:"required"`
+	GameTitle  string    `json:"game_title" binding:"required"`
+	CreatedAt  time.Time `json:"created_at" binding:"required"`
 }
 
 // UserResBody : ユーザーレスポンス

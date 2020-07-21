@@ -79,9 +79,9 @@ func (u *userUsecase) GetMe(c *gin.Context) (*output.UserResBody, error) {
 	}
 	for _, g := range favoriteGames {
 		r := output.FavoriteGamesRes{
-			GameID:    g.GameID,
-			GameTitle: g.GameTitle,
-			CreatedAt: g.CreatedAt,
+			GameListID: g.GameListID,
+			GameTitle:  g.GameTitle,
+			CreatedAt:  g.CreatedAt,
 		}
 		resBody.FavoriteGames = append(resBody.FavoriteGames, r)
 	}
@@ -113,9 +113,9 @@ func (u *userUsecase) GetByID(c *gin.Context) (*output.UserResBody, error) {
 	}
 	for _, g := range favorateGames {
 		r := output.FavoriteGamesRes{
-			GameID:    g.GameTitle,
-			GameTitle: g.GameTitle,
-			CreatedAt: g.CreatedAt,
+			GameListID: g.GameTitle,
+			GameTitle:  g.GameTitle,
+			CreatedAt:  g.CreatedAt,
 		}
 		resBody.FavoriteGames = append(resBody.FavoriteGames, r)
 	}

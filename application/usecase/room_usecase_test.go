@@ -1,7 +1,6 @@
 package usecase
 
 import (
-	"errors"
 	"net/http"
 	"testing"
 	"time"
@@ -20,74 +19,6 @@ import (
 )
 
 func TestUpdateRoom(t *testing.T) {}
-
-func TestDeleteRoom(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	mockRoomRepository := mock_repository.NewMockIRoomRepository(ctrl)
-	mockRoomRepository.EXPECT().LockFlg("existID", "existRoomID").Return(nil)
-
-	mockEntryHistoryRepository := mock_repository.NewMockIEntryHistoryRepository(ctrl)
-	mockRoomService := mock_service.NewMockIRoomService(ctrl)
-	mockRoomService.EXPECT().IsOwner("existID", "existRoomID").Return(true, nil)
-	mockRoomService.EXPECT().IsOwner("existID", "notExistRoomID").Return(false, errors.New("not exist room"))
-	mockRoomService.EXPECT().IsOwner("norRoomOwnerID", "existRoomID").Return(false, nil)
-
-	mockEntryHistoryService := mock_service.NewMockIEntryHistoryService(ctrl)
-
-	test := NewRoomUsecase(mockRoomRepository, mockEntryHistoryRepository, mockRoomService, mockEntryHistoryService)
-
-	existToken := auth.GenerateAccessToken("existID", false)
-	norRoomOwnerToken := auth.GenerateAccessToken("norRoomOwnerID", false)
-	invalidToken := existToken + "foo"
-
-	// 正常処理テスト
-	req, _ := http.NewRequest("GET", "", nil)
-	req.Header.Add("Authorization", existToken)
-	param := gin.Param{Key: "id", Value: "existRoomID"}
-	params := gin.Params{param}
-	context := &gin.Context{Request: req, Params: params}
-	err := test.Delete(context)
-
-	assert.NoError(t, err)
-
-	// 異常処理テスト
-	// 1. トークン無し
-	req, _ = http.NewRequest("GET", "", nil)
-	context = &gin.Context{Request: req}
-	err = test.Delete(context)
-
-	assert.Error(t, err)
-
-	// 2. 異常なトークン
-	req, _ = http.NewRequest("GET", "", nil)
-	req.Header.Add("Authorization", invalidToken)
-	context = &gin.Context{Request: req}
-	err = test.Delete(context)
-
-	assert.Error(t, err)
-
-	// 3. 存在しないルームID
-	req, _ = http.NewRequest("GET", "", nil)
-	req.Header.Add("Authorization", existToken)
-	param = gin.Param{Key: "id", Value: "notExistRoomID"}
-	params = gin.Params{param}
-	context = &gin.Context{Request: req, Params: params}
-	err = test.Delete(context)
-
-	assert.Error(t, err)
-
-	// 3. 非ルームオーナー
-	req, _ = http.NewRequest("GET", "", nil)
-	req.Header.Add("Authorization", norRoomOwnerToken)
-	param = gin.Param{Key: "id", Value: "existRoomID"}
-	params = gin.Params{param}
-	context = &gin.Context{Request: req, Params: params}
-	err = test.Delete(context)
-
-	assert.Error(t, err)
-}
 
 func TestJoinRoom(t *testing.T) {
 	jst, _ := time.LoadLocation("Asia/Tokyo")

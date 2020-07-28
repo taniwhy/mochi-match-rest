@@ -7,6 +7,7 @@ package mock_repository
 import (
 	gomock "github.com/golang/mock/gomock"
 	models "github.com/taniwhy/mochi-match-rest/domain/models"
+	output "github.com/taniwhy/mochi-match-rest/domain/models/output"
 	reflect "reflect"
 )
 
@@ -46,6 +47,21 @@ func (m *MockIGameListRepository) FindAll() ([]*models.GameList, error) {
 func (mr *MockIGameListRepositoryMockRecorder) FindAll() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindAll", reflect.TypeOf((*MockIGameListRepository)(nil).FindAll))
+}
+
+// FindHot mocks base method
+func (m *MockIGameListRepository) FindHot() ([]*output.HotGameRes, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FindHot")
+	ret0, _ := ret[0].([]*output.HotGameRes)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FindHot indicates an expected call of FindHot
+func (mr *MockIGameListRepositoryMockRecorder) FindHot() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindHot", reflect.TypeOf((*MockIGameListRepository)(nil).FindHot))
 }
 
 // Insert mocks base method

@@ -5,6 +5,7 @@ package usecase
 import (
 	"context"
 	"database/sql"
+	"fmt"
 
 	"github.com/gin-gonic/gin"
 	"golang.org/x/sync/errgroup"
@@ -71,6 +72,7 @@ func (u *userUsecase) GetMe(c *gin.Context) (*output.UserResBody, error) {
 	if err != nil {
 		return nil, err
 	}
+	fmt.Println(favoriteGames)
 	resBody := &output.UserResBody{
 		UserID:    user.UserID,
 		UserName:  userDetail.UserName,

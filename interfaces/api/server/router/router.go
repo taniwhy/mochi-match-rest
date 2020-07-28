@@ -79,7 +79,7 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 	}
 	hot := v1.Group("/hot")
 	{
-		hot.GET("/games")
+		hot.GET("/games", gameListHandler.GetHot)
 	}
 	history := v1.Group("/history")
 	{

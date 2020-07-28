@@ -65,21 +65,6 @@ func (mr *MockIRoomUseCaseMockRecorder) GetByID(c interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByID", reflect.TypeOf((*MockIRoomUseCase)(nil).GetByID), c)
 }
 
-// GetHotGame mocks base method
-func (m *MockIRoomUseCase) GetHotGame(c *gin.Context) ([]*output.HotGameRes, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetHotGame", c)
-	ret0, _ := ret[0].([]*output.HotGameRes)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetHotGame indicates an expected call of GetHotGame
-func (mr *MockIRoomUseCaseMockRecorder) GetHotGame(c interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetHotGame", reflect.TypeOf((*MockIRoomUseCase)(nil).GetHotGame), c)
-}
-
 // Create mocks base method
 func (m *MockIRoomUseCase) Create(c *gin.Context) (*output.RoomDetailResBody, error) {
 	m.ctrl.T.Helper()

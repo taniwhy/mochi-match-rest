@@ -19,7 +19,6 @@ func main() {
 	redisConn := dao.NewRedisConn()
 	defer redisConn.Close()
 
-	dbConn.LogMode(true)
 	dbConn.SetLogger(&logging.GormLogger{})
 
 	routers := router.InitRouter(dbConn, redisConn)

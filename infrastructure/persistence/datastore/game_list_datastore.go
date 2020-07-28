@@ -1,10 +1,13 @@
 package datastore
 
 import (
+	"fmt"
+
 	"github.com/jinzhu/gorm"
 
 	"github.com/taniwhy/mochi-match-rest/domain/errors"
 	"github.com/taniwhy/mochi-match-rest/domain/models"
+	"github.com/taniwhy/mochi-match-rest/domain/models/output"
 	"github.com/taniwhy/mochi-match-rest/domain/repository"
 )
 
@@ -24,6 +27,43 @@ func (d *gameListDatastore) FindAll() ([]*models.GameList, error) {
 		return nil, errors.ErrDataBase{Detail: err.Error()}
 	}
 	return gamelists, nil
+}
+
+func (d *gameListDatastore) FindHot() ([]*output.HotGameRes, error) {
+	hotGames := []*output.HotGameRes{}
+	err := d.db.
+		Table("game_lists").
+		Select(`
+			DISTINCT ON(game_lists.game_list_id) game_lists.game_list_id,
+			game_lists.game_title,
+			(
+				SELECT
+					COUNT(rooms.room_id)
+				FROM
+					rooms
+				WHERE
+					rooms.is_lock = false AND
+					rooms.game_list_id = game_lists.game_list_id
+			) As room_count,
+			(
+				SELECT
+					COUNT(entry_histories.entry_history_id)
+				FROM
+					entry_histories
+				WHERE
+					entry_histories.room_id = rooms.room_id AND
+					entry_histories.is_leave = false
+			) As player_count
+			`).
+		Joins(`LEFT JOIN rooms ON rooms.game_list_id = game_lists.game_list_id`).
+		Joins(`LEFT JOIN entry_histories ON entry_histories.room_id = rooms.room_id`).
+		Limit(10).
+		Scan(&hotGames).Error
+	if err != nil {
+		return nil, errors.ErrDataBase{Detail: err.Error()}
+	}
+	fmt.Println(hotGames[0])
+	return hotGames, nil
 }
 
 func (d *gameListDatastore) Insert(gamelist *models.GameList) error {

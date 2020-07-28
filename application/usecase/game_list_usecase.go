@@ -8,6 +8,7 @@ import (
 	"github.com/taniwhy/mochi-match-rest/domain/errors"
 	"github.com/taniwhy/mochi-match-rest/domain/models"
 	"github.com/taniwhy/mochi-match-rest/domain/models/input"
+	"github.com/taniwhy/mochi-match-rest/domain/models/output"
 	"github.com/taniwhy/mochi-match-rest/domain/repository"
 	"github.com/taniwhy/mochi-match-rest/util/clock"
 )
@@ -15,6 +16,7 @@ import (
 // IGameListUseCase : インターフェース
 type IGameListUseCase interface {
 	FindAll(c *gin.Context) ([]*models.GameList, error)
+	FindHot(c *gin.Context) ([]*output.HotGameRes, error)
 	Insert(c *gin.Context) error
 	Update(c *gin.Context) error
 	Delete(c *gin.Context) error
@@ -35,6 +37,14 @@ func (u *gameListUsecase) FindAll(c *gin.Context) ([]*models.GameList, error) {
 		return nil, err
 	}
 	return gamelists, nil
+}
+
+func (u *gameListUsecase) FindHot(c *gin.Context) ([]*output.HotGameRes, error) {
+	hotGames, err := u.gameListRepository.FindHot()
+	if err != nil {
+		return nil, err
+	}
+	return hotGames, nil
 }
 
 func (u *gameListUsecase) Insert(c *gin.Context) error {

@@ -20,7 +20,6 @@ import (
 type IRoomUseCase interface {
 	GetList(c *gin.Context) ([]*output.RoomResBody, *int, error)
 	GetByID(c *gin.Context) (*output.RoomDetailResBody, error)
-	GetHotGame(c *gin.Context) ([]*output.HotGameRes, error)
 	Create(c *gin.Context) (*output.RoomDetailResBody, error)
 	Update(c *gin.Context) error
 	Delete(c *gin.Context) error
@@ -95,10 +94,6 @@ func (u *roomUsecase) GetByID(c *gin.Context) (*output.RoomDetailResBody, error)
 		resBody.JoinUsers = append(resBody.JoinUsers, r)
 	}
 	return resBody, nil
-}
-
-func (u *roomUsecase) GetHotGame(c *gin.Context) ([]*output.HotGameRes, error) {
-	return nil, nil
 }
 
 func (u *roomUsecase) Create(c *gin.Context) (*output.RoomDetailResBody, error) {

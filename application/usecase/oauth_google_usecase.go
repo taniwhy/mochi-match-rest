@@ -52,11 +52,6 @@ func (u *googleOAuthUsecase) Login(c *gin.Context) (string, error) {
 }
 
 func (u *googleOAuthUsecase) Callback(c *gin.Context) (bool, *models.GoogleUser, error) {
-	session := sessions.Default(c)
-	retrievedState := session.Get("state")
-	if retrievedState != c.Query("state") {
-		return false, nil, errors.ErrInvalidSessionState{State: retrievedState}
-	}
 	token, err := u.oauthConf.Exchange(oauth2.NoContext, c.Query("code"))
 	if err != nil {
 		return false, nil, errors.ErrGoogleOAuthTokenExchange{}

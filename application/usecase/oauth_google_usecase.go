@@ -40,7 +40,7 @@ func NewGoogleOAuthUsecase(uS service.IUserService) IGoogleOAuthUsecase {
 
 func (u *googleOAuthUsecase) Login(c *gin.Context) (string, error) {
 	session := sessions.Default(c)
-	option := sessions.Options{Path: "/", Domain: "", MaxAge: 300, Secure: false, HttpOnly: true}
+	option := sessions.Options{Path: "/", Domain: "", MaxAge: 0, Secure: false, HttpOnly: true}
 	session.Options(option)
 
 	sessionID := uuid.UuID()

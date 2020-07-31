@@ -65,7 +65,7 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 	})
 	authHandle := v1.Group("/auth")
 	{
-		authHandle.GET("/get", authHandler.GetToken)
+		authHandle.POST("/get", authHandler.GetToken)
 		authHandle.POST("/refresh", authHandler.Refresh)
 	}
 	google := authHandle.Group("/google")

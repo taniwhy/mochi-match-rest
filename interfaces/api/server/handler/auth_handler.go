@@ -33,12 +33,12 @@ func (h *authHandler) GetToken(c *gin.Context) {
 	}
 	body := &Body{}
 	if err := c.BindJSON(body); err != nil {
-		c.JSON(http.StatusBadRequest, err.Error())
+		c.JSON(http.StatusBadRequest, "body error")
 		return
 	}
 	claims, err := auth.GetTokenClaimsFromToken(body.Token)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, err)
+		c.JSON(http.StatusBadRequest, "token claims error")
 		return
 	}
 	claimsID := claims["sub"].(string)

@@ -56,7 +56,6 @@ func (u *googleOAuthUsecase) Callback(c *gin.Context) (bool, *models.GoogleUser,
 	if err != nil {
 		return false, nil, errors.ErrGoogleOAuthTokenExchange{}
 	}
-
 	if token.Valid() == false {
 		return false, nil, errors.ErrInvalidGoogleOAuthToken{}
 	}

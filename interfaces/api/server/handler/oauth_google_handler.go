@@ -111,8 +111,6 @@ func (gA *googleOAuthHandler) Callback(c *gin.Context) {
 			}
 		}
 	}
-	refleshToken, exp := auth.GenerateRefreshToken(u.UserID)
-	c.SetCookie("token", refleshToken, 0, "/", "", false, true)
-	c.SetCookie("token_exp", exp, 0, "/", "", false, true)
-	c.Redirect(http.StatusTemporaryRedirect, "http://localhost:4000/login-done")
+	refleshToken, _ := auth.GenerateRefreshToken(u.UserID)
+	c.Redirect(http.StatusTemporaryRedirect, "http://localhost:4000/login-done?token="+refleshToken)
 }

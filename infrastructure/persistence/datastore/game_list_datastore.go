@@ -40,6 +40,7 @@ func (d *gameListDatastore) FindHot() ([]*output.HotGameRes, error) {
 		Joins(`LEFT JOIN entry_histories ON entry_histories.room_id = rooms.room_id`).
 		Group("game_lists.game_list_id").
 		Having("COUNT(entry_histories.entry_history_id) > ?", 0).
+		Where("entry_histories.is_leave = ?", false).
 		Order("player_count desc").
 		Limit(10).
 		Scan(&hotGames).Error

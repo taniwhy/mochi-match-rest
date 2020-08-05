@@ -1,8 +1,6 @@
 package datastore
 
 import (
-	"fmt"
-
 	"github.com/jinzhu/gorm"
 
 	"github.com/taniwhy/mochi-match-rest/domain/errors"
@@ -58,12 +56,10 @@ func (d *gameListDatastore) FindHot() ([]*output.HotGameRes, error) {
 		Joins(`LEFT JOIN rooms ON rooms.game_list_id = game_lists.game_list_id`).
 		Joins(`LEFT JOIN entry_histories ON entry_histories.room_id = rooms.room_id`).
 		Limit(10).
-		Order("player_count desc").
 		Scan(&hotGames).Error
 	if err != nil {
 		return nil, errors.ErrDataBase{Detail: err.Error()}
 	}
-	fmt.Println(hotGames[0])
 	return hotGames, nil
 }
 

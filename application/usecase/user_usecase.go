@@ -5,7 +5,6 @@ package usecase
 import (
 	"context"
 	"database/sql"
-	"fmt"
 
 	"github.com/gin-gonic/gin"
 	"golang.org/x/sync/errgroup"
@@ -72,7 +71,6 @@ func (u *userUsecase) GetMe(c *gin.Context) (*output.UserResBody, error) {
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println(favoriteGames)
 	resBody := &output.UserResBody{
 		UserID:    user.UserID,
 		UserName:  userDetail.UserName,
@@ -184,7 +182,6 @@ func (u *userUsecase) Update(c *gin.Context) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println(favoriteGames)
 	beforeFavoriteGames := []input.FavoriteGameRecord{}
 	for _, v := range favoriteGames {
 		beforeFavoriteGames = append(beforeFavoriteGames, input.FavoriteGameRecord{GameTitle: v.GameTitle})
@@ -193,8 +190,6 @@ func (u *userUsecase) Update(c *gin.Context) error {
 
 	var insertGames []input.FavoriteGameRecord
 	var deleteGames []input.FavoriteGameRecord
-	fmt.Println("beforeFavoriteGames", beforeFavoriteGames)
-	fmt.Println("afterFavoriteGames", afterFavoriteGames)
 	for _, g := range afterFavoriteGames {
 		if !containsRecord(beforeFavoriteGames, g.GameTitle) {
 			insertGames = append(insertGames, g)
@@ -208,8 +203,6 @@ func (u *userUsecase) Update(c *gin.Context) error {
 	eg, ctx := errgroup.WithContext(context.Background())
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
-	fmt.Println("insert", insertGames)
-	fmt.Println("delete", deleteGames)
 	for _, g := range insertGames {
 		f, err := models.NewFavoriteGame(claimsID, g.GameTitle)
 		if err != nil {

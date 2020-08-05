@@ -34,27 +34,12 @@ func (d *gameListDatastore) FindHot() ([]*output.HotGameRes, error) {
 		Select(`
 			game_lists.game_list_id,
 			game_lists.game_title,
-			(
-				SELECT
-					COUNT(rooms.room_id)
-				FROM
-					rooms
-				WHERE
-					rooms.is_lock = false AND
-					rooms.game_list_id = game_lists.game_list_id
-			) As room_count,
-			(
-				SELECT
-					COUNT(entry_histories.entry_history_id)
-				FROM
-					entry_histories
-				WHERE
-					entry_histories.room_id = rooms.room_id AND
-					entry_histories.is_leave = false
-			) As player_count
+			COUNT(entry_histories.entry_history_id) As player_count
 			`).
 		Joins(`LEFT JOIN rooms ON rooms.game_list_id = game_lists.game_list_id`).
 		Joins(`LEFT JOIN entry_histories ON entry_histories.room_id = rooms.room_id`).
+		Group("game_lists.game_list_id").
+		Order("player_count desc").
 		Limit(10).
 		Scan(&hotGames).Error
 	if err != nil {

@@ -87,6 +87,5 @@ type EntryHistoryResBody struct {
 type HotGameRes struct {
 	GameListID  string `json:"game_id"`
 	GameTitle   string `json:"game_title"`
-	RoomCount   int    `json:"room_count"`
 	PlayerCount int    `json:"player_count"`
 }

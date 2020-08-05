@@ -22,7 +22,7 @@ func NewUserDetail(uid, name string) (*UserDetail, error) {
 		UserDetailID: uuid.UuID(),
 		UserID:       uid,
 		UserName:     name,
-		Icon:         "",
+		Icon:         "icon",
 		UpdateAt:     clock.Now(),
 	}, nil
 }

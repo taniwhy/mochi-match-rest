@@ -29,7 +29,7 @@ func (d *favoriteGameDatastore) FindByID(userID string) ([]*output.FavoriteGames
 		`).
 		Joins("LEFT JOIN game_lists ON game_lists.game_title = favorite_games.game_title").
 		Where(`favorite_games.user_id = ?`, userID).
-		First(&games).Error
+		Find(&games).Error
 	if gorm.IsRecordNotFoundError(err) {
 		return nil, nil
 	}

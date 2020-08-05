@@ -33,11 +33,11 @@ func (uD userDetailDatastore) Insert(userDetail *models.UserDetail) error {
 
 func (uD userDetailDatastore) Update(id, name, icon string) error {
 	u := models.UserDetail{}
-	err := uD.db.Model(&u).Where("user_id = ?", id).Updates(models.UserDetail{
-		UserName: name,
-		Icon:     icon,
-		UpdateAt: time.Now(),
-	}).Error
+	err := uD.db.Model(&u).
+		Where("user_id = ?", id).
+		Update("user_name", name).
+		Update("icon", icon).
+		Update("update_at", time.Now()).Error
 	if gorm.IsRecordNotFoundError(err) {
 		return errors.ErrRecordNotFound{Detail: err.Error()}
 	}

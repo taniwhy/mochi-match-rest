@@ -34,10 +34,20 @@ func (d *gameListDatastore) FindHot() ([]*output.HotGameRes, error) {
 		Select(`
 			game_lists.game_list_id,
 			game_lists.game_title,
-			COUNT(entry_histories.entry_history_id) As player_count
-			`).
-		Joins(`LEFT JOIN rooms ON rooms.game_list_id = game_lists.game_list_id`).
-		Joins(`LEFT JOIN entry_histories ON entry_histories.room_id = rooms.room_id`).
+			COUNT(entry_histories.entry_history_id) AS player_count
+		`).
+		Joins(`
+			LEFT JOIN
+				rooms
+			ON
+				rooms.game_list_id = game_lists.game_list_id
+		`).
+		Joins(`
+			LEFT JOIN
+				entry_histories
+			ON
+				entry_histories.room_id = rooms.room_id
+		`).
 		Group("game_lists.game_list_id").
 		Having("COUNT(entry_histories.entry_history_id) > ?", 0).
 		Where("entry_histories.is_leave = ?", false).

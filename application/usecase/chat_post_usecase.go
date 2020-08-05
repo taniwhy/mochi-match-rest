@@ -101,7 +101,7 @@ func (u *chatPostUsecase) Insert(c *gin.Context) error {
 	// todo : publishのチャンネル名がハードコーディングされているため要修正
 	_, err = u.redis.Do("PUBLISH", "create_message", string(res))
 	if err != nil {
-		panic(err)
+		return err
 	}
 	return nil
 }

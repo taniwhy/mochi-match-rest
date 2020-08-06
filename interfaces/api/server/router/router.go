@@ -22,6 +22,7 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 	userDetailDatastore := datastore.NewUserDetailDatastore(dbConn)
 	roomDatastore := datastore.NewRoomDatastore(dbConn)
 	roomBalacklistDatastore := datastore.NewRoomBlacklistDatastore(dbConn)
+	reportDatastore := datastore.NewReportDatastore(dbConn)
 	entryHistoryDatastore := datastore.NewEntryHistoryDatastore(dbConn)
 	chatPostDatastore := datastore.NewChatPostDatastore(dbConn)
 	gameListDatastore := datastore.NewGameListDatastore(dbConn)
@@ -35,6 +36,7 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 	userUsecase := usecase.NewUserUsecase(userDatastore, userDetailDatastore, userService, favorateGameDatastore)
 	roomUsecase := usecase.NewRoomUsecase(roomDatastore, entryHistoryDatastore, roomService, entryHistoryService)
 	roomBlacklistUsecase := usecase.NewRoomBlacklistUsecase(roomBalacklistDatastore, roomService)
+	reportUsecase := usecase.NewReportUsecase(reportDatastore)
 	entryHistoryUsecase := usecase.NewEntryHistoryUsecase(roomDatastore, entryHistoryDatastore)
 	chatPostUsecase := usecase.NewChatPostUsecase(chatPostDatastore, redisConn)
 	gameListUsecase := usecase.NewGameListUsecase(gameListDatastore)
@@ -44,6 +46,7 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 	userHandler := handler.NewUserHandler(userUsecase)
 	roomHandler := handler.NewRoomHandler(userUsecase, roomUsecase)
 	roomBlacklistHandler := handler.NewRoomBlacklistHandler(roomBlacklistUsecase)
+	reportHandler := handler.NewReportHanlder(reportUsecase)
 	entryHistoryHandler := handler.NewEntryHistoryHandler(entryHistoryUsecase)
 	chatPostHandler := handler.NewChatPostHandler(chatPostUsecase)
 	gameListHandler := handler.NewGameListHandler(gameListUsecase)
@@ -111,7 +114,7 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 	}
 	report := room.Group("/:id/report")
 	{
-		report.POST("")
+		report.POST("", reportHandler.Create)
 	}
 	blacklist := room.Group("/:id/blacklist")
 	{

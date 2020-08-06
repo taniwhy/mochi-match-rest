@@ -168,7 +168,11 @@ func (d *roomDatastore) Delete(room *models.Room) error {
 // todo ロック時間は保存する？
 func (d *roomDatastore) LockFlg(uid, rid string) error {
 	h := &models.Room{}
-	err := d.db.Model(&h).
+	eH := &models.EntryHistory{}
+	err := d.db.Model(&eH).
+		Where("room_id = ?", rid).
+		Update("is_leave", true).Error
+	err = d.db.Model(&h).
 		Where("room_id = ? AND user_id = ? AND is_lock = ?", rid, uid, false).
 		Updates(models.Room{IsLock: true}).Error
 	if gorm.IsRecordNotFoundError(err) {

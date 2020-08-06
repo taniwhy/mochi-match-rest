@@ -1,6 +1,8 @@
 package datastore
 
 import (
+	"fmt"
+
 	"github.com/jinzhu/gorm"
 	"github.com/taniwhy/mochi-match-rest/domain/errors"
 	"github.com/taniwhy/mochi-match-rest/domain/models"
@@ -82,6 +84,102 @@ func (d *roomDatastore) FindByLimitAndOffset(limit, offset int) ([]*output.RoomR
 	return rooms, nil
 }
 
+func (d *roomDatastore) FindByLimitAndOffsetAndTitleAndHard(limit, offset int, titles, hards []string) ([]*output.RoomResBody, error) {
+	rooms := []*output.RoomResBody{}
+	fmt.Println(titles)
+	switch {
+	case len(titles) != 0 && len(hards) != 0:
+		err := d.db.
+			Table("rooms").
+			Select(`rooms.room_id,
+				rooms.user_id,
+				user_details.icon,
+				game_hards.hard_name,
+				game_lists.game_title,
+				rooms.capacity,
+				rooms.room_text,
+				user_details.user_name,
+				(
+					SELECT
+						COUNT(entry_histories.entry_history_id)
+					FROM entry_histories
+					WHERE rooms.room_id = entry_histories.room_id AND entry_histories.is_leave = false
+				) As count,
+				rooms.is_lock,
+				rooms.created_at,
+				rooms.start`).
+			Joins("LEFT JOIN user_details ON rooms.user_id = user_details.user_id").
+			Joins("LEFT JOIN game_hards ON rooms.game_hard_id = game_hards.game_hard_id").
+			Joins("LEFT JOIN game_lists ON rooms.game_list_id = game_lists.game_list_id").
+			Where("rooms.is_lock = ? AND rooms.game_list_id IN (?) AND rooms.game_hard_id IN (?)", false, titles, hards).
+			Limit(limit).Offset(offset).Order("created_at desc").Scan(&rooms).Error
+		if err != nil {
+			return nil, err
+		}
+		return rooms, nil
+	case len(titles) != 0:
+		err := d.db.
+			Table("rooms").
+			Select(`rooms.room_id,
+				rooms.user_id,
+				user_details.icon,
+				game_hards.hard_name,
+				game_lists.game_title,
+				rooms.capacity,
+				rooms.room_text,
+				user_details.user_name,
+				(
+					SELECT
+						COUNT(entry_histories.entry_history_id)
+					FROM entry_histories
+					WHERE rooms.room_id = entry_histories.room_id AND entry_histories.is_leave = false
+				) As count,
+				rooms.is_lock,
+				rooms.created_at,
+				rooms.start`).
+			Joins("LEFT JOIN user_details ON rooms.user_id = user_details.user_id").
+			Joins("LEFT JOIN game_hards ON rooms.game_hard_id = game_hards.game_hard_id").
+			Joins("LEFT JOIN game_lists ON rooms.game_list_id = game_lists.game_list_id").
+			Where("rooms.is_lock = ? AND rooms.game_list_id IN (?)", false, titles).
+			Limit(limit).Offset(offset).Order("created_at desc").Scan(&rooms).Error
+		if err != nil {
+			return nil, err
+		}
+		return rooms, nil
+	case len(hards) != 0:
+		err := d.db.
+			Table("rooms").
+			Select(`rooms.room_id,
+				rooms.user_id,
+				user_details.icon,
+				game_hards.hard_name,
+				game_lists.game_title,
+				rooms.capacity,
+				rooms.room_text,
+				user_details.user_name,
+				(
+					SELECT
+						COUNT(entry_histories.entry_history_id)
+					FROM entry_histories
+					WHERE rooms.room_id = entry_histories.room_id AND entry_histories.is_leave = false
+				) As count,
+				rooms.is_lock,
+				rooms.created_at,
+				rooms.start`).
+			Joins("LEFT JOIN user_details ON rooms.user_id = user_details.user_id").
+			Joins("LEFT JOIN game_hards ON rooms.game_hard_id = game_hards.game_hard_id").
+			Joins("LEFT JOIN game_lists ON rooms.game_list_id = game_lists.game_list_id").
+			Where("rooms.is_lock = ? AND rooms.game_hard_id IN (?)", false, hards).
+			Limit(limit).Offset(offset).Order("created_at desc").Scan(&rooms).Error
+		if err != nil {
+			return nil, err
+		}
+		return rooms, nil
+	default:
+		return nil, nil
+	}
+}
+
 func (d *roomDatastore) FindByID(roomID string) (*output.RoomResBody, error) {
 	room := &output.RoomResBody{}
 	err := d.db.
@@ -143,6 +241,61 @@ func (d *roomDatastore) FindUnlockCountByID() (*int, error) {
 		return nil, errors.ErrDataBase{Detail: err.Error()}
 	}
 	return &count, nil
+}
+
+func (d *roomDatastore) FindUnlockCountByIDAndTitleAndHard(titles, hards []string) (*int, error) {
+	var count int
+	switch {
+	case len(titles) != 0 && len(hards) != 0:
+		err := d.db.
+			Table("rooms").
+			Where(`
+				is_lock = ? AND
+				game_list_id IN (?) AND
+				game_hard_id IN (?)`,
+				false,
+				titles,
+				hards,
+			).
+			Count(&count).
+			Error
+		if err != nil {
+			return nil, errors.ErrDataBase{Detail: err.Error()}
+		}
+		return &count, nil
+	case len(titles) != 0:
+		err := d.db.
+			Table("rooms").
+			Where(`
+				is_lock = ? AND
+				game_list_id IN (?)`,
+				false,
+				titles,
+			).
+			Count(&count).
+			Error
+		if err != nil {
+			return nil, errors.ErrDataBase{Detail: err.Error()}
+		}
+		return &count, nil
+	case len(hards) != 0:
+		err := d.db.
+			Table("rooms").
+			Where(`
+				is_lock = ? AND
+				game_hard_id IN (?)`,
+				false,
+				hards,
+			).
+			Count(&count).
+			Error
+		if err != nil {
+			return nil, errors.ErrDataBase{Detail: err.Error()}
+		}
+		return &count, nil
+	default:
+		return nil, nil
+	}
 }
 
 func (d *roomDatastore) Insert(room *models.Room) error {

@@ -64,6 +64,21 @@ func (mr *MockIRoomRepositoryMockRecorder) FindByLimitAndOffset(limit, offset in
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByLimitAndOffset", reflect.TypeOf((*MockIRoomRepository)(nil).FindByLimitAndOffset), limit, offset)
 }
 
+// FindByLimitAndOffsetAndTitleAndHard mocks base method
+func (m *MockIRoomRepository) FindByLimitAndOffsetAndTitleAndHard(limit, offset int, titles, hards []string) ([]*output.RoomResBody, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FindByLimitAndOffsetAndTitleAndHard", limit, offset, titles, hards)
+	ret0, _ := ret[0].([]*output.RoomResBody)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FindByLimitAndOffsetAndTitleAndHard indicates an expected call of FindByLimitAndOffsetAndTitleAndHard
+func (mr *MockIRoomRepositoryMockRecorder) FindByLimitAndOffsetAndTitleAndHard(limit, offset, titles, hards interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByLimitAndOffsetAndTitleAndHard", reflect.TypeOf((*MockIRoomRepository)(nil).FindByLimitAndOffsetAndTitleAndHard), limit, offset, titles, hards)
+}
+
 // FindByID mocks base method
 func (m *MockIRoomRepository) FindByID(roomID string) (*output.RoomResBody, error) {
 	m.ctrl.T.Helper()

@@ -51,6 +51,8 @@ func NewRoomUsecase(
 
 func (u *roomUsecase) GetList(c *gin.Context) ([]*output.RoomResBody, *int, error) {
 	pageStr := c.Query("page")
+	titleIDs, _ := c.GetQueryArray("title")
+	hardIDs, _ := c.GetQueryArray("hard")
 	page, err := strconv.Atoi(pageStr)
 	if err != nil {
 		return nil, nil, errors.ErrParams{Need: "page=`int`", Got: pageStr}
@@ -63,8 +65,19 @@ func (u *roomUsecase) GetList(c *gin.Context) ([]*output.RoomResBody, *int, erro
 	if page == 1 {
 		offset = 0
 	}
-	rooms, err := u.roomRepository.FindByLimitAndOffset(limit, offset)
-	roomCnt, err := u.roomRepository.FindUnlockCountByID()
+	if len(titleIDs) == 0 && len(hardIDs) == 0 {
+		rooms, err := u.roomRepository.FindByLimitAndOffset(limit, offset)
+		if err != nil {
+			return nil, nil, err
+		}
+		roomCnt, err := u.roomRepository.FindUnlockCountByID()
+		return rooms, roomCnt, nil
+	}
+	rooms, err := u.roomRepository.FindByLimitAndOffsetAndTitleAndHard(limit, offset, titleIDs, hardIDs)
+	if err != nil {
+		return nil, nil, err
+	}
+	roomCnt, err := u.roomRepository.FindUnlockCountByIDAndTitleAndHard(titleIDs, hardIDs)
 	return rooms, roomCnt, nil
 }
 

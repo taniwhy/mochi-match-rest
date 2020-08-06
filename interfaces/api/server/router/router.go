@@ -77,6 +77,7 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 		google.GET("/callback", googleAuthHandler.Callback)
 	}
 	check := v1.Group("/check")
+	check.Use(auth.TokenAuth())
 	{
 		check.GET("/entry", roomHandler.CheckEntry)
 	}
@@ -85,6 +86,7 @@ func InitRouter(dbConn *gorm.DB, redisConn redis.Conn) *gin.Engine {
 		hot.GET("/games", gameListHandler.GetHot)
 	}
 	history := v1.Group("/history")
+	history.Use(auth.TokenAuth())
 	{
 		history.GET("", entryHistoryHandler.GetByID)
 	}

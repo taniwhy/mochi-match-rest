@@ -13,7 +13,7 @@ func Write() gin.HandlerFunc {
 		case "staging":
 			c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:4000")
 		case "prod":
-			c.Writer.Header().Set("Access-Control-Allow-Origin", "https://mochi-match.work")
+			c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:4000")
 		default:
 			c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:4000")
 		}

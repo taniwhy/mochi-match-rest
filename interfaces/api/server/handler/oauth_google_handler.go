@@ -112,5 +112,5 @@ func (gA *googleOAuthHandler) Callback(c *gin.Context) {
 		}
 	}
 	refleshToken, _ := auth.GenerateRefreshToken(u.UserID)
-	c.Redirect(http.StatusTemporaryRedirect, "https://mochi-match.work/login-done?token="+refleshToken)
+	c.Redirect(http.StatusTemporaryRedirect, "http://localhost:4000/login-done?token="+refleshToken)
 }

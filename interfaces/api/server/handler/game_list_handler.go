@@ -12,6 +12,7 @@ import (
 // IGameListHandler : インターフェース
 type IGameListHandler interface {
 	GetAll(*gin.Context)
+	GetHot(*gin.Context)
 	Create(*gin.Context)
 	Update(*gin.Context)
 	Delete(*gin.Context)
@@ -41,12 +42,25 @@ func (gH gameListHandler) GetAll(c *gin.Context) {
 	c.JSON(http.StatusOK, gameTitles)
 }
 
+func (gH gameListHandler) GetHot(c *gin.Context) {
+	hotGames, err := gH.gameListUsecase.FindHot(c)
+	if err != nil {
+		switch err := err.(type) {
+		default:
+			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			log.Warn("Unexpected error")
+			panic(err)
+		}
+	}
+	c.JSON(http.StatusOK, hotGames)
+}
+
 func (gH gameListHandler) Create(c *gin.Context) {
 	err := gH.gameListUsecase.Insert(c)
 	if err != nil {
 		switch err := err.(type) {
 		default:
-			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			c.JSON(http.StatusInternalServerError, gin.H{"code": 99, "message": err.Error()})
 			log.Warn("Unexpected error")
 			panic(err)
 		}
@@ -59,7 +73,7 @@ func (gH gameListHandler) Update(c *gin.Context) {
 	if err != nil {
 		switch err := err.(type) {
 		default:
-			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			c.JSON(http.StatusInternalServerError, gin.H{"code": 99, "message": err.Error()})
 			log.Warn("Unexpected error")
 			panic(err)
 		}
@@ -72,7 +86,7 @@ func (gH gameListHandler) Delete(c *gin.Context) {
 	if err != nil {
 		switch err := err.(type) {
 		default:
-			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			c.JSON(http.StatusInternalServerError, gin.H{"code": 99, "message": err.Error()})
 			log.Warn("Unexpected error")
 			panic(err)
 		}

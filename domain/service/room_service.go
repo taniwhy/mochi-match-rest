@@ -24,8 +24,8 @@ func NewRoomService(rR repository.IRoomRepository) IRoomService {
 	}
 }
 
-func (s *roomService) CanInsert(id string) (bool, error) {
-	r, err := s.roomRepository.FindUnlockByID(id)
+func (s *roomService) CanInsert(userID string) (bool, error) {
+	r, err := s.roomRepository.FindUnlockByID(userID)
 	if err != nil {
 		return false, err
 	}

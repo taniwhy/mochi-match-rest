@@ -8,6 +8,7 @@ import (
 	gin "github.com/gin-gonic/gin"
 	gomock "github.com/golang/mock/gomock"
 	models "github.com/taniwhy/mochi-match-rest/domain/models"
+	output "github.com/taniwhy/mochi-match-rest/domain/models/output"
 	reflect "reflect"
 )
 
@@ -47,6 +48,21 @@ func (m *MockIGameListUseCase) FindAll(c *gin.Context) ([]*models.GameList, erro
 func (mr *MockIGameListUseCaseMockRecorder) FindAll(c interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindAll", reflect.TypeOf((*MockIGameListUseCase)(nil).FindAll), c)
+}
+
+// FindHot mocks base method
+func (m *MockIGameListUseCase) FindHot(c *gin.Context) ([]*output.HotGameRes, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FindHot", c)
+	ret0, _ := ret[0].([]*output.HotGameRes)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FindHot indicates an expected call of FindHot
+func (mr *MockIGameListUseCaseMockRecorder) FindHot(c interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindHot", reflect.TypeOf((*MockIGameListUseCase)(nil).FindHot), c)
 }
 
 // Insert mocks base method

@@ -35,12 +35,13 @@ func (m *MockIRoomUseCase) EXPECT() *MockIRoomUseCaseMockRecorder {
 }
 
 // GetList mocks base method
-func (m *MockIRoomUseCase) GetList(c *gin.Context) ([]*output.RoomResBody, error) {
+func (m *MockIRoomUseCase) GetList(c *gin.Context) ([]*output.RoomResBody, *int, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetList", c)
 	ret0, _ := ret[0].([]*output.RoomResBody)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	ret1, _ := ret[1].(*int)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
 }
 
 // GetList indicates an expected call of GetList
@@ -65,11 +66,12 @@ func (mr *MockIRoomUseCaseMockRecorder) GetByID(c interface{}) *gomock.Call {
 }
 
 // Create mocks base method
-func (m *MockIRoomUseCase) Create(c *gin.Context) error {
+func (m *MockIRoomUseCase) Create(c *gin.Context) (*output.RoomDetailResBody, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Create", c)
-	ret0, _ := ret[0].(error)
-	return ret0
+	ret0, _ := ret[0].(*output.RoomDetailResBody)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // Create indicates an expected call of Create

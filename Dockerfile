@@ -12,7 +12,6 @@ RUN apt-get update && apt-get install -y wget \
 
 RUN mkdir -p /go/src/github.com/taniwhy/mochi-match-rest
 WORKDIR /go/src/github.com/taniwhy/mochi-match-rest
-
 ADD . /go/src/github.com/taniwhy/mochi-match-rest
 
 EXPOSE 8000

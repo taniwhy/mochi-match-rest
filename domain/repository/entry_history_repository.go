@@ -12,6 +12,8 @@ type IEntryHistoryRepository interface {
 	FindAll() ([]*models.EntryHistory, error)
 	FindNotLeave(userID string) (*models.EntryHistory, error)
 	FindNotLeaveByRoomID(userID, roomID string) (*models.EntryHistory, error)
+	FindListByRoomID(roomID string) ([]*output.JoinUserRes, error)
+	FindListByUserID(userID string) ([]*models.EntryHistory, error)
 	FindNotLeaveListByRoomID(roomID string) ([]*output.JoinUserRes, error)
 	Insert(*models.EntryHistory) error
 	Update(*models.EntryHistory) error

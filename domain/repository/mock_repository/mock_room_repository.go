@@ -64,6 +64,21 @@ func (mr *MockIRoomRepositoryMockRecorder) FindByLimitAndOffset(limit, offset in
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByLimitAndOffset", reflect.TypeOf((*MockIRoomRepository)(nil).FindByLimitAndOffset), limit, offset)
 }
 
+// FindByLimitAndOffsetAndTitleAndHard mocks base method
+func (m *MockIRoomRepository) FindByLimitAndOffsetAndTitleAndHard(limit, offset int, titles, hards []string) ([]*output.RoomResBody, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FindByLimitAndOffsetAndTitleAndHard", limit, offset, titles, hards)
+	ret0, _ := ret[0].([]*output.RoomResBody)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FindByLimitAndOffsetAndTitleAndHard indicates an expected call of FindByLimitAndOffsetAndTitleAndHard
+func (mr *MockIRoomRepositoryMockRecorder) FindByLimitAndOffsetAndTitleAndHard(limit, offset, titles, hards interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByLimitAndOffsetAndTitleAndHard", reflect.TypeOf((*MockIRoomRepository)(nil).FindByLimitAndOffsetAndTitleAndHard), limit, offset, titles, hards)
+}
+
 // FindByID mocks base method
 func (m *MockIRoomRepository) FindByID(roomID string) (*output.RoomResBody, error) {
 	m.ctrl.T.Helper()
@@ -107,6 +122,36 @@ func (m *MockIRoomRepository) FindUnlockByID(roomID string) (*models.Room, error
 func (mr *MockIRoomRepositoryMockRecorder) FindUnlockByID(roomID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindUnlockByID", reflect.TypeOf((*MockIRoomRepository)(nil).FindUnlockByID), roomID)
+}
+
+// FindUnlockCountByID mocks base method
+func (m *MockIRoomRepository) FindUnlockCountByID() (*int, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FindUnlockCountByID")
+	ret0, _ := ret[0].(*int)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FindUnlockCountByID indicates an expected call of FindUnlockCountByID
+func (mr *MockIRoomRepositoryMockRecorder) FindUnlockCountByID() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindUnlockCountByID", reflect.TypeOf((*MockIRoomRepository)(nil).FindUnlockCountByID))
+}
+
+// FindUnlockCountByIDAndTitleAndHard mocks base method
+func (m *MockIRoomRepository) FindUnlockCountByIDAndTitleAndHard(titles, hards []string) (*int, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FindUnlockCountByIDAndTitleAndHard", titles, hards)
+	ret0, _ := ret[0].(*int)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FindUnlockCountByIDAndTitleAndHard indicates an expected call of FindUnlockCountByIDAndTitleAndHard
+func (mr *MockIRoomRepositoryMockRecorder) FindUnlockCountByIDAndTitleAndHard(titles, hards interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindUnlockCountByIDAndTitleAndHard", reflect.TypeOf((*MockIRoomRepository)(nil).FindUnlockCountByIDAndTitleAndHard), titles, hards)
 }
 
 // Insert mocks base method

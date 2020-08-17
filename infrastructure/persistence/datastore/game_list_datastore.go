@@ -5,6 +5,7 @@ import (
 
 	"github.com/taniwhy/mochi-match-rest/domain/errors"
 	"github.com/taniwhy/mochi-match-rest/domain/models"
+	"github.com/taniwhy/mochi-match-rest/domain/models/output"
 	"github.com/taniwhy/mochi-match-rest/domain/repository"
 )
 
@@ -24,6 +25,39 @@ func (d *gameListDatastore) FindAll() ([]*models.GameList, error) {
 		return nil, errors.ErrDataBase{Detail: err.Error()}
 	}
 	return gamelists, nil
+}
+
+func (d *gameListDatastore) FindHot() ([]*output.HotGameRes, error) {
+	hotGames := []*output.HotGameRes{}
+	err := d.db.
+		Table("game_lists").
+		Select(`
+			game_lists.game_list_id,
+			game_lists.game_title,
+			COUNT(entry_histories.entry_history_id) AS player_count
+		`).
+		Joins(`
+			LEFT JOIN
+				rooms
+			ON
+				rooms.game_list_id = game_lists.game_list_id
+		`).
+		Joins(`
+			LEFT JOIN
+				entry_histories
+			ON
+				entry_histories.room_id = rooms.room_id
+		`).
+		Group("game_lists.game_list_id").
+		Having("COUNT(entry_histories.entry_history_id) > ?", 0).
+		Where("entry_histories.is_leave = ?", false).
+		Order("player_count desc").
+		Limit(10).
+		Scan(&hotGames).Error
+	if err != nil {
+		return nil, errors.ErrDataBase{Detail: err.Error()}
+	}
+	return hotGames, nil
 }
 
 func (d *gameListDatastore) Insert(gamelist *models.GameList) error {

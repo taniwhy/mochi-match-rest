@@ -3,8 +3,6 @@ package handler
 import (
 	"fmt"
 	"net/http"
-	"strconv"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/taniwhy/mochi-match-rest/domain/models/input"
@@ -30,40 +28,28 @@ func NewAuthHandler(uS service.IUserService) IAuthHandler {
 }
 
 func (h *authHandler) GetToken(c *gin.Context) {
-	token, err := c.Cookie("token")
-	if err != nil {
-		c.JSON(http.StatusBadRequest, err.Error())
+	type Body struct {
+		Token string `json:"token" binding:"required"`
+	}
+	body := &Body{}
+	if err := c.BindJSON(body); err != nil {
+		c.JSON(http.StatusBadRequest, "body error")
 		return
 	}
-	expStr, err := c.Cookie("token_exp")
+	claims, err := auth.GetTokenClaimsFromToken(body.Token)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, err.Error())
-		return
-	}
-	expAt, err := strconv.ParseInt(expStr, 10, 64)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, err.Error())
-		return
-	}
-	if time.Now().Unix() > expAt {
-		c.JSON(http.StatusBadRequest, err.Error())
-		return
-	}
-	claims, err := auth.GetTokenClaimsFromToken(token)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, err)
+		c.JSON(http.StatusBadRequest, "token claims error")
 		return
 	}
 	claimsID := claims["sub"].(string)
 	fmt.Println("id", claimsID)
-	// TODO
 	isAdmin := true
 	fmt.Println("isAdmin", isAdmin)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
-	accessToken, refreshToken, exp, err := auth.TokenRefresh(token, isAdmin)
+	accessToken, refreshToken, exp, err := auth.TokenRefresh(body.Token, isAdmin)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err.Error())
 		return

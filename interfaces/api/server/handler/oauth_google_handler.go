@@ -71,25 +71,25 @@ func (gA *googleOAuthHandler) Callback(c *gin.Context) {
 		if err != nil {
 			switch err := err.(type) {
 			case errors.ErrUserCreateReqBinding:
-				c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+				c.JSON(http.StatusBadRequest, gin.H{"code": 1, "message": err.Error()})
 				return
 			case errors.ErrCoockie:
-				c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+				c.JSON(http.StatusBadRequest, gin.H{"code": 2, "message": err.Error()})
 				return
 			case errors.ErrUnexpectedQueryProvider:
-				c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+				c.JSON(http.StatusBadRequest, gin.H{"code": 3, "message": err.Error()})
 				return
 			case errors.ErrIDAlreadyExists:
-				c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+				c.JSON(http.StatusBadRequest, gin.H{"code": 4, "message": err.Error()})
 				return
 			case errors.ErrDataBase:
-				c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+				c.JSON(http.StatusInternalServerError, gin.H{"code": 5, "message": err.Error()})
 				return
 			case errors.ErrGenerateID:
-				c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+				c.JSON(http.StatusInternalServerError, gin.H{"code": 6, "message": err.Error()})
 				return
 			default:
-				c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+				c.JSON(http.StatusInternalServerError, gin.H{"code": 99, "message": err.Error()})
 				log.Warn("Unexpected error")
 				panic(err)
 			}
@@ -99,20 +99,18 @@ func (gA *googleOAuthHandler) Callback(c *gin.Context) {
 		if err != nil {
 			switch err := err.(type) {
 			case errors.ErrUnexpectedQueryProvider:
-				c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+				c.JSON(http.StatusBadRequest, gin.H{"code": 1, "message": err.Error()})
 				return
 			case errors.ErrDataBase:
-				c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+				c.JSON(http.StatusInternalServerError, gin.H{"code": 2, "message": err.Error()})
 				return
 			default:
-				c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+				c.JSON(http.StatusInternalServerError, gin.H{"code": 99, "message": err.Error()})
 				log.Warnf("Unexpected error: %s", err.Error())
 				panic(err)
 			}
 		}
 	}
-	refleshToken, exp := auth.GenerateRefreshToken(u.UserID)
-	c.SetCookie("token", refleshToken, 0, "/", "", false, true)
-	c.SetCookie("token_exp", exp, 0, "/", "", false, true)
-	c.Redirect(http.StatusTemporaryRedirect, "http://localhost:4000/login-done")
+	refleshToken, _ := auth.GenerateRefreshToken(u.UserID)
+	c.Redirect(http.StatusTemporaryRedirect, "https://mochi-match.work/login-done?token="+refleshToken)
 }

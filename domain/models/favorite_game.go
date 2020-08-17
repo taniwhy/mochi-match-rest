@@ -16,15 +16,15 @@ type FavoriteGame struct {
 }
 
 // NewFavoriteGame : favorate_gameテーブルのレコードモデル生成
-func NewFavoriteGame(uid, gt string) (*FavoriteGame, error) {
+func NewFavoriteGame(userID, gameTitle string) (*FavoriteGame, error) {
 	id, err := uuid.NewRandom()
 	if err != nil {
 		return nil, errors.ErrGenerateID{}
 	}
 	return &FavoriteGame{
 		FavoriteGameID: id.String(),
-		UserID:         uid,
-		GameTitle:      gt,
+		UserID:         userID,
+		GameTitle:      gameTitle,
 		CreatedAt:      time.Now(),
 	}, nil
 }

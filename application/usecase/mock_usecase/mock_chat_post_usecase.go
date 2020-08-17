@@ -7,7 +7,7 @@ package mock_usecase
 import (
 	gin "github.com/gin-gonic/gin"
 	gomock "github.com/golang/mock/gomock"
-	models "github.com/taniwhy/mochi-match-rest/domain/models"
+	output "github.com/taniwhy/mochi-match-rest/domain/models/output"
 	reflect "reflect"
 )
 
@@ -35,75 +35,75 @@ func (m *MockIChatPostUseCase) EXPECT() *MockIChatPostUseCaseMockRecorder {
 }
 
 // FindByRoomID mocks base method
-func (m *MockIChatPostUseCase) FindByRoomID(id string) ([]*models.ChatPost, error) {
+func (m *MockIChatPostUseCase) FindByRoomID(roomID string) ([]*output.ChatPostResBody, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FindByRoomID", id)
-	ret0, _ := ret[0].([]*models.ChatPost)
+	ret := m.ctrl.Call(m, "FindByRoomID", roomID)
+	ret0, _ := ret[0].([]*output.ChatPostResBody)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // FindByRoomID indicates an expected call of FindByRoomID
-func (mr *MockIChatPostUseCaseMockRecorder) FindByRoomID(id interface{}) *gomock.Call {
+func (mr *MockIChatPostUseCaseMockRecorder) FindByRoomID(roomID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByRoomID", reflect.TypeOf((*MockIChatPostUseCase)(nil).FindByRoomID), id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByRoomID", reflect.TypeOf((*MockIChatPostUseCase)(nil).FindByRoomID), roomID)
 }
 
 // FindByRoomIDAndLimit mocks base method
-func (m *MockIChatPostUseCase) FindByRoomIDAndLimit(id, limit string) ([]*models.ChatPost, error) {
+func (m *MockIChatPostUseCase) FindByRoomIDAndLimit(roomID, limit string) ([]*output.ChatPostResBody, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FindByRoomIDAndLimit", id, limit)
-	ret0, _ := ret[0].([]*models.ChatPost)
+	ret := m.ctrl.Call(m, "FindByRoomIDAndLimit", roomID, limit)
+	ret0, _ := ret[0].([]*output.ChatPostResBody)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // FindByRoomIDAndLimit indicates an expected call of FindByRoomIDAndLimit
-func (mr *MockIChatPostUseCaseMockRecorder) FindByRoomIDAndLimit(id, limit interface{}) *gomock.Call {
+func (mr *MockIChatPostUseCaseMockRecorder) FindByRoomIDAndLimit(roomID, limit interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByRoomIDAndLimit", reflect.TypeOf((*MockIChatPostUseCase)(nil).FindByRoomIDAndLimit), id, limit)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByRoomIDAndLimit", reflect.TypeOf((*MockIChatPostUseCase)(nil).FindByRoomIDAndLimit), roomID, limit)
 }
 
 // FindByRoomIDAndOffset mocks base method
-func (m *MockIChatPostUseCase) FindByRoomIDAndOffset(id, offset string) ([]*models.ChatPost, error) {
+func (m *MockIChatPostUseCase) FindByRoomIDAndOffset(roomID, offset string) ([]*output.ChatPostResBody, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FindByRoomIDAndOffset", id, offset)
-	ret0, _ := ret[0].([]*models.ChatPost)
+	ret := m.ctrl.Call(m, "FindByRoomIDAndOffset", roomID, offset)
+	ret0, _ := ret[0].([]*output.ChatPostResBody)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // FindByRoomIDAndOffset indicates an expected call of FindByRoomIDAndOffset
-func (mr *MockIChatPostUseCaseMockRecorder) FindByRoomIDAndOffset(id, offset interface{}) *gomock.Call {
+func (mr *MockIChatPostUseCaseMockRecorder) FindByRoomIDAndOffset(roomID, offset interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByRoomIDAndOffset", reflect.TypeOf((*MockIChatPostUseCase)(nil).FindByRoomIDAndOffset), id, offset)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByRoomIDAndOffset", reflect.TypeOf((*MockIChatPostUseCase)(nil).FindByRoomIDAndOffset), roomID, offset)
 }
 
 // FindByRoomIDAndLimitAndOffset mocks base method
-func (m *MockIChatPostUseCase) FindByRoomIDAndLimitAndOffset(id, offset, limit string) ([]*models.ChatPost, error) {
+func (m *MockIChatPostUseCase) FindByRoomIDAndLimitAndOffset(roomID, offset, limit string) ([]*output.ChatPostResBody, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FindByRoomIDAndLimitAndOffset", id, offset, limit)
-	ret0, _ := ret[0].([]*models.ChatPost)
+	ret := m.ctrl.Call(m, "FindByRoomIDAndLimitAndOffset", roomID, offset, limit)
+	ret0, _ := ret[0].([]*output.ChatPostResBody)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // FindByRoomIDAndLimitAndOffset indicates an expected call of FindByRoomIDAndLimitAndOffset
-func (mr *MockIChatPostUseCaseMockRecorder) FindByRoomIDAndLimitAndOffset(id, offset, limit interface{}) *gomock.Call {
+func (mr *MockIChatPostUseCaseMockRecorder) FindByRoomIDAndLimitAndOffset(roomID, offset, limit interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByRoomIDAndLimitAndOffset", reflect.TypeOf((*MockIChatPostUseCase)(nil).FindByRoomIDAndLimitAndOffset), id, offset, limit)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindByRoomIDAndLimitAndOffset", reflect.TypeOf((*MockIChatPostUseCase)(nil).FindByRoomIDAndLimitAndOffset), roomID, offset, limit)
 }
 
 // Insert mocks base method
-func (m *MockIChatPostUseCase) Insert(arg0 *gin.Context) error {
+func (m *MockIChatPostUseCase) Insert(c *gin.Context) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Insert", arg0)
+	ret := m.ctrl.Call(m, "Insert", c)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Insert indicates an expected call of Insert
-func (mr *MockIChatPostUseCaseMockRecorder) Insert(arg0 interface{}) *gomock.Call {
+func (mr *MockIChatPostUseCaseMockRecorder) Insert(c interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Insert", reflect.TypeOf((*MockIChatPostUseCase)(nil).Insert), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Insert", reflect.TypeOf((*MockIChatPostUseCase)(nil).Insert), c)
 }

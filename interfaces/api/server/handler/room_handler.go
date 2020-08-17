@@ -38,12 +38,12 @@ func NewRoomHandler(
 }
 
 func (h *roomHandler) GetList(c *gin.Context) {
-	r, err := h.roomUsecase.GetList(c)
+	rooms, roomCnt, err := h.roomUsecase.GetList(c)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
-	c.JSON(http.StatusOK, r)
+	c.JSON(http.StatusOK, gin.H{"rooms": rooms, "roomCnt": roomCnt})
 }
 
 func (h *roomHandler) GetByID(c *gin.Context) {
@@ -56,31 +56,34 @@ func (h *roomHandler) GetByID(c *gin.Context) {
 }
 
 func (h *roomHandler) Create(c *gin.Context) {
-	err := h.roomUsecase.Create(c)
+	room, err := h.roomUsecase.Create(c)
 	if err != nil {
 		switch err := err.(type) {
 		case errors.ErrRoomCreateReqBinding:
-			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+			c.JSON(http.StatusBadRequest, gin.H{"code": 1, "message": err.Error()})
 			return
 		case errors.ErrGetTokenClaims:
-			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+			c.JSON(http.StatusBadRequest, gin.H{"code": 2, "message": err.Error()})
 			return
 		case errors.ErrRoomAlreadyExists:
-			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+			c.JSON(http.StatusBadRequest, gin.H{"code": 3, "message": err.Error()})
+			return
+		case errors.ErrRoomAlreadyEntry:
+			c.JSON(http.StatusBadRequest, gin.H{"code": 4, "message": err.Error()})
 			return
 		case errors.ErrGenerateID:
-			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			c.JSON(http.StatusInternalServerError, gin.H{"code": 5, "message": err.Error()})
 			return
 		case errors.ErrDataBase:
-			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			c.JSON(http.StatusInternalServerError, gin.H{"code": 6, "message": err.Error()})
 			return
 		default:
-			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			c.JSON(http.StatusInternalServerError, gin.H{"code": 99, "message": err.Error()})
 			log.Warn("Unexpected error")
 			panic(err)
 		}
 	}
-	c.JSON(http.StatusOK, gin.H{"message": "Create room"})
+	c.JSON(http.StatusOK, gin.H{"data": room, "message": "Create room"})
 }
 
 func (h *roomHandler) Update(c *gin.Context) {
@@ -92,22 +95,22 @@ func (h *roomHandler) Delete(c *gin.Context) {
 	if err != nil {
 		switch err := err.(type) {
 		case errors.ErrGetTokenClaims:
-			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+			c.JSON(http.StatusBadRequest, gin.H{"code": 1, "message": err.Error()})
 			return
 		case errors.ErrNotRoomOwner:
-			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+			c.JSON(http.StatusBadRequest, gin.H{"code": 2, "message": err.Error()})
 			return
 		case errors.ErrRecordNotFound:
-			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+			c.JSON(http.StatusBadRequest, gin.H{"code": 3, "message": err.Error()})
 			return
 		case errors.ErrGenerateID:
-			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			c.JSON(http.StatusInternalServerError, gin.H{"code": 4, "message": err.Error()})
 			return
 		case errors.ErrDataBase:
-			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			c.JSON(http.StatusInternalServerError, gin.H{"code": 5, "message": err.Error()})
 			return
 		default:
-			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			c.JSON(http.StatusInternalServerError, gin.H{"code": 99, "message": err.Error()})
 			log.Warn("Unexpected error")
 			panic(err)
 		}
@@ -154,19 +157,19 @@ func (h *roomHandler) Leave(c *gin.Context) {
 	if err != nil {
 		switch err := err.(type) {
 		case errors.ErrGetTokenClaims:
-			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+			c.JSON(http.StatusBadRequest, gin.H{"code": 1, "message": err.Error()})
 			return
 		case errors.ErrNotEntryRoom:
-			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+			c.JSON(http.StatusBadRequest, gin.H{"code": 2, "message": err.Error()})
 			return
 		case errors.ErrRecordNotFound:
-			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+			c.JSON(http.StatusBadRequest, gin.H{"code": 3, "message": err.Error()})
 			return
 		case errors.ErrDataBase:
-			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			c.JSON(http.StatusInternalServerError, gin.H{"code": 4, "message": err.Error()})
 			return
 		default:
-			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			c.JSON(http.StatusInternalServerError, gin.H{"code": 99, "message": err.Error()})
 			log.Warn("Unexpected error")
 			panic(err)
 		}
@@ -179,19 +182,19 @@ func (h *roomHandler) CheckEntry(c *gin.Context) {
 	if err != nil {
 		switch err := err.(type) {
 		case errors.ErrGetTokenClaims:
-			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+			c.JSON(http.StatusBadRequest, gin.H{"code": 1, "message": err.Error()})
 			return
 		case errors.ErrNotEntryRoom:
-			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+			c.JSON(http.StatusBadRequest, gin.H{"code": 2, "message": err.Error()})
 			return
 		case errors.ErrRecordNotFound:
-			c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+			c.JSON(http.StatusBadRequest, gin.H{"code": 3, "message": err.Error()})
 			return
 		case errors.ErrDataBase:
-			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			c.JSON(http.StatusInternalServerError, gin.H{"code": 4, "message": err.Error()})
 			return
 		default:
-			c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			c.JSON(http.StatusInternalServerError, gin.H{"code": 99, "message": err.Error()})
 			log.Warn("Unexpected error")
 			panic(err)
 		}

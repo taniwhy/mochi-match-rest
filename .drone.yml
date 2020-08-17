@@ -3,17 +3,7 @@ kind: pipeline
 name: default
 
 steps:
-  - name: build
-    image: golang:1.13
-    commands:
-      - make build
-    when:
-      event:
-        - push
-        - pull_request
-        - tag
-
-  - name: test
+  - name: build & test
     image: golang:1.13
     environment:
       GO_ENV: test
@@ -27,7 +17,9 @@ steps:
         from_secret: GOOGLE_OAUTH_CLIENT_SECRET
 
     commands:
+      - make build
       - make test
+
     when:
       event:
         - push

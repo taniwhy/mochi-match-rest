@@ -1,6 +1,7 @@
 package datastore
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/jinzhu/gorm"
@@ -19,8 +20,8 @@ func NewUserDetailDatastore(db *gorm.DB) repository.IUserDetailRepository {
 }
 
 func (uD userDetailDatastore) FindByID(id string) (*models.UserDetail, error) {
-	userDetails := models.UserDetail{UserDetailID: id}
-	err := uD.db.Take(&userDetails).Error
+	userDetails := models.UserDetail{}
+	err := uD.db.Where("user_id = ?", id).First(&userDetails).Error
 	if err != nil {
 		return nil, err
 	}
@@ -33,11 +34,12 @@ func (uD userDetailDatastore) Insert(userDetail *models.UserDetail) error {
 
 func (uD userDetailDatastore) Update(id, name, icon string) error {
 	u := models.UserDetail{}
-	err := uD.db.Model(&u).Where("user_id = ?", id).Updates(models.UserDetail{
-		UserName: name,
-		Icon:     icon,
-		UpdateAt: time.Now(),
-	}).Error
+	fmt.Println(id, name, icon)
+	err := uD.db.Model(&u).
+		Where("user_id = ?", id).
+		Update("user_name", name).
+		Update("icon", icon).
+		Update("update_at", time.Now()).Error
 	if gorm.IsRecordNotFoundError(err) {
 		return errors.ErrRecordNotFound{Detail: err.Error()}
 	}

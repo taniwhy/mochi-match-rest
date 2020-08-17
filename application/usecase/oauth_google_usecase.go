@@ -40,7 +40,7 @@ func NewGoogleOAuthUsecase(uS service.IUserService) IGoogleOAuthUsecase {
 
 func (u *googleOAuthUsecase) Login(c *gin.Context) (string, error) {
 	session := sessions.Default(c)
-	option := sessions.Options{Path: "/", Domain: "", MaxAge: 300, Secure: false, HttpOnly: true}
+	option := sessions.Options{Path: "/", Domain: "", MaxAge: 3000, Secure: false, HttpOnly: true}
 	session.Options(option)
 
 	sessionID := uuid.UuID()
@@ -52,16 +52,10 @@ func (u *googleOAuthUsecase) Login(c *gin.Context) (string, error) {
 }
 
 func (u *googleOAuthUsecase) Callback(c *gin.Context) (bool, *models.GoogleUser, error) {
-	session := sessions.Default(c)
-	retrievedState := session.Get("state")
-	if retrievedState != c.Query("state") {
-		return false, nil, errors.ErrInvalidSessionState{State: retrievedState}
-	}
 	token, err := u.oauthConf.Exchange(oauth2.NoContext, c.Query("code"))
 	if err != nil {
 		return false, nil, errors.ErrGoogleOAuthTokenExchange{}
 	}
-
 	if token.Valid() == false {
 		return false, nil, errors.ErrInvalidGoogleOAuthToken{}
 	}

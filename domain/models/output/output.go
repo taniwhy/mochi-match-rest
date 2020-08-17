@@ -8,8 +8,9 @@ import (
 
 // FavoriteGamesRes : お気に入りゲームレスポンス
 type FavoriteGamesRes struct {
-	GameTitle string    `json:"game_title" binding:"required"`
-	CreatedAt time.Time `json:"created_at" binding:"required"`
+	GameListID string    `json:"game_id" binding:"required"`
+	GameTitle  string    `json:"game_title" binding:"required"`
+	CreatedAt  time.Time `json:"created_at" binding:"required"`
 }
 
 // UserResBody : ユーザーレスポンス
@@ -65,4 +66,26 @@ type ChatPostResBody struct {
 	Icon       string    `json:"icon"`
 	Message    string    `json:"message" binding:"required"`
 	CreatedAt  time.Time `json:"created_at"`
+}
+
+// EntryHistoryRes :
+type EntryHistoryRes struct {
+	PlaydedDate time.Time
+	HostName    string
+	GameName    string
+}
+
+// EntryHistoryResBody :
+type EntryHistoryResBody struct {
+	PlaydedDate time.Time     `json:"played_date"`
+	HostName    string        `json:"host_name"`
+	GameName    string        `json:"game_title"`
+	JoinUsers   []JoinUserRes `json:"join_users" binding:"required"`
+}
+
+// HotGameRes :
+type HotGameRes struct {
+	GameListID  string `json:"game_id"`
+	GameTitle   string `json:"game_title"`
+	PlayerCount int    `json:"player_count"`
 }
